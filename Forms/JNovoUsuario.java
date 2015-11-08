@@ -4,8 +4,12 @@
  * and open the template in the editor.
  */
 
-package heimdall;
+package heimdall.Forms;
 
+import heimdall.ExecutaSQL;
+import heimdall.SenhaAutomatica;
+import heimdall.TratarEntrada;
+import heimdall.Util.Usuario;
 import javax.swing.JOptionPane;
 
 /**
@@ -60,7 +64,6 @@ public class JNovoUsuario extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Novo Usuario");
-        setPreferredSize(new java.awt.Dimension(386, 187));
 
         jLabel1.setText("Login de Usuário*: ");
 

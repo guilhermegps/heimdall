@@ -10,11 +10,7 @@ package heimdall;
  *
  * @author guilherme
  */
-public class TratarEntrada {
-
-    public TratarEntrada() {
-    }
-    
+public class TratarEntrada {   
     public boolean whiteList (String entrada){
         entrada = entrada.toUpperCase();
         String permitido = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ._";

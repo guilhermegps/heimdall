@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package heimdall;
+package heimdall.Forms;
 
+import heimdall.ExecutaSQL;
+import heimdall.Util.Modelo;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 

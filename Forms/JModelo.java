@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 
-package heimdall;
+package heimdall.Forms;
 
+import heimdall.ExecutaSQL;
+import heimdall.Util.Classe;
+import heimdall.Util.Modelo;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -66,9 +69,7 @@ public class JModelo extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Customizar Modelo");
-        setMaximumSize(new java.awt.Dimension(627, 353));
         setMinimumSize(new java.awt.Dimension(627, 353));
-        setPreferredSize(new java.awt.Dimension(627, 353));
         setResizable(false);
 
         tbModelo.setFloatable(false);

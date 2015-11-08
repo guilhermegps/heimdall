@@ -4,8 +4,12 @@
  * and open the template in the editor.
  */
 
-package heimdall;
+package heimdall.Forms;
 
+import heimdall.ExecutaSQL;
+import heimdall.SenhaAutomatica;
+import heimdall.TratarEntrada;
+import heimdall.Util.Usuario;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.swing.JOptionPane;
@@ -149,7 +153,7 @@ public class JLogin extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 176, Short.MAX_VALUE)
+            .addComponent(pLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
         );
 
         pack();

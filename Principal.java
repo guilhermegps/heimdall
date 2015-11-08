@@ -6,6 +6,11 @@
 
 package heimdall;
 
+import heimdall.Forms.JNovoUsuario;
+import heimdall.Forms.JLogin;
+import heimdall.Forms.JVeiculo;
+import heimdall.Util.Usuario;
+
 /**
  *
  * @author guilherme

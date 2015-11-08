@@ -6,6 +6,11 @@
 
 package heimdall;
 
+import heimdall.Util.Classe;
+import heimdall.Util.Usuario;
+import heimdall.Util.Cor;
+import heimdall.Util.Veiculo;
+import heimdall.Util.Modelo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -23,7 +28,7 @@ public class ExecutaSQL {
         conexao = new Conexao();
     }    
     
-    
+    // Operações tb_usuario
     public Usuario SELECT_USUARIO(String camp, String val){
         Usuario user = null;
         try{
@@ -48,29 +53,6 @@ public class ExecutaSQL {
         return user;
     }
     
-    public void DELETE_USUARIO(String cnd){
-        try{
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");    
-        }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
-        }
-        
-    }
-    
-    public void UPDATE_USUARIO(String cond, Usuario user){
-        try{
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");    
-        }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
-        }        
-    }
-    
     public boolean INSERT_USUARIO(Usuario user){
         boolean retorno = true;
         try{
@@ -92,6 +74,30 @@ public class ExecutaSQL {
         return retorno;
     }
     
+    public void UPDATE_USUARIO(String cond, Usuario user){
+        try{
+            
+            System.out.println("Executou a SQL");
+    conexao.getConexao().close();    
+            System.out.println("Fechou o banco");    
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+        }        
+    }
+    
+    public void DELETE_USUARIO(String cnd){
+        try{
+            
+            System.out.println("Executou a SQL");
+    conexao.getConexao().close();    
+            System.out.println("Fechou o banco");    
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+        }
+        
+    }
+    
+    // Operações tb_classe
     public ArrayList SELECT_CLASSE(boolean busca){
         ArrayList<Classe> c = new ArrayList<Classe>();
         try{
@@ -116,6 +122,7 @@ public class ExecutaSQL {
         return c;
     }
     
+    // Operações tb_modelo
     public ArrayList<Modelo> SELECT_ALL_MODELO_VEICULO(){
         ArrayList<Modelo> m = new ArrayList<Modelo>();
         try{
@@ -172,6 +179,53 @@ public class ExecutaSQL {
         return retorno;
     }
     
+    // Operações tb_veiculo
+    public ArrayList<Veiculo> SELECT_ALL_VEICULO(){
+        ArrayList<Veiculo> v = new ArrayList<Veiculo>();
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT v.*, m.*, c.*" +
+                    "FROM tb_veiculo AS v\n" +
+                    "INNER JOIN tb_modelo AS m ON (m.id_modelo = v.tb_modelo_id_modelo)\n" +
+                    "INNER JOIN tb_cor AS c ON (c.id_cor = v.tb_cor_id_cor)\n" +
+                    "ORDER BY v.dh_veiculo;");
+            ResultSet rs = comando.executeQuery();
+            
+            while(rs.next()){
+                Veiculo veiculo = new Veiculo();
+                Modelo modelo = new Modelo();
+                Cor cor = new Cor();
+                
+                cor.setId(rs.getInt("id_cor"));
+                cor.setCor(rs.getString("de_cor"));
+                
+                modelo.setId(rs.getInt("id_modelo"));
+                modelo.setModelo(rs.getString("de_modelo"));
+                modelo.setMarca(rs.getString("de_marca_modelo"));
+                modelo.setLayout(rs.getString("de_layout_modelo"));
+                
+                veiculo.setModelo(modelo);
+                veiculo.setCor(cor);
+                veiculo.setId(rs.getInt("id_veiculo"));
+                veiculo.setNome(rs.getString("no_veiculo"));
+                veiculo.setRfid(rs.getString("vc_rfid_veiculo"));
+                veiculo.setPlaca(rs.getString("vc_placa_veiculo"));
+                veiculo.setKm(rs.getFloat("nu_km_veiculo"));
+                veiculo.setObservacao(rs.getString("ds_obs_veiculo"));
+                veiculo.setDataHora(rs.getString("dh_veiculo"));
+                
+                v.add(veiculo);
+            }
+            
+            System.out.println("Executou a SQL");
+    conexao.getConexao().close();    
+            System.out.println("Fechou o banco");  
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+        }    
+        return v;
+    }    
+    
+    // Operações tb_cor
     public ArrayList<Cor> SELECT_ALL_COR(){
             ArrayList<Cor> cor = new ArrayList<Cor>();
         try{

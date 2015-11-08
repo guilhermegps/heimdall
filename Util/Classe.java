@@ -1,5 +1,5 @@
 
-package heimdall;
+package heimdall.Util;
 
 /**
  *

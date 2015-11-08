@@ -4,8 +4,12 @@
  * and open the template in the editor.
  */
 
-package heimdall;
+package heimdall.Forms;
 
+import heimdall.ExecutaSQL;
+import heimdall.Util.Cor;
+import heimdall.Util.Modelo;
+import heimdall.Util.Veiculo;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +33,7 @@ public class JVeiculo extends javax.swing.JFrame {
     private ArrayList<Cor> cor;
     private DefaultTableModel dtm;
     private Object[][] valores;
-    private String[] colunas = new String [] {"N°", "Modelo", "Marca", "Layout", "Classe"};
+    private String[] colunas = new String [] {"N°", "Nome", "Modelo", "Km", "Registrado", "rfid"};
     private boolean killThread = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
@@ -108,7 +112,7 @@ public class JVeiculo extends javax.swing.JFrame {
 
         tfPlaca.setColumns(5);
         tfPlaca.setToolTipText("Número da placa. EX: ABC-1234");
-        tfPlaca.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        tfPlaca.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         cbCor.setModel(new javax.swing.DefaultComboBoxModel(carregarCores()));
         cbCor.setToolTipText("Escolha a cor do veículo");
@@ -166,7 +170,7 @@ public class JVeiculo extends javax.swing.JFrame {
                                         .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(cbCor, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         lpIdtVeiculoLayout.setVerticalGroup(
             lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,7 +195,7 @@ public class JVeiculo extends javax.swing.JFrame {
                 .addGap(11, 11, 11)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                 .addContainerGap())
         );
         lpIdtVeiculo.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -270,6 +274,11 @@ public class JVeiculo extends javax.swing.JFrame {
         bSaveCdtVeiculo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bSaveCdtVeiculo.setPreferredSize(new java.awt.Dimension(50, 50));
         bSaveCdtVeiculo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bSaveCdtVeiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bSaveCdtVeiculoActionPerformed(evt);
+            }
+        });
         tbVeiculo.add(bSaveCdtVeiculo);
 
         bNewCdtVeiculo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 50x50/new-file.png"))); // NOI18N
@@ -406,6 +415,10 @@ public class JVeiculo extends javax.swing.JFrame {
         
     }//GEN-LAST:event_bRefreshCdtVeiculoActionPerformed
 
+    private void bSaveCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveCdtVeiculoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bSaveCdtVeiculoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -476,24 +489,25 @@ public class JVeiculo extends javax.swing.JFrame {
     
     public void initTable(){
         ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Modelo> aux = new ArrayList<Modelo>();
+        ArrayList<Veiculo> aux = new ArrayList<Veiculo>();
         
-        aux = sql.SELECT_ALL_MODELO_VEICULO();
-        valores = new Object[aux.size()][5];
-        for(int i=0; i<aux.size(); i++){
+        aux = sql.SELECT_ALL_VEICULO();
+        valores = new Object[aux.size()][colunas.length];
+        for(int i=0; i<aux.size(); i++){// "N°", "Nome", "Modelo", "Km", "Registrado", "rfid"
             valores[i][0] = i+1;
-            valores[i][1] = aux.get(i).getModelo();
-            valores[i][2] = aux.get(i).getMarca();
-            valores[i][3] = aux.get(i).getLayout();
-            valores[i][4] = aux.get(i).getClasse().getNome();
+            valores[i][1] = aux.get(i).getNome();
+            valores[i][2] = aux.get(i).getModelo().getModelo();
+            valores[i][3] = aux.get(i).getKm();
+            valores[i][4] = aux.get(i).getDataHora();
+            valores[i][5] = aux.get(i).getRfid();
         }
         
         dtm = new DefaultTableModel(valores, colunas) {
             Class[] types = new Class [] {
-                java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -558,7 +572,7 @@ public class Campos extends Thread{
             int aux = tfVeiculo.getText().compareTo("");
             aux *= tfPlaca.getText().compareTo("");
             aux *= modelo.compareTo("");
-            if(aux==0 && !tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
+            if(aux==0 || !tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
                 bSaveCdtVeiculo.setEnabled(false);
             }else{
                 bSaveCdtVeiculo.setEnabled(true);
