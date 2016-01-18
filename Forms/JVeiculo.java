@@ -137,6 +137,19 @@ public class JVeiculo extends javax.swing.JFrame {
             }
         });
 
+        lpIdtVeiculo.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(tfVeiculo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(tfPlaca, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(cbCor, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(bRefreshModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout lpIdtVeiculoLayout = new javax.swing.GroupLayout(lpIdtVeiculo);
         lpIdtVeiculo.setLayout(lpIdtVeiculoLayout);
         lpIdtVeiculoLayout.setHorizontalGroup(
@@ -198,18 +211,6 @@ public class JVeiculo extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        lpIdtVeiculo.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(tfVeiculo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(tfPlaca, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(cbCor, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(bRefreshModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lpCondVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Informações do Cadastro"));
 
@@ -224,6 +225,11 @@ public class JVeiculo extends javax.swing.JFrame {
                 tfDataCdtActionPerformed(evt);
             }
         });
+
+        lpCondVeiculo.setLayer(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(tfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(tfDataCdt, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpCondVeiculoLayout = new javax.swing.GroupLayout(lpCondVeiculo);
         lpCondVeiculo.setLayout(lpCondVeiculoLayout);
@@ -257,10 +263,6 @@ public class JVeiculo extends javax.swing.JFrame {
                     .addComponent(tfDataCdt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        lpCondVeiculo.setLayer(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpCondVeiculo.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpCondVeiculo.setLayer(tfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpCondVeiculo.setLayer(tfDataCdt, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jTextPane1.setEditable(false);
         jScrollPane2.setViewportView(jTextPane1);
@@ -300,6 +302,11 @@ public class JVeiculo extends javax.swing.JFrame {
         bEditCdtVeiculo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bEditCdtVeiculo.setPreferredSize(new java.awt.Dimension(50, 50));
         bEditCdtVeiculo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bEditCdtVeiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEditCdtVeiculoActionPerformed(evt);
+            }
+        });
         tbVeiculo.add(bEditCdtVeiculo);
 
         bDeleteCdtVeiculo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 50x50/delete.png"))); // NOI18N
@@ -418,6 +425,10 @@ public class JVeiculo extends javax.swing.JFrame {
     private void bSaveCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveCdtVeiculoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_bSaveCdtVeiculoActionPerformed
+
+    private void bEditCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCdtVeiculoActionPerformed
+        new JErro(true, "Mensagem de teste da janela de erro", false, true, false);
+    }//GEN-LAST:event_bEditCdtVeiculoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -562,7 +573,7 @@ public class Campos extends Thread{
                 try{
                     tfDataCdt.setText(sdf.format(new Date()));                    
                 }catch(Exception ex){
-                    JOptionPane.showMessageDialog(null,"ERRO: "+ex.getMessage());
+                    new JErro(true, ex.getMessage(), false, true, false);
                 }
             }
         }

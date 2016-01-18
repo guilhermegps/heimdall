@@ -112,6 +112,17 @@ public class JComponente extends javax.swing.JFrame {
 
         tfDataValComponente.setToolTipText("Escreva o nome do veiculo. EX: Onibus 05");
 
+        lpIdtVeiculo.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(tfComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(bRefreshModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(tfDataValComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout lpIdtVeiculoLayout = new javax.swing.GroupLayout(lpIdtVeiculo);
         lpIdtVeiculo.setLayout(lpIdtVeiculoLayout);
         lpIdtVeiculoLayout.setHorizontalGroup(
@@ -138,7 +149,7 @@ public class JComponente extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tfDataValComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         lpIdtVeiculoLayout.setVerticalGroup(
             lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,16 +177,6 @@ public class JComponente extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
         );
-        lpIdtVeiculo.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(tfComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(bRefreshModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(tfDataValComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         tComponente.setAutoCreateRowSorter(true);
         tComponente.setModel(dtm);
@@ -214,6 +215,11 @@ public class JComponente extends javax.swing.JFrame {
         bEditCdtComponente.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bEditCdtComponente.setPreferredSize(new java.awt.Dimension(50, 50));
         bEditCdtComponente.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bEditCdtComponente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEditCdtComponenteActionPerformed(evt);
+            }
+        });
         tbVeiculo.add(bEditCdtComponente);
 
         bDeleteCdtComponente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 50x50/delete.png"))); // NOI18N
@@ -269,6 +275,11 @@ public class JComponente extends javax.swing.JFrame {
             }
         });
 
+        lpCondVeiculo.setLayer(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(tfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(tfDataCdt, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout lpCondVeiculoLayout = new javax.swing.GroupLayout(lpCondVeiculo);
         lpCondVeiculo.setLayout(lpCondVeiculoLayout);
         lpCondVeiculoLayout.setHorizontalGroup(
@@ -297,10 +308,6 @@ public class JComponente extends javax.swing.JFrame {
                     .addComponent(tfDataCdt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        lpCondVeiculo.setLayer(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpCondVeiculo.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpCondVeiculo.setLayer(tfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpCondVeiculo.setLayer(tfDataCdt, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -367,6 +374,10 @@ public class JComponente extends javax.swing.JFrame {
     private void tfDataCdtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDataCdtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfDataCdtActionPerformed
+
+    private void bEditCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCdtComponenteActionPerformed
+        
+    }//GEN-LAST:event_bEditCdtComponenteActionPerformed
 
     /**
      * @param args the command line arguments

@@ -6,6 +6,7 @@
 
 package heimdall;
 
+import heimdall.Forms.JErro;
 import heimdall.Forms.JNovoUsuario;
 import heimdall.Forms.JLogin;
 import heimdall.Forms.JVeiculo;
@@ -13,7 +14,7 @@ import heimdall.Util.Usuario;
 
 /**
  *
- * @author guilherme
+ * @author Guilherme de Paiva
  */
 public class Principal extends javax.swing.JFrame {
 
@@ -27,9 +28,13 @@ public class Principal extends javax.swing.JFrame {
     private Usuario usuario;
     private JNovoUsuario newUser = new JNovoUsuario();
     
-    public Principal() { //Guilherme
-        initComponents();
-        logando();
+    public Principal() { 
+        try{
+            initComponents();
+            logando();
+        }catch(Exception ex){
+            new JErro(true, "Erro não tratado: \n\n"+ex.getMessage(), false, true, false);
+        }
     }
 
     /**
@@ -101,6 +106,9 @@ public class Principal extends javax.swing.JFrame {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
+        jLayeredPane1.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jToolBar1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
@@ -115,8 +123,6 @@ public class Principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        jLayeredPane1.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jToolBar1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         menuArq.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/page.png"))); // NOI18N
         menuArq.setText("Arquivos");

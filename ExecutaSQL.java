@@ -6,6 +6,7 @@
 
 package heimdall;
 
+import heimdall.Forms.JErro;
 import heimdall.Util.Classe;
 import heimdall.Util.Usuario;
 import heimdall.Util.Cor;
@@ -22,10 +23,10 @@ import javax.swing.JOptionPane;
  */
 public class ExecutaSQL {
     private PreparedStatement comando;
-    private Conexao conexao;
+    private ConexaoDB conexao;
 
     public ExecutaSQL() {
-        conexao = new Conexao();
+        conexao = new ConexaoDB();
     }    
     
     // Operações tb_usuario
@@ -47,7 +48,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");        
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }
         
         return user;
@@ -69,7 +70,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");    
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }        
         return retorno;
     }
@@ -81,7 +82,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");    
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }        
     }
     
@@ -92,7 +93,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");    
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }
         
     }
@@ -116,7 +117,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");    
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }        
         
         return c;
@@ -152,7 +153,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }    
         return m;
     }    
@@ -173,7 +174,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");    
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
             retorno =false;
         }       
         return retorno;
@@ -220,7 +221,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }    
         return v;
     }    
@@ -245,7 +246,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }     
         return cor;
     }
@@ -259,7 +260,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }        
     }
     
@@ -270,7 +271,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }        
     }
     
@@ -281,7 +282,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }        
     }
     
@@ -292,7 +293,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"ERRO DE SQL: "+ex.getMessage());
+            new JErro(true, ex.getMessage(), false, true, false);
         }        
     }*/
     

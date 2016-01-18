@@ -122,7 +122,7 @@
                           <Component id="tfDataValComponente" min="-2" pref="240" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="18" max="32767" attributes="0"/>
+                  <EmptySpace pref="15" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -331,6 +331,9 @@
             </Property>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bEditCdtComponenteActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="bDeleteCdtComponente">
           <Properties>

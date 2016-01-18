@@ -7,6 +7,7 @@
 package heimdall;
 
 //import java.beans.Statement;  Essa não é a biblioteca q queremos
+import heimdall.Forms.JErro;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,10 +19,10 @@ import javax.swing.JOptionPane;
  *
  * @author guilherme
  */
-public class Conexao {
+public class ConexaoDB {
     private Connection conexao;
 
-    public Conexao(){
+    public ConexaoDB(){
             try{
                     //Arquivo de Driver / Carrega o JDBC
                     Class.forName("org.postgresql.Driver");
@@ -33,10 +34,8 @@ public class Conexao {
 
                     /*/Comandos SQL no Banco de Dados
                     comando = conexao.prepareStatement("INSERT INTO ");*/
-
-
             }catch(Exception ex){
-                    JOptionPane.showMessageDialog(null,"ERRO DE CONEXÃO COM O BD: "+ex.getMessage());
+                new JErro(true, ex.getMessage(), false, true, true);
             }
     }
 
