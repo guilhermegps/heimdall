@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author guilherme
  */
-public class JModelo extends javax.swing.JFrame {
+public class JModelo extends javax.swing.JDialog {
 
     /**
      * Creates new form JModelo
@@ -32,6 +32,7 @@ public class JModelo extends javax.swing.JFrame {
     private boolean killThread = false;
     
     public JModelo(Boolean classe) {
+        setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         this.classe = classe;
         initTable();
         initComponents();

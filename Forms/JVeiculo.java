@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author guilherme
  */
-public class JVeiculo extends javax.swing.JFrame {
+public class JVeiculo extends javax.swing.JDialog {
 
     /**
      * Creates new form JVeiculo
@@ -38,6 +38,7 @@ public class JVeiculo extends javax.swing.JFrame {
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
     public JVeiculo() {
+        setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         initTable();
         initComponents();
         jm = new JModelo(true);

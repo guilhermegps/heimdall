@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author guilherme
  */
-public class JComponente extends javax.swing.JFrame {
+public class JComponente extends javax.swing.JDialog {
 
     private ArrayList<Modelo> m;
     private String[] colunas = new String [] {"N°", "Modelo", "Marca", "Layout", "Classe"};
@@ -24,6 +24,7 @@ public class JComponente extends javax.swing.JFrame {
      * Creates new form JComponente
      */
     public JComponente() {
+        setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         initComponents();
     }
 
@@ -37,14 +38,14 @@ public class JComponente extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        lpIdtVeiculo = new javax.swing.JLayeredPane();
+        tpHelp = new javax.swing.JTextPane();
+        lpIdtComponente = new javax.swing.JLayeredPane();
         jLabel1 = new javax.swing.JLabel();
         tfComponente = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tpObs = new javax.swing.JTextPane();
+        tpObsComponente = new javax.swing.JTextPane();
         cbModelo = new javax.swing.JComboBox();
         bCustomModelo = new javax.swing.JButton();
         bRefreshModelo = new javax.swing.JButton();
@@ -68,14 +69,15 @@ public class JComponente extends javax.swing.JFrame {
         tfDataCdt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Cadastrar Componente");
 
-        jTextPane1.setEditable(false);
-        jScrollPane2.setViewportView(jTextPane1);
+        tpHelp.setEditable(false);
+        jScrollPane2.setViewportView(tpHelp);
 
-        lpIdtVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Informações do Veículo"));
-        lpIdtVeiculo.setToolTipText("");
-        lpIdtVeiculo.setName(""); // NOI18N
-        lpIdtVeiculo.setPreferredSize(new java.awt.Dimension(400, 200));
+        lpIdtComponente.setBorder(javax.swing.BorderFactory.createTitledBorder("Informações do Componente"));
+        lpIdtComponente.setToolTipText("");
+        lpIdtComponente.setName(""); // NOI18N
+        lpIdtComponente.setPreferredSize(new java.awt.Dimension(400, 200));
 
         jLabel1.setText("Modelo*: ");
 
@@ -85,8 +87,8 @@ public class JComponente extends javax.swing.JFrame {
 
         jLabel3.setText("Nome*: ");
 
-        tpObs.setPreferredSize(new java.awt.Dimension(5, 25));
-        jScrollPane1.setViewportView(tpObs);
+        tpObsComponente.setPreferredSize(new java.awt.Dimension(5, 25));
+        jScrollPane1.setViewportView(tpObsComponente);
 
         cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
         cbModelo.setToolTipText("Escolha o modelo do veículo");
@@ -112,63 +114,63 @@ public class JComponente extends javax.swing.JFrame {
 
         tfDataValComponente.setToolTipText("Escreva o nome do veiculo. EX: Onibus 05");
 
-        lpIdtVeiculo.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(tfComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(bRefreshModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(tfDataValComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(tfComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(bRefreshModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(tfDataValComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout lpIdtVeiculoLayout = new javax.swing.GroupLayout(lpIdtVeiculo);
-        lpIdtVeiculo.setLayout(lpIdtVeiculoLayout);
-        lpIdtVeiculoLayout.setHorizontalGroup(
-            lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
+        javax.swing.GroupLayout lpIdtComponenteLayout = new javax.swing.GroupLayout(lpIdtComponente);
+        lpIdtComponente.setLayout(lpIdtComponenteLayout);
+        lpIdtComponenteLayout.setHorizontalGroup(
+            lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2)
                     .addComponent(jScrollPane1)
-                    .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
-                        .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(lpIdtComponenteLayout.createSequentialGroup()
+                        .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
-                        .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tfComponente)
-                            .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
+                            .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                                 .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(bRefreshModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lpIdtVeiculoLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lpIdtComponenteLayout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tfDataValComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
-        lpIdtVeiculoLayout.setVerticalGroup(
-            lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
+        lpIdtComponenteLayout.setVerticalGroup(
+            lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
+                .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                         .addGap(34, 34, 34)
-                        .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel1))
                             .addComponent(bRefreshModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
                         .addComponent(tfComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tfDataValComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -318,7 +320,7 @@ public class JComponente extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lpIdtVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lpIdtComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lpCondVeiculo)
@@ -337,7 +339,7 @@ public class JComponente extends javax.swing.JFrame {
                         .addComponent(lpCondVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lpIdtVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lpIdtComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(tpComponente, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                 .addContainerGap())
@@ -345,14 +347,6 @@ public class JComponente extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void bCustomModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCustomModeloActionPerformed
-        //jm.setVisible(true);
-    }//GEN-LAST:event_bCustomModeloActionPerformed
-
-    private void bRefreshModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshModeloActionPerformed
-        //cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
-    }//GEN-LAST:event_bRefreshModeloActionPerformed
 
     private void bNewCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNewCdtComponenteActionPerformed
 
@@ -371,13 +365,21 @@ public class JComponente extends javax.swing.JFrame {
         }*/
     }//GEN-LAST:event_bCancelCdtComponenteActionPerformed
 
+    private void bEditCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCdtComponenteActionPerformed
+        
+    }//GEN-LAST:event_bEditCdtComponenteActionPerformed
+
     private void tfDataCdtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDataCdtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfDataCdtActionPerformed
 
-    private void bEditCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCdtComponenteActionPerformed
-        
-    }//GEN-LAST:event_bEditCdtComponenteActionPerformed
+    private void bRefreshModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshModeloActionPerformed
+        //cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
+    }//GEN-LAST:event_bRefreshModeloActionPerformed
+
+    private void bCustomModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCustomModeloActionPerformed
+        //jm.setVisible(true);
+    }//GEN-LAST:event_bCustomModeloActionPerformed
 
     /**
      * @param args the command line arguments
@@ -447,9 +449,8 @@ public class JComponente extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLayeredPane lpCondVeiculo;
-    private javax.swing.JLayeredPane lpIdtVeiculo;
+    private javax.swing.JLayeredPane lpIdtComponente;
     private javax.swing.JTable tComponente;
     private javax.swing.JToggleButton tbHelpCdtComponente;
     private javax.swing.JToolBar tbVeiculo;
@@ -458,6 +459,7 @@ public class JComponente extends javax.swing.JFrame {
     private javax.swing.JTextField tfDataValComponente;
     private javax.swing.JTextField tfTagRfid;
     private javax.swing.JTabbedPane tpComponente;
-    private javax.swing.JTextPane tpObs;
+    private javax.swing.JTextPane tpHelp;
+    private javax.swing.JTextPane tpObsComponente;
     // End of variables declaration//GEN-END:variables
 }

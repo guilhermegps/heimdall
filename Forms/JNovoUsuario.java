@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  *
  * @author guilherme
  */
-public class JNovoUsuario extends javax.swing.JFrame {
+public class JNovoUsuario extends javax.swing.JDialog {
 
     
     /**
@@ -27,10 +27,12 @@ public class JNovoUsuario extends javax.swing.JFrame {
     private TratarEntrada trata;
 
     public JNovoUsuario() {
+        setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         initComponents();
     }
     
     public JNovoUsuario(Usuario usuario) {
+        setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         this.usuario = usuario;
         this.trata = new TratarEntrada();
         initComponents();
@@ -53,10 +55,9 @@ public class JNovoUsuario extends javax.swing.JFrame {
         tfLogin = new javax.swing.JTextField();
         bCdtUsuario = new javax.swing.JButton();
         bCancelUsuario = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -102,14 +103,11 @@ public class JNovoUsuario extends javax.swing.JFrame {
             }
         });
 
-        jTextPane1.setBackground(jLabel1.getBackground());
-        jTextPane1.setBorder(null);
-        jTextPane1.setText("Não é permitido o uso de caracteres especiais ou  acentos no login de usuário, com excessão do  ponto (.) e underline (_). ");
-        jScrollPane2.setViewportView(jTextPane1);
-
         jLabel2.setText("CPF*: ");
 
         jTextField1.setToolTipText("Digite o CPF do novo usuário");
+
+        jLabel4.setText("<html>  <p><b><font color=\"red\" align=\"justify\">Não é permitido o uso de caracteres especiais ou  acentos no login de usuário, com excessão do  ponto (.) e underline (_).</font></b></p>");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -117,24 +115,26 @@ public class JNovoUsuario extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tfLogin)
+                    .addComponent(tfNome, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(jTextField1))
+                .addGap(15, 15, 15))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(bCdtUsuario)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bCancelUsuario))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel2))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(tfLogin)
-                                .addComponent(tfNome, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                                .addComponent(jTextField1)))))
-                .addGap(15, 15, 15))
+                        .addComponent(bCancelUsuario)
+                        .addGap(0, 132, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,15 +152,15 @@ public class JNovoUsuario extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bCdtUsuario)
                     .addComponent(bCancelUsuario))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(385, 250));
+        setSize(new java.awt.Dimension(385, 254));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -202,7 +202,7 @@ public class JNovoUsuario extends javax.swing.JFrame {
         } else if(!trata.whiteList(tfLogin.getText())){
             JOptionPane.showMessageDialog(null,"O login contem caracteres inválidos ou está vazio. Por favor, digite novamente.");
         } else{
-            int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cadastrar esse usuário?\nNome:"+tfNome.getText()+"\nLogin: "+tfLogin.getText(),"Tem certeza?",JOptionPane.YES_NO_OPTION);
+            int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cadastrar esse usuário?\nNome: "+tfNome.getText()+"\nLogin: "+tfLogin.getText(),"Tem certeza?",JOptionPane.YES_NO_OPTION);
             if(resp==0){
                 ExecutaSQL sql = new ExecutaSQL();
                 SenhaAutomatica senha = new SenhaAutomatica(6);
@@ -242,11 +242,10 @@ public class JNovoUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTextField tfLogin;
     private javax.swing.JTextField tfNome;
     // End of variables declaration//GEN-END:variables
