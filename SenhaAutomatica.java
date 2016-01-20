@@ -6,6 +6,7 @@
 
 package heimdall;
 
+import heimdall.Forms.JErro;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -44,17 +45,16 @@ public class SenhaAutomatica {
                 
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 BigInteger hash = hash = new BigInteger(1, md.digest(senha.getBytes("UTF-8")));//Cria hash MD5 da senha criptografada 
-                senha = String.format("%32x", hash);
+                senha = String.format("%32x", hash).replace(' ', '0').toUpperCase();
             }
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            Logger.getLogger(SenhaAutomatica.class.getName()).log(Level.SEVERE, null, ex);
+            new JErro(true, "Erro não tratado: \n\n"+ex.getMessage(), false, true, false);
         }        
         return senha;         
      }  
     
     public String gerarSenha(int digitos){
         String senha = new String();
-        //int digitos = Integer.parseInt(JOptionPane.showInputDialog("Quantos digitos a senha deve ter?"));
         for(int i=0;i<digitos;i++){
             int x = (49+(int)(Math.random()*42)); 
             if((x>=58&&x<=64)){
