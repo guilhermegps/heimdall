@@ -245,7 +245,7 @@ public class JLogin extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null,"A senha contem caracteres inválidos ou está vazia. Por favor, digite novamente.");
         } else{
 
-            user = sql.SELECT_USUARIO("de_login_usuario", "\'"+login+"\'");
+            user = sql.SELECT_USUARIO_ATIVOS("vc_login_usuario", "\'"+login+"\'");
             if(user!=null){
                 SenhaAutomatica aux = new SenhaAutomatica(WIDTH);
                 senha = login + senha;

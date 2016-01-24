@@ -30,23 +30,22 @@ public class ExecutaSQL {
     }    
     
     // Operações tb_usuario
-    public Usuario SELECT_USUARIO(String camp, String val){
+    public Usuario SELECT_USUARIO_ATIVOS(String camp, String val){
         Usuario user = null;
         try{
-            comando = conexao.getConexao().prepareStatement("SELECT * FROM tb_usuario WHERE "+camp+" = "+val);
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM usuario WHERE "+camp+" = "+val+" AND bo_registro_ativo_usuario = TRUE");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
                 user = new Usuario();
                 user.setId(rs.getInt("id_usuario"));
-                user.setNome(rs.getString("no_usuario"));
-                user.setSenha(rs.getString("ps_usuario"));
-                user.setNivel(rs.getInt("nu_nivel_usuario"));
-                user.setLogin(rs.getString("de_login_usuario"));
-            }
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");        
+                user.setNome(rs.getString("vc_nome_usuario"));
+                user.setSenha(rs.getString("vc_senha_usuario"));
+                user.setNivel(rs.getInt("in_nivel_usuario"));
+                user.setLogin(rs.getString("vc_login_usuario"));
+                user.setCpf(rs.getString("vc_cpf_usuario"));
+                user.setAtivo(rs.getBoolean("bo_registro_ativo_usuario"));
+            }       
         }catch(Exception ex){
             new JErro(true, ex.getMessage(), false, true, false);
         }
@@ -57,18 +56,16 @@ public class ExecutaSQL {
     public boolean INSERT_USUARIO(Usuario user){
         boolean retorno = true;
         try{
-            comando = conexao.getConexao().prepareStatement("INSERT INTO tb_usuario VALUES (DEFAULT, ?, ?, ?, ?);");
+            comando = conexao.getConexao().prepareStatement("INSERT INTO usuario VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), ?, ?, ?, ?, ?, ?);");
             
             comando.setString(1, user.getSenha());
             comando.setString(2, user.getNome());
             comando.setInt(3,user.getNivel());
             comando.setString(4, user.getLogin());
+            comando.setString(5, user.getCpf());
+            comando.setBoolean(6, user.isAtivo());
             
-            retorno = comando.execute();
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");    
+            retorno = comando.execute();  
         }catch(Exception ex){
             new JErro(true, ex.getMessage(), false, true, false);
         }        
@@ -77,10 +74,7 @@ public class ExecutaSQL {
     
     public void UPDATE_USUARIO(String cond, Usuario user){
         try{
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");    
+               
         }catch(Exception ex){
             new JErro(true, ex.getMessage(), false, true, false);
         }        
@@ -88,10 +82,7 @@ public class ExecutaSQL {
     
     public void DELETE_USUARIO(String cnd){
         try{
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");    
+             
         }catch(Exception ex){
             new JErro(true, ex.getMessage(), false, true, false);
         }
@@ -99,23 +90,20 @@ public class ExecutaSQL {
     }
     
     // Operações tb_classe
-    public ArrayList SELECT_CLASSE(boolean busca){
+    public ArrayList SELECT_CLASSE_TIPO(boolean busca){
         ArrayList<Classe> c = new ArrayList<Classe>();
         try{
-            comando = conexao.getConexao().prepareStatement("SELECT * FROM tb_classe WHERE bo_tipo_classe = "+busca+" ORDER BY no_classe;");
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM classe WHERE bo_tipo_classe = "+busca+" ORDER BY vc_nome_classe;");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
                 Classe aux = new Classe();
                 aux.setId(rs.getInt("id_classe"));
-                aux.setNome(rs.getString("no_classe"));
+                aux.setNome(rs.getString("vc_nome_classe"));
                 aux.setTipo(rs.getBoolean("bo_tipo_classe"));
                 c.add(aux);
             }
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");    
+             
         }catch(Exception ex){
             new JErro(true, ex.getMessage(), false, true, false);
         }        
@@ -127,31 +115,27 @@ public class ExecutaSQL {
     public ArrayList<Modelo> SELECT_ALL_MODELO_VEICULO(){
         ArrayList<Modelo> m = new ArrayList<Modelo>();
         try{
-            comando = conexao.getConexao().prepareStatement("SELECT c.*, m.* FROM tb_modelo AS m\n" +
-"INNER JOIN tb_classe c ON c.id_classe = m.tb_classe_id_classe\n" +
+            comando = conexao.getConexao().prepareStatement("SELECT c.*, m.* FROM modelo AS m\n" +
+"INNER JOIN classe c ON (c.id_classe = m.classe_id_classe)\n" +
 "WHERE c.bo_tipo_classe = TRUE\n" +
-"ORDER BY m.de_modelo");
+"ORDER BY m.vc_descricao_modelo");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
                 Modelo aux = new Modelo();
                 Classe aux2 = new Classe();
                 aux2.setId(rs.getInt("id_classe"));
-                aux2.setNome(rs.getString("no_classe"));
+                aux2.setNome(rs.getString("vc_nome_classe"));
                 aux2.setTipo(rs.getBoolean("bo_tipo_classe"));
                 
                 aux.setClasse(aux2);
                 aux.setId(rs.getInt("id_modelo"));
-                aux.setModelo(rs.getString("de_modelo"));
-                aux.setMarca(rs.getString("de_marca_modelo"));
-                aux.setLayout(rs.getString("de_layout_modelo"));
+                aux.setModelo(rs.getString("vc_descricao_modelo"));
+                aux.setMarca(rs.getString("vc_marca_modelo"));
+                aux.setLayout(rs.getString("vc_layout_modelo"));
                 
                 m.add(aux);
-            }
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");  
+            } 
         }catch(Exception ex){
             new JErro(true, ex.getMessage(), false, true, false);
         }    
@@ -161,7 +145,7 @@ public class ExecutaSQL {
     public boolean INSERT_MODELO(Modelo model){
         boolean retorno = true;
         try{
-            comando = conexao.getConexao().prepareStatement("INSERT INTO tb_modelo VALUES (DEFAULT, ?, ?, ?, ?);");
+            comando = conexao.getConexao().prepareStatement("INSERT INTO modelo VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), ?, ?, ?, ?);");
             
             comando.setInt(1, model.getClasse().getId());
             comando.setString(2, model.getModelo());
@@ -170,9 +154,6 @@ public class ExecutaSQL {
             
             retorno = comando.execute();
             
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");    
         }catch(Exception ex){
             new JErro(true, ex.getMessage(), false, true, false);
             retorno =false;
@@ -185,10 +166,10 @@ public class ExecutaSQL {
         ArrayList<Veiculo> v = new ArrayList<Veiculo>();
         try{
             comando = conexao.getConexao().prepareStatement("SELECT v.*, m.*, c.*" +
-                    "FROM tb_veiculo AS v\n" +
-                    "INNER JOIN tb_modelo AS m ON (m.id_modelo = v.tb_modelo_id_modelo)\n" +
-                    "INNER JOIN tb_cor AS c ON (c.id_cor = v.tb_cor_id_cor)\n" +
-                    "ORDER BY v.dh_veiculo;");
+                    "FROM veiculo AS v\n" +
+                    "INNER JOIN modelo AS m ON (m.id_modelo = v.modelo_id_modelo)\n" +
+                    "INNER JOIN cor AS c ON (c.id_cor = v.cor_id_cor)\n" +
+                    "ORDER BY v.dh_registro_veiculo;");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
@@ -197,29 +178,25 @@ public class ExecutaSQL {
                 Cor cor = new Cor();
                 
                 cor.setId(rs.getInt("id_cor"));
-                cor.setCor(rs.getString("de_cor"));
+                cor.setCor(rs.getString("vc_nome_cor"));
                 
                 modelo.setId(rs.getInt("id_modelo"));
-                modelo.setModelo(rs.getString("de_modelo"));
-                modelo.setMarca(rs.getString("de_marca_modelo"));
-                modelo.setLayout(rs.getString("de_layout_modelo"));
+                modelo.setModelo(rs.getString("vc_descricao_modelo"));
+                modelo.setMarca(rs.getString("vc_marca_modelo"));
+                modelo.setLayout(rs.getString("vc_layout_modelo"));
                 
                 veiculo.setModelo(modelo);
                 veiculo.setCor(cor);
                 veiculo.setId(rs.getInt("id_veiculo"));
-                veiculo.setNome(rs.getString("no_veiculo"));
+                veiculo.setNome(rs.getString("vc_nome_veiculo"));
                 veiculo.setRfid(rs.getString("vc_rfid_veiculo"));
                 veiculo.setPlaca(rs.getString("vc_placa_veiculo"));
                 veiculo.setKm(rs.getFloat("nu_km_veiculo"));
-                veiculo.setObservacao(rs.getString("ds_obs_veiculo"));
-                veiculo.setDataHora(rs.getString("dh_veiculo"));
+                veiculo.setObservacao(rs.getString("tx_observacao_veiculo"));
+                veiculo.setDataHora(rs.getString("dh_registro_veiculo"));
                 
                 v.add(veiculo);
             }
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");  
         }catch(Exception ex){
             new JErro(true, ex.getMessage(), false, true, false);
         }    
@@ -230,21 +207,17 @@ public class ExecutaSQL {
     public ArrayList<Cor> SELECT_ALL_COR(){
             ArrayList<Cor> cor = new ArrayList<Cor>();
         try{
-            comando = conexao.getConexao().prepareStatement("SELECT * FROM tb_cor ORDER BY de_cor;");
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM cor ORDER BY vc_nome_cor;");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
                 Cor aux = new Cor();
                 
                 aux.setId(rs.getInt("id_cor"));
-                aux.setCor(rs.getString("de_cor"));
+                aux.setCor(rs.getString("vc_nome_cor"));
                 
                 cor.add(aux);
             }
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");  
         }catch(Exception ex){
             new JErro(true, ex.getMessage(), false, true, false);
         }     
@@ -296,5 +269,4 @@ public class ExecutaSQL {
             new JErro(true, ex.getMessage(), false, true, false);
         }        
     }*/
-    
 }

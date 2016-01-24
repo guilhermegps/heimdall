@@ -16,8 +16,20 @@ public class Usuario {
     private String senha;
     private int nivel;
     private String login;
+    private String cpf;
+    private boolean ativo;
 
     public Usuario() {
+    }
+
+    public Usuario(int id, String nome, String senha, int nivel, String login, String cpf, boolean ativo) {
+        this.id = id;
+        this.nome = nome;
+        this.senha = senha;
+        this.nivel = nivel;
+        this.login = login;
+        this.cpf = cpf;
+        this.ativo = ativo;
     }
 
     public int getId() {
@@ -34,12 +46,6 @@ public class Usuario {
 
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    public Usuario(String nome, String senha, int nivel) {
-        this.nome = nome;
-        this.senha = senha;
-        this.nivel = nivel;
     }
 
     public String getNome() {
@@ -66,9 +72,25 @@ public class Usuario {
         this.nivel = nivel;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
     @Override
     public String toString() {
-        return "Usuario{" + "nome=" + nome + ", senha=" + senha + ", nivel=" + nivel + ", login=" + login + '}';
+        return "Usuario{" + "id=" + id + ", nome=" + nome + ", senha=" + senha + ", nivel=" + nivel + ", login=" + login + ", cpf=" + cpf + ", ativo=" + ativo + '}';
     }
     
 }

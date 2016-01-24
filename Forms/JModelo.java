@@ -258,7 +258,6 @@ public class JModelo extends javax.swing.JDialog {
                 ExecutaSQL sql = new ExecutaSQL();
                 int aux = -1;
                 Modelo m =  new Modelo();
-                System.out.println((String) cbClasse.getSelectedItem());
                 for(int i=0; i<classes.size(); i++){
                     if(classes.get(i).getNome().compareTo((String) cbClasse.getSelectedItem())==0){
                         aux=i;
@@ -296,7 +295,7 @@ public class JModelo extends javax.swing.JDialog {
     public String[] carregarClasses(Boolean tipo){
         ExecutaSQL sql = new ExecutaSQL();
         classes = new ArrayList<Classe>();
-        classes = sql.SELECT_CLASSE(true);
+        classes = sql.SELECT_CLASSE_TIPO(true);
         String c[] = new String[classes.size()+2];
         c[0] = "";
         for(int i=0;i<classes.size();i++){
