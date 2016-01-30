@@ -5,6 +5,8 @@
  */
 package heimdall.Forms;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,30 +22,24 @@ public class JErro extends javax.swing.JDialog {
     /**
      * Creates new form JErro
      */
+    public JErro(boolean janela, Throwable exception, boolean log, boolean tipo, boolean sair) {
+        gerarLog = log;
+        tipoLog = tipo;
+        gerarJanela = janela;
+        sairSistema = sair;     
+        mensagemDetalhes = getStack(exception); 
+        
+        initialize();
+    }
+    
     public JErro(boolean janela, String mensagem, boolean log, boolean tipo, boolean sair) {
         mensagemDetalhes = mensagem;
         gerarLog = log;
         tipoLog = tipo;
         gerarJanela = janela;
-        sairSistema = sair;
+        sairSistema = sair;       
         
-        setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
-        
-        if(tipo){
-            tituloJanela = "ERRO";
-            mensagemJanela = "<html> <b><font color=\"red\" align=\"justify\">Houve um erro no sistema ao tentar realizar uma operação.<br/> Favor, entrar em contato com o suporte. <br/> Detalhes do erro a seguir: </font></b>";
-            icone = "/heimdall/img/icons 80x80/error.png";
-        } else {
-            tituloJanela = "ALERTA";
-            mensagemJanela = "<html> <b><font color=\"red\" align=\"justify\"> <font size=\"6\">Atenção!</font> <br/> Este é um alerta do sistema. <br/> Detalhes do alerta a seguir: </font></b>";
-            icone = "/heimdall/img/icons 80x80/warning.png";
-        }
-        
-        initComponents();
-        jLabel3.setVisible(sair);
-        setVisible(janela);
-        
-        
+        initialize();
     }
 
     /**
@@ -136,9 +132,38 @@ public class JErro extends javax.swing.JDialog {
         
         dispose();
     }//GEN-LAST:event_bFecharErroActionPerformed
-
+    
+    private void initialize(){        
+        setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
+        
+        if(mensagemDetalhes == null){
+            mensagemDetalhes = "Um erro foi identificado, mas não possui detalhes especificados.";
+        }
+        
+        if(tipoLog){
+            tituloJanela = "ERRO";
+            mensagemJanela = "<html> <b><font color=\"red\" align=\"justify\">Houve um erro no sistema ao tentar realizar uma operação.<br/> Favor, entrar em contato com o suporte. <br/> Detalhes do erro a seguir: </font></b>";
+            icone = "/heimdall/img/icons 80x80/error.png";
+        } else {
+            tituloJanela = "ALERTA";
+            mensagemJanela = "<html> <b><font color=\"red\" align=\"justify\"> <font size=\"6\">Atenção!</font> <br/> Este é um alerta do sistema. <br/> Detalhes do alerta a seguir: </font></b>";
+            icone = "/heimdall/img/icons 80x80/warning.png";
+        }
+        
+        initComponents();
+        jLabel3.setVisible(sairSistema);
+        setVisible(gerarJanela);        
+    }
+    
     private void geraLog(){
         
+    }
+    
+    public static String getStack(Throwable exception) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        return (sw.toString());
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

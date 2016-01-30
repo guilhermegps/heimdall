@@ -33,7 +33,7 @@ public class Principal extends javax.swing.JFrame {
             initComponents();
             logando();
         }catch(Exception ex){
-            new JErro(true, "Erro não tratado: \n\n"+ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }
     }
 

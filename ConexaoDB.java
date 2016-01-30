@@ -35,7 +35,7 @@ public class ConexaoDB {
                     /*/Comandos SQL no Banco de Dados
                     comando = conexao.prepareStatement("INSERT INTO ");*/
             }catch(Exception ex){
-                new JErro(true, ex.getMessage(), false, true, true);
+                new JErro(true, ex, false, true, true);
             }
     }
 

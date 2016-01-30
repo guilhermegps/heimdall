@@ -15,7 +15,6 @@ import heimdall.Util.Modelo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -47,7 +46,7 @@ public class ExecutaSQL {
                 user.setAtivo(rs.getBoolean("bo_registro_ativo_usuario"));
             }       
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }
         
         return user;
@@ -67,7 +66,7 @@ public class ExecutaSQL {
             
             retorno = comando.execute();  
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }        
         return retorno;
     }
@@ -76,7 +75,7 @@ public class ExecutaSQL {
         try{
                
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }        
     }
     
@@ -84,7 +83,7 @@ public class ExecutaSQL {
         try{
              
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }
         
     }
@@ -105,7 +104,7 @@ public class ExecutaSQL {
             }
              
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }        
         
         return c;
@@ -137,7 +136,7 @@ public class ExecutaSQL {
                 m.add(aux);
             } 
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }    
         return m;
     }    
@@ -155,7 +154,7 @@ public class ExecutaSQL {
             retorno = comando.execute();
             
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
             retorno =false;
         }       
         return retorno;
@@ -198,7 +197,7 @@ public class ExecutaSQL {
                 v.add(veiculo);
             }
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }    
         return v;
     }    
@@ -219,7 +218,7 @@ public class ExecutaSQL {
                 cor.add(aux);
             }
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }     
         return cor;
     }
@@ -233,7 +232,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }        
     }
     
@@ -244,7 +243,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }        
     }
     
@@ -255,7 +254,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }        
     }
     
@@ -266,7 +265,7 @@ public class ExecutaSQL {
     conexao.getConexao().close();    
             System.out.println("Fechou o banco");  
         }catch(Exception ex){
-            new JErro(true, ex.getMessage(), false, true, false);
+            new JErro(true, ex, false, true, false);
         }        
     }*/
 }
