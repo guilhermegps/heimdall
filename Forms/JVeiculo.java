@@ -6,6 +6,7 @@
 
 package heimdall.Forms;
 
+import heimdall.ConfiguraTabelaPadrao;
 import heimdall.ExecutaSQL;
 import heimdall.Util.Cor;
 import heimdall.Util.Modelo;
@@ -33,7 +34,6 @@ public class JVeiculo extends javax.swing.JDialog {
     private ArrayList<Cor> cor;
     private DefaultTableModel dtm;
     private Object[][] valores;
-    private String[] colunas = new String [] {"N°", "Nome", "Modelo", "Km", "Registrado", "rfid"};
     private boolean killThread = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
@@ -502,34 +502,23 @@ public class JVeiculo extends javax.swing.JDialog {
     public void initTable(){
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Veiculo> aux = new ArrayList<Veiculo>();
-        
+        ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Nome", "Modelo", "Km", "Registrado", "rfid"},
+                new boolean [] {false, false, false, false},
+                new Class [] {java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class}
+        );
+                
         aux = sql.SELECT_ALL_VEICULO();
-        valores = new Object[aux.size()][colunas.length];
-        for(int i=0; i<aux.size(); i++){// "N°", "Nome", "Modelo", "Km", "Registrado", "rfid"
-            valores[i][0] = i+1;
-            valores[i][1] = aux.get(i).getNome();
-            valores[i][2] = aux.get(i).getModelo().getModelo();
-            valores[i][3] = aux.get(i).getKm();
-            valores[i][4] = aux.get(i).getDataHora();
-            valores[i][5] = aux.get(i).getRfid();
-        }
-        
-        dtm = new DefaultTableModel(valores, colunas) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        };       
+        Object valores[] = new Object[aux.size()];
+        for(int i=0; i<aux.size(); i++){
+            confTabela.addLinha(new Object[] {
+                    aux.get(i).getNome(),
+                    aux.get(i).getModelo().getModelo(),
+                    aux.get(i).getKm(),
+                    aux.get(i).getDataHora(),
+                    aux.get(i).getRfid()}
+            );
+        }     
+        dtm = confTabela.getDtm();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

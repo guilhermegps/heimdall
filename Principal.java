@@ -10,6 +10,7 @@ import heimdall.Forms.JErro;
 import heimdall.Forms.JNovoUsuario;
 import heimdall.Forms.JLogin;
 import heimdall.Forms.JVeiculo;
+import heimdall.Forms.JRevisao;
 import heimdall.Util.Usuario;
 
 /**
@@ -32,6 +33,7 @@ public class Principal extends javax.swing.JFrame {
         try{
             initComponents();
             logando();
+            //new JRevisao().setVisible(true);//Teste da janela
         }catch(Exception ex){
             new JErro(true, ex, false, true, false);
         }

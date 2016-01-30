@@ -6,6 +6,7 @@
 
 package heimdall.Forms;
 
+import heimdall.ConfiguraTabelaPadrao;
 import heimdall.ExecutaSQL;
 import heimdall.Util.Classe;
 import heimdall.Util.Modelo;
@@ -24,8 +25,6 @@ public class JModelo extends javax.swing.JDialog {
      */
     
     private Boolean classe;
-    private Object[][] valores;
-    private String[] colunas = new String [] {"N°", "Modelo", "Marca", "Layout", "Classe"};
     private DefaultTableModel dtm;
     private ArrayList<Classe> classes;
     private int operacao = 0;
@@ -321,33 +320,22 @@ public class JModelo extends javax.swing.JDialog {
     public void initTable(){
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Modelo> aux = new ArrayList<Modelo>();
-        
+        ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Modelo", "Marca", "Layout", "Classe"},
+                new boolean [] {false, false, false, false},
+                new Class [] {java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class}
+        );
+                
         aux = sql.SELECT_ALL_MODELO_VEICULO();
-        valores = new Object[aux.size()][5];
+        Object valores[] = new Object[aux.size()];
         for(int i=0; i<aux.size(); i++){
-            valores[i][0] = i+1;
-            valores[i][1] = aux.get(i).getModelo();
-            valores[i][2] = aux.get(i).getMarca();
-            valores[i][3] = aux.get(i).getLayout();
-            valores[i][4] = aux.get(i).getClasse().getNome();
-        }
-        
-        dtm = new DefaultTableModel(valores, colunas) {
-            Class[] types = new Class [] {
-                java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        };       
+            confTabela.addLinha(new Object[] {
+                    aux.get(i).getModelo(),
+                    aux.get(i).getMarca(),
+                    aux.get(i).getLayout(),
+                    aux.get(i).getClasse().getNome()}
+            );
+        }     
+        dtm = confTabela.getDtm();
     }
     
     public void fecharJanelas(){
