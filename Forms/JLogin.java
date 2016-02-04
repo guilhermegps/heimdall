@@ -235,8 +235,8 @@ public class JLogin extends javax.swing.JDialog {
     private void logando(){
         ExecutaSQL sql = new ExecutaSQL();
         Usuario user;
-        String login = trata.noSQLInjection(tfUser.getText());
-        String senha = trata.noSQLInjection(new String(pfSenha.getPassword()));
+        String login = tfUser.getText();
+        String senha = new String(pfSenha.getPassword());
         int comp1, comp2;
         
         if(!trata.whiteList(login)){
