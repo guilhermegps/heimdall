@@ -134,7 +134,7 @@ public class JNovoUsuario extends javax.swing.JDialog {
                                 .addComponent(bCdtUsuario)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bCancelUsuario)))
-                        .addGap(0, 9, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -193,24 +193,35 @@ public class JNovoUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_tfNomeActionPerformed
     
     public void cadastrar(){
-        String campo = "";
+        String array[] = tfNome.getText().trim().split(" ");
+        String nome = "";
         
-        if(tfNome.getText().length()!=0){
-            campo += tfNome.getText().charAt(0);
+        for(int i=0; i<array.length; i++){
+            if(array[i].compareTo("")!=0 && array[i]!=null){
+                array[i] = array[i].replace('_', ' ');
+                if(!trata.whiteList(array[i])){
+                    JOptionPane.showMessageDialog(null,"Nome completo inválido.");
+                    return;
+                }
+                nome += (nome.compareTo("")==0) ? array[i] : ' '+array[i];
+            }
         }
-        if(!trata.whiteList(campo)){
-            JOptionPane.showMessageDialog(null,"Nome completo inválido.");
-        } else if(!trata.whiteList(tfLogin.getText())){
+        
+        if(!trata.whiteList(tfLogin.getText())){
             JOptionPane.showMessageDialog(null,"O login contem caracteres inválidos ou está vazio. Por favor, digite novamente.");
+            return;
+        } else if(!trata.isValidCPF(tfCpf.getText())){
+            JOptionPane.showMessageDialog(null,"CPF inválido ou está vazio. Por favor, digite novamente.");
+            return;
         } else{
-            int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cadastrar esse usuário?\nNome: "+tfNome.getText()+"\nLogin: "+tfLogin.getText(),"Tem certeza?",JOptionPane.YES_NO_OPTION);
+            int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cadastrar esse usuário?\nNome: "+nome+"\nLogin: "+tfLogin.getText()+"\nCPF: "+tfCpf.getText(),"Tem certeza?",JOptionPane.YES_NO_OPTION);
             if(resp==0){
                 ExecutaSQL sql = new ExecutaSQL();
                 SenhaAutomatica senha = new SenhaAutomatica(6);
                 Usuario user = new Usuario();
                 
                 user.setLogin(tfLogin.getText());
-                user.setNome(tfNome.getText());
+                user.setNome(nome);
                 user.setNivel(2);
                 user.setSenha(senha.senhaSemiAutomatica(tfLogin.getText()));
                 user.setCpf(tfCpf.getText());
@@ -230,12 +241,6 @@ public class JNovoUsuario extends javax.swing.JDialog {
                 }
             }
         }
-        
-        
-    }
-    
-    public void fecharJanelas(){
-        dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

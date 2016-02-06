@@ -40,7 +40,8 @@ public class TratarEntrada {
         cpf = cpf.replace(".", "").replace("-","");
         final int[] pesoCPF = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
         
-        if ((cpf==null) || (cpf.length()!=11)) return false;
+        if (cpf==null || !cpf.matches("\\d{11,11}")) 
+            return false;
 
         Integer digito1 = calcularDigito(cpf.substring(0,9), pesoCPF);
         Integer digito2 = calcularDigito(cpf.substring(0,9) + digito1, pesoCPF);

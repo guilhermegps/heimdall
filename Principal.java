@@ -206,9 +206,8 @@ public class Principal extends javax.swing.JFrame {
 
     private void miLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLogoutActionPerformed
         logado = false;
-        fecharJanelas();
         dispose();
-        new Relogar();
+        new Principal();
     }//GEN-LAST:event_miLogoutActionPerformed
 
     private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
@@ -263,12 +262,6 @@ public class Principal extends javax.swing.JFrame {
         }
         usuario = login.getUsuario();
         setVisible(logado);
-    }
-    
-    private void fecharJanelas(){
-        novoVeiculo.fecharJanelas();
-        newUser.fecharJanelas();
-        dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
