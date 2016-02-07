@@ -51,6 +51,7 @@ public class ConfiguracaoSistema {
             BufferedWriter bw = new BufferedWriter(fw);//construtor recebe como argumento o objeto do tipo FileWriter
             
             bw.write("DADOS DE CONEXÃO COM O BANCO DE DADOS:");
+            bw.newLine();
             bw.write(campo1+enderecoBD);
             bw.newLine();//Quebra de linha. Tbm pode ser feito com '\n'
             bw.newLine();
@@ -64,13 +65,12 @@ public class ConfiguracaoSistema {
             
             bw.close();
             fw.close();
-            
+        
+            enderecoBD = portaBD = nomeBD = senhaBD = null;
             carregarConfiguracao();
         } catch (IOException ex) {
             new JErro(true, ex, true, false, true);
         }
-        
-        enderecoBD = portaBD = nomeBD = senhaBD = null;
     }
     
     private void carregarConfiguracao(){
@@ -90,8 +90,6 @@ public class ConfiguracaoSistema {
                         nomeBD = (linha.substring(0, 9).compareTo(campo3)==0) ? linha.substring(9).trim() : nomeBD;
                     } else if(linha.length()>10 && senhaBD==null){
                         senhaBD = (linha.substring(0, 10).compareTo(campo4)==0) ? linha.substring(10).trim() : senhaBD;
-                    } else {
-                        System.out.println(portaBD);
                     }
                 }
             }
