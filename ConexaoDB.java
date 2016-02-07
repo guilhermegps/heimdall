@@ -17,22 +17,21 @@ import java.sql.DriverManager;
  */
 public class ConexaoDB {
     private Connection conexao;
+    private ConfiguracaoSistema configuracaoSistema;
 
     public ConexaoDB(){
-            try{
-                    //Arquivo de Driver / Carrega o JDBC
-                    Class.forName("org.postgresql.Driver");
+        configuracaoSistema = new ConfiguracaoSistema();
+        try{
+            //Arquivo de Driver / Carrega o JDBC
+            Class.forName("org.postgresql.Driver");
 
-                    //Conexão com Banco de Dados
-                    String url = "jdbc:postgresql://localhost:5432/heimdall";/*jdbc:NOMEDOSGBD://ENDEREÇODAMAQUINAONDEESTAOBD:PORTA/BD*/
-                    conexao = DriverManager.getConnection(url,"postgres","123456");
-                    System.out.println("Conectou ao banco");
-
-                    /*/Comandos SQL no Banco de Dados
-                    comando = conexao.prepareStatement("INSERT INTO ");*/
-            }catch(Exception ex){
-                new JErro(true, ex, false, true, true);
-            }
+            //Conexão com Banco de Dados
+            String url = "jdbc:postgresql://"+configuracaoSistema.getEnderecoBD()+":"+configuracaoSistema.getPortaBD()+"/"+configuracaoSistema.getNomeBD()+"";/*jdbc:NOMEDOSGBD://ENDEREÇODAMAQUINAONDEESTAOBD:PORTA/BD*/
+            conexao = DriverManager.getConnection(url,"postgres",configuracaoSistema.getSenhaBD());
+            System.out.println("Conectou ao banco");
+        }catch(Exception ex){
+            new JErro(true, ex, false, true, true);
+        }
     }
 
     public Connection getConexao() {
