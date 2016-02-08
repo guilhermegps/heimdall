@@ -9,18 +9,10 @@ import heimdall.Forms.JErro;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import org.eclipse.persistence.internal.oxm.conversion.Base64;
 
 /**
  *
@@ -57,9 +49,9 @@ public class ConfiguracaoSistema {
             BufferedWriter bw = new BufferedWriter(fw);//construtor recebe como argumento o objeto do tipo FileWriter
             
             bw.write("DADOS DE CONEXÃO COM O BANCO DE DADOS:");
-            bw.newLine();
-            bw.write(campo1+enderecoBD);
             bw.newLine();//Quebra de linha. Tbm pode ser feito com '\n'
+            bw.write(campo1+enderecoBD);
+            bw.newLine();
             bw.newLine();
             bw.write(campo2+portaBD);
             bw.newLine();
@@ -75,7 +67,7 @@ public class ConfiguracaoSistema {
             enderecoBD = portaBD = nomeBD = senhaBD = null;
             carregarConfiguracao();
         } catch (IOException ex) {
-            new JErro(true, ex, true, false, true);
+            new JErro(true, ex, true, true, true);
         }
     }
     

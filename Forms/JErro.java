@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class JErro extends javax.swing.JDialog {
     
     private String icone = "", mensagemDetalhes, tituloJanela, mensagemJanela; 
-    private boolean gerarLog, tipoLog /*true = alerta, false = erro*/, gerarJanela, sairSistema /*Sai do sistema após encerrar a janela*/;
+    private boolean gerarLog, tipoLog /*true = erro, false = Alerta*/, gerarJanela, sairSistema /*Sai do sistema após encerrar a janela*/;
 
     /**
      * Creates new form JErro

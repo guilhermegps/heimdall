@@ -28,9 +28,9 @@ public class ConexaoDB {
             //Conexão com Banco de Dados
             String url = "jdbc:postgresql://"+configuracaoSistema.getEnderecoBD()+":"+configuracaoSistema.getPortaBD()+"/"+configuracaoSistema.getNomeBD()+"";/*jdbc:NOMEDOSGBD://ENDEREÇODAMAQUINAONDEESTAOBD:PORTA/BD*/
             conexao = DriverManager.getConnection(url,"postgres",configuracaoSistema.getSenhaBD());
-            System.out.println("Conectou ao banco");
+            //System.out.println("Conectou ao banco");
         }catch(Exception ex){
-            new JErro(true, ex, false, true, true);
+            new JErro(true, ex, true, true, true);
         }
     }
 
