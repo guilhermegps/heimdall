@@ -14,6 +14,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 /**
@@ -38,20 +40,49 @@ public class SenhaAutomatica {
     }
     
     public String encripta (String senha) {     
-        try {       
-            for(int i=0; i<2; i++){
-                BASE64Encoder b64 = new BASE64Encoder();
-                senha = b64.encode(senha.getBytes());//criptografa pelo Base64
-                
-                MessageDigest md = MessageDigest.getInstance("MD5");
-                BigInteger hash = hash = new BigInteger(1, md.digest(senha.getBytes("UTF-8")));//Cria hash MD5 da senha criptografada 
-                senha = String.format("%32x", hash).replace(' ', '0').toUpperCase();
-            }
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            new JErro(true, "Erro não tratado: \n\n"+ex.getMessage(), false, true, false);
-        }        
+        for(int i=0; i<2; i++){
+            senha = base64Encoder(senha);
+
+            senha = MD5(senha);
+        }
         return senha;         
      }  
+    
+    public String MD5(String senha) {     
+        try {                    
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            BigInteger hash = hash = new BigInteger(1, md.digest(senha.getBytes("UTF-8")));//Cria hash MD5 da senha criptografada 
+            senha = String.format("%32x", hash).replace(' ', '0').toUpperCase();
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+            new JErro(true, ex.getMessage(), true, false, false);
+        }        
+        return senha;         
+    }  
+    
+    public String base64Encoder(String senha) {     
+        BASE64Encoder b64 = new BASE64Encoder();
+        senha = b64.encode(senha.getBytes());//criptografa pelo Base64
+        return senha;         
+    }  
+    
+    public byte[] base64Decoder(String senha) {     
+        BASE64Decoder b64 = new BASE64Decoder(); 
+        byte[] result;
+        try {
+            result = b64.decodeBuffer(senha);
+            return result;
+        } catch (Exception ex) {
+            new JErro(true, ex.getMessage(), true, false, false);
+        }
+        return null;         
+    }  
+    
+    public String base64Encoder(byte[] senha) {   
+        String result = "";
+        BASE64Encoder b64 = new BASE64Encoder();
+        result = b64.encode(senha);
+        return result;         
+    }  
     
     public String gerarSenha(int digitos){
         String senha = new String();

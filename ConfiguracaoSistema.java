@@ -15,10 +15,12 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.eclipse.persistence.internal.oxm.conversion.Base64;
 
 /**
  *
@@ -29,8 +31,12 @@ public class ConfiguracaoSistema {
     private final String campo1 = "EnderecoHostBD = ", campo2 = "PortaConexaoBD = ", campo3 = "NomeBD = ", campo4 = "SenhaBD = ";
     private String enderecoBD, portaBD, nomeBD, senhaBD;
     private final int qtdConfig = 4;
+    private EncriptaDecriptaAES AES;
+    private SenhaAutomatica crypt;
 
     public ConfiguracaoSistema(){
+        AES = new EncriptaDecriptaAES();
+        crypt = new SenhaAutomatica(0);
         f = new File("heimdall.conf");
         if(f.exists()){
             carregarConfiguracao();
@@ -43,7 +49,7 @@ public class ConfiguracaoSistema {
         enderecoBD = "localhost";
         portaBD = "5432";
         nomeBD = "heimdall";
-        senhaBD = "postgres";
+        senhaBD = encripta("postgres");
         
         try {
             f.createNewFile();
@@ -90,14 +96,33 @@ public class ConfiguracaoSistema {
                         nomeBD = (linha.substring(0, 9).compareTo(campo3)==0) ? linha.substring(9).trim() : nomeBD;
                     } else if(linha.length()>10 && senhaBD==null){
                         senhaBD = (linha.substring(0, 10).compareTo(campo4)==0) ? linha.substring(10).trim() : senhaBD;
+                        senhaBD = decripta(senhaBD);
                     }
                 }
             }
             br.close();
             fr.close();
         } catch (Exception ex) {
-            new JErro(true, ex, true, false, true);
+            new JErro(true, ex, true, true, true);
         }
+    }
+    
+    private String encripta(String valor){
+        try {
+            valor = crypt.base64Encoder(AES.encriptaAES(valor.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException ex) {
+            new JErro(true, ex, true, true, false);
+        }
+        return valor;
+    }
+    
+    private String decripta(String valor){
+        try {
+            valor = new String(AES.decriptaAES(crypt.base64Decoder(valor)), "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            new JErro(true, ex, true, true, false);
+        }
+        return valor;
     }
 
     public String getSenhaBD() {
