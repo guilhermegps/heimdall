@@ -59,9 +59,7 @@ public class TratarEntrada {
     }
     
     public String noSQLInjection (String query){
-        query = query.replaceAll(";", " ");
-        query = query.replaceAll("\'", "");
-        query = query.replaceAll("\"", "");
+        return query.replaceAll(";", "");//.replaceAll("\'", "").replaceAll("\"", "");
         
         /*String reservados[] = {"SELECT", "INSERT", "UPDATE", "DELETE", "WHERE", "JOIN", "LEFT", "INNER", 
             " NOT", " IN", " LIKE", "TRUNCATE", "DROP", "CREATE", "ALTER", "DELIMITER", "WITH", " INTO", " FROM", " OR"};
@@ -72,7 +70,7 @@ public class TratarEntrada {
             query = query.replaceAll(reservados[i].toLowerCase()+" ", " ");
             query = query.replaceAll(reservados[i].toLowerCase()+";", " ");
             query = query.replaceAll(reservados[i].toLowerCase()+"\n", "\n");
-        }*/
-        return query;
+        }
+        return query;*/
     }
 }

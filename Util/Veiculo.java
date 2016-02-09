@@ -6,6 +6,8 @@
 
 package heimdall.Util;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author guilherme
@@ -20,7 +22,7 @@ public class Veiculo {
     private String placa;
     private float km;
     private String observacao;
-    private String dataHora;
+    private Timestamp registro;
 
     public Veiculo() {
         this.id = 0;
@@ -31,10 +33,10 @@ public class Veiculo {
         this.placa = "";
         this.km = 0;
         this.observacao = "";
-        this.dataHora = "";
+        this.registro = null;
     }
     
-    public Veiculo(int id, Modelo modelo, Cor cor, String nome, String rfid, String placa, float km, String observacao, String dataHora) {
+    public Veiculo(int id, Modelo modelo, Cor cor, String nome, String rfid, String placa, float km, String observacao, Timestamp registro) {
         this.id = id;
         this.modelo = modelo;
         this.cor = cor;
@@ -43,7 +45,7 @@ public class Veiculo {
         this.placa = placa;
         this.km = km;
         this.observacao = observacao;
-        this.dataHora = dataHora;
+        this.registro = registro;
     }
 
     public int getId() {
@@ -110,16 +112,16 @@ public class Veiculo {
         this.observacao = observacao;
     }
 
-    public String getDataHora() {
-        return dataHora;
+    public Timestamp getRegistro() {
+        return registro;
     }
 
-    public void setDataHora(String dataHora) {
-        this.dataHora = dataHora;
+    public void setRegistro(Timestamp registro) {
+        this.registro = registro;
     }
 
     @Override
     public String toString() {
-        return "Veiculo{" + "id=" + id + ", modelo=" + modelo + ", cor=" + cor + ", nome=" + nome + ", rfid=" + rfid + ", placa=" + placa + ", km=" + km + ", observacao=" + observacao + ", dataHora=" + dataHora + '}';
+        return "Veiculo{" + "id=" + id + ", modelo=" + modelo + ", cor=" + cor + ", nome=" + nome + ", rfid=" + rfid + ", placa=" + placa + ", km=" + km + ", observacao=" + observacao + ", registro=" + registro + '}';
     }
 }

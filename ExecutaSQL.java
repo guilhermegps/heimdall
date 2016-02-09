@@ -26,20 +26,28 @@ public class ExecutaSQL {
     private PreparedStatement comando;
     private ConexaoDB conexao;
     private TratarEntrada trata;
+    private final String chavePrimaria = "NEXTVAL('SEQ_CHAVE_PRIMARIA')";
 
     public ExecutaSQL() {
         conexao = new ConexaoDB();
+        trata = new TratarEntrada();
     }    
     
     // Operações tb_usuario
-    public Usuario SELECT_USUARIO_ATIVOS(String camp, String val){
-        Usuario user = null;
+    public ArrayList<Usuario> SELECT_USUARIO_ATIVO(String camp, String val){
+        if(camp.compareTo("")==0 || val.compareTo("")==0 || camp==null || val==null)
+            return new ArrayList<Usuario>();
+        
+        camp = trata.noSQLInjection(camp);
+        val = trata.noSQLInjection(val);
+        
+        ArrayList<Usuario> usuario = new ArrayList<Usuario>();
         try{
             comando = conexao.getConexao().prepareStatement("SELECT * FROM usuario WHERE "+camp+" = "+val+" AND bo_registro_ativo_usuario = TRUE");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                user = new Usuario();
+                Usuario user = new Usuario();
                 user.setId(rs.getInt("id_usuario"));
                 user.setNome(rs.getString("vc_nome_usuario"));
                 user.setSenha(rs.getString("vc_senha_usuario"));
@@ -47,18 +55,19 @@ public class ExecutaSQL {
                 user.setLogin(rs.getString("vc_login_usuario"));
                 user.setCpf(rs.getString("vc_cpf_usuario"));
                 user.setAtivo(rs.getBoolean("bo_registro_ativo_usuario"));
+                
+                usuario.add(user);
             }       
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }
         
-        return user;
+        return usuario;
     }
     
     public boolean INSERT_USUARIO(Usuario user){
-        boolean retorno = true;
         try{
-            comando = conexao.getConexao().prepareStatement("INSERT INTO usuario VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), ?, ?, ?, ?, ?, ?);");
+            comando = conexao.getConexao().prepareStatement("INSERT INTO usuario VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?);");
             
             comando.setString(1, user.getSenha());
             comando.setString(2, user.getNome());
@@ -67,18 +76,18 @@ public class ExecutaSQL {
             comando.setString(5, user.getCpf());
             comando.setBoolean(6, user.isAtivo());
             
-            retorno = comando.execute();  
+            return comando.execute();  
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }        
-        return retorno;
+        return false;
     }
     
     public void UPDATE_USUARIO(String cond, Usuario user){
         try{
                
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }        
     }
     
@@ -86,7 +95,7 @@ public class ExecutaSQL {
         try{
              
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }
         
     }
@@ -105,15 +114,17 @@ public class ExecutaSQL {
                 aux.setTipo(rs.getBoolean("bo_tipo_classe"));
                 c.add(aux);
             }
-             
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }        
         
         return c;
     }
     
-    public ArrayList SELECT_CLASSE(String camp, String val){
+    public ArrayList<Classe> SELECT_CLASSE(String camp, String val){
+        if(camp.compareTo("")==0 || val.compareTo("")==0 || camp==null || val==null)
+            return new ArrayList<Classe>();
+        
         camp = trata.noSQLInjection(camp);
         val = trata.noSQLInjection(val);
         
@@ -131,7 +142,7 @@ public class ExecutaSQL {
             }
              
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }        
         
         return c;
@@ -163,7 +174,7 @@ public class ExecutaSQL {
                 m.add(aux);
             } 
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }    
         return m;
     }    
@@ -193,12 +204,15 @@ public class ExecutaSQL {
                 m.add(aux);
             } 
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }    
         return m;
     }    
     
     public ArrayList<Modelo> SELECT_MODELO(String camp, String val){
+        if(camp.compareTo("")==0 || val.compareTo("")==0 || camp==null || val==null)
+            return new ArrayList<Modelo>();
+        
         camp = trata.noSQLInjection(camp);
         val = trata.noSQLInjection(val);
         
@@ -220,53 +234,40 @@ public class ExecutaSQL {
                 m.add(model);
             } 
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }    
         return m;
     }    
     
     public boolean INSERT_MODELO(Modelo model){
-        boolean retorno = true;
         try{
-            comando = conexao.getConexao().prepareStatement("INSERT INTO modelo VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), ?, ?, ?, ?);");
+            comando = conexao.getConexao().prepareStatement("INSERT INTO modelo(\n" +
+"            id_modelo, classe_id_classe, vc_descricao_modelo, vc_marca_modelo, \n" +
+"            vc_layout_modelo) VALUES ("+chavePrimaria+", ?, ?, ?, ?);");
             
             comando.setInt(1, model.getClasse().getId());
             comando.setString(2, model.getModelo());
             comando.setString(3,model.getMarca());
             comando.setString(4, model.getLayout());
             
-            retorno = comando.execute();
-            
+            return comando.execute();
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
-            retorno =false;
+            new JErro(true, ex, true, true, false);
         }       
-        return retorno;
+        return false;
     }
     
     // Operações tb_veiculo
     public ArrayList<Veiculo> SELECT_ALL_VEICULO(){
         ArrayList<Veiculo> v = new ArrayList<Veiculo>();
         try{
-            comando = conexao.getConexao().prepareStatement("SELECT v.*, m.*, c.*" +
-                    "FROM veiculo AS v\n" +
-                    "INNER JOIN modelo AS m ON (m.id_modelo = v.modelo_id_modelo)\n" +
-                    "INNER JOIN cor AS c ON (c.id_cor = v.cor_id_cor)\n" +
-                    "ORDER BY v.dh_registro_veiculo;");
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM veiculo ORDER BY dh_registro_veiculo;");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
                 Veiculo veiculo = new Veiculo();
-                Modelo modelo = new Modelo();
-                Cor cor = new Cor();
-                
-                cor.setId(rs.getInt("id_cor"));
-                cor.setCor(rs.getString("vc_nome_cor"));
-                
-                modelo.setId(rs.getInt("id_modelo"));
-                modelo.setModelo(rs.getString("vc_descricao_modelo"));
-                modelo.setMarca(rs.getString("vc_marca_modelo"));
-                modelo.setLayout(rs.getString("vc_layout_modelo"));
+                Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", Integer.toString(rs.getInt("modelo_id_modelo"))).get(0);
+                Cor cor = (Cor) SELECT_COR("id_cor", Integer.toString(rs.getInt("cor_id_cor"))).get(0);
                 
                 veiculo.setModelo(modelo);
                 veiculo.setCor(cor);
@@ -276,12 +277,12 @@ public class ExecutaSQL {
                 veiculo.setPlaca(rs.getString("vc_placa_veiculo"));
                 veiculo.setKm(rs.getFloat("nu_km_veiculo"));
                 veiculo.setObservacao(rs.getString("tx_observacao_veiculo"));
-                veiculo.setDataHora(rs.getString("dh_registro_veiculo"));
+                veiculo.setRegistro(rs.getTimestamp("dh_registro_veiculo"));
                 
                 v.add(veiculo);
             }
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }    
         return v;
     }    
@@ -296,9 +297,9 @@ public class ExecutaSQL {
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", ""+rs.getInt("modelo_id_modelo")).get(0);
-                Cor cor = (Cor) SELECT_COR("id_cor", ""+rs.getInt("cor_id_cor")).get(0);
                 Veiculo veiculo = new Veiculo();
+                Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", Integer.toString(rs.getInt("modelo_id_modelo"))).get(0);
+                Cor cor = (Cor) SELECT_COR("id_cor", Integer.toString(rs.getInt("cor_id_cor"))).get(0);
                 
                 veiculo.setModelo(modelo);
                 veiculo.setCor(cor);
@@ -308,15 +309,38 @@ public class ExecutaSQL {
                 veiculo.setPlaca(rs.getString("vc_placa_veiculo"));
                 veiculo.setKm(rs.getFloat("nu_km_veiculo"));
                 veiculo.setObservacao(rs.getString("tx_observacao_veiculo"));
-                veiculo.setDataHora(rs.getString("dh_registro_veiculo"));
+                veiculo.setRegistro(rs.getTimestamp("dh_registro_veiculo"));
                 
                 v.add(veiculo);
             }
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }    
         return v;
-    }    
+    } 
+    
+    public boolean INSERT_VEICULO(Veiculo veiculo){
+        try{
+            comando = conexao.getConexao().prepareStatement("INSERT INTO veiculo(\n" +
+"            id_veiculo, modelo_id_modelo, cor_id_cor, vc_nome_veiculo, vc_rfid_veiculo, \n" +
+"            vc_placa_veiculo, nu_km_veiculo, tx_observacao_veiculo, dh_registro_veiculo)\n" +
+"    VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?, ?);");
+            
+            comando.setInt(1, veiculo.getModelo().getId());
+            comando.setInt(2, veiculo.getCor().getId());
+            comando.setString(3,veiculo.getNome());
+            comando.setString(4, veiculo.getRfid());
+            comando.setString(5, veiculo.getPlaca());
+            comando.setFloat(6, veiculo.getKm());
+            comando.setString(7, veiculo.getObservacao());
+            comando.setTimestamp(8, veiculo.getRegistro());
+            
+            return comando.execute();
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }       
+        return false;
+    }   
     
     // Operações tb_cor
     public ArrayList<Cor> SELECT_ALL_COR(){
@@ -334,7 +358,7 @@ public class ExecutaSQL {
                 cor.add(aux);
             }
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }     
         return cor;
     }
@@ -357,7 +381,7 @@ public class ExecutaSQL {
                 cor.add(aux);
             }
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }     
         return cor;
     }
@@ -387,7 +411,7 @@ public class ExecutaSQL {
                 comp.setRegistro(rs.getTimestamp("dh_registro_componente"));
             }       
         }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
+            new JErro(true, ex, true, true, false);
         }
         
         return componente;

@@ -12,6 +12,7 @@ import heimdall.TratarEntrada;
 import heimdall.Util.Usuario;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import sun.misc.BASE64Encoder;
 
@@ -234,7 +235,7 @@ public class JLogin extends javax.swing.JDialog {
     
     private void logando(){
         ExecutaSQL sql = new ExecutaSQL();
-        Usuario user;
+        ArrayList<Usuario> user = new ArrayList<Usuario>();
         String login = tfUser.getText();
         String senha = new String(pfSenha.getPassword());
         int comp1, comp2;
@@ -245,20 +246,22 @@ public class JLogin extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null,"A senha contem caracteres inválidos ou está vazia. Por favor, digite novamente.");
         } else{
 
-            user = sql.SELECT_USUARIO_ATIVOS("vc_login_usuario", "\'"+login+"\'");
-            if(user!=null){
+            user = sql.SELECT_USUARIO_ATIVO("vc_login_usuario", "\'"+login+"\'");
+            if(user.size()==1){
                 SenhaAutomatica aux = new SenhaAutomatica(WIDTH);
                 senha = login + senha;
                 senha = aux.encripta(senha);
 
-                comp1 = user.getLogin().compareTo(login);
-                comp2 = user.getSenha().compareTo(senha);
+                comp1 = user.get(0).getLogin().compareTo(login);
+                comp2 = user.get(0).getSenha().compareTo(senha);
             } else{
-                comp1=comp2=1;
+                new JErro(true, "Houve um problema ao tentar encontrar este usuário.\n"
+                        + "Favor, verificar o banco de dados.", true, false, false);
+                return;
             }
             if(comp1==0 && comp2==0){
                 logado = true;
-                usuario = user;
+                usuario = user.get(0);
                 dispose();
             } else {
                 JOptionPane.showMessageDialog(null,"Login incorreto");

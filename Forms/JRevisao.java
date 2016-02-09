@@ -7,6 +7,7 @@ package heimdall.Forms;
 
 import heimdall.ConfiguraTabelaPadrao;
 import heimdall.ExecutaSQL;
+import heimdall.Util.Componente;
 import heimdall.Util.Veiculo;
 import java.awt.Image;
 import java.io.File;
@@ -26,11 +27,14 @@ public class JRevisao extends javax.swing.JDialog {
 
     private DefaultTableModel dtm;
     private File f;
+    private Veiculo veiculo;
     
     /**
      * Creates new form JRevisao
      */
-    public JRevisao() {
+    
+    public JRevisao(Veiculo veiculo) {
+        this.veiculo = veiculo;
         setModal(true);
         initTable();
         this.f = new File("");
@@ -118,23 +122,21 @@ public class JRevisao extends javax.swing.JDialog {
     
     public void initTable(){
         ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Veiculo> aux = new ArrayList<Veiculo>();
+        ArrayList<Componente> aux = new ArrayList<Componente>();
         ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Verificado", "Codigo", "Componente"},
                 new boolean [] {false, false},
                 new Class [] {java.awt.Image.class, java.lang.String.class, java.lang.String.class}
         );
                 
-        /*aux = sql.SELECT_ALL_VEICULO();
+        aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
         Object valores[] = new Object[aux.size()];
         for(int i=0; i<aux.size(); i++){
             confTabela.addLinha(new Object[] {
                     aux.get(i).getNome(),
                     aux.get(i).getModelo().getModelo(),
-                    aux.get(i).getKm(),
-                    aux.get(i).getDataHora(),
                     aux.get(i).getRfid()}
             );
-        }     */
+        }     
         dtm = confTabela.getDtm();
     }
     
@@ -163,4 +165,8 @@ public class JRevisao extends javax.swing.JDialog {
     private javax.swing.JTable tRevisao;
     private javax.swing.JTextField tfBusca;
     // End of variables declaration//GEN-END:variables
+
+    private JRevisao() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

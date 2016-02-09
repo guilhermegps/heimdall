@@ -32,6 +32,6 @@ public class Cor {
 
     @Override
     public String toString() {
-        return "Cor{" + "id=" + id + ", cor=" + cor + '}';
+        return cor;
     }
 }

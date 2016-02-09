@@ -27,7 +27,7 @@ public class JModelo extends javax.swing.JDialog {
     private Boolean classe;
     private DefaultTableModel dtm;
     private ArrayList<Classe> classes;
-    private int operacao = 0;
+    private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private boolean killThread = false;
     
     public JModelo(Boolean classe) {
@@ -254,29 +254,7 @@ public class JModelo extends javax.swing.JDialog {
     private void bSaveCdtModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveCdtModeloActionPerformed
         switch (operacao) {
             case 1:
-                ExecutaSQL sql = new ExecutaSQL();
-                int aux = -1;
-                Modelo m =  new Modelo();
-                for(int i=0; i<classes.size(); i++){
-                    if(classes.get(i).getNome().compareTo((String) cbClasse.getSelectedItem())==0){
-                        aux=i;
-                    }
-                }
-                if(aux>-1){
-                    m.setLayout(tfLayout.getText());
-                    m.setMarca(tfMarca.getText());
-                    m.setModelo(tfModelo.getText());
-                    m.setClasse(classes.get(aux));
-                    if(!sql.INSERT_MODELO(m)){
-                        JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
-                        liberarCampos(false);
-                    }else{
-                        JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
-                    }
-                    
-                }else{
-                    JOptionPane.showMessageDialog(null,"Escolha a classe do seu veículo");
-                }
+                cadastrarNovo();
                 break;
             case 2:
                 
@@ -338,8 +316,31 @@ public class JModelo extends javax.swing.JDialog {
         dtm = confTabela.getDtm();
     }
     
-    public void fecharJanelas(){
-        dispose();
+    private void cadastrarNovo(){
+        ExecutaSQL sql = new ExecutaSQL();
+        int aux = -1;
+        Modelo m =  new Modelo();
+        for(int i=0; i<classes.size(); i++){
+            if(classes.get(i).getNome().compareTo((String) cbClasse.getSelectedItem())==0){
+                aux=i;
+            }
+        }
+        if(aux>-1){
+            m.setLayout(tfLayout.getText());
+            m.setMarca(tfMarca.getText());
+            m.setModelo(tfModelo.getText());
+            m.setClasse(classes.get(aux));
+            
+            if(!sql.INSERT_MODELO(m)){
+                JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
+                liberarCampos(false);
+            }else{
+                JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
+            }
+
+        }else{
+            JOptionPane.showMessageDialog(null,"Escolha a classe do seu veículo");
+        }
     }
     
 

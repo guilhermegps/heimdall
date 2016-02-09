@@ -24,6 +24,15 @@ public class Componente {
     private Timestamp registro;
 
     public Componente() {
+        this.id = 0;
+        this.codigo = "";
+        this.modelo = null;
+        this.veiculo = null;
+        this.rfid = "";
+        this.nome = "";
+        this.descricao = "";
+        this.validade = null;
+        this.registro = null;
     }
 
     public Componente(int id, String codigo, Modelo modelo, Veiculo veiculo, String rfid, String nome, String descricao, Date validade, Timestamp registro) {

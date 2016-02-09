@@ -11,6 +11,8 @@ import heimdall.ExecutaSQL;
 import heimdall.Util.Cor;
 import heimdall.Util.Modelo;
 import heimdall.Util.Veiculo;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +35,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private ArrayList<Modelo> m;
     private ArrayList<Cor> cor;
     private DefaultTableModel dtm;
-    private Object[][] valores;
+    private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private boolean killThread = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
@@ -43,6 +45,7 @@ public class JVeiculo extends javax.swing.JDialog {
         initComponents();
         jm = new JModelo(true);
         new Campos().start();
+        liberarCampos(false);   
     }
 
     /**
@@ -68,6 +71,8 @@ public class JVeiculo extends javax.swing.JDialog {
         cbModelo = new javax.swing.JComboBox();
         bCustomModelo = new javax.swing.JButton();
         bRefreshModelo = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        tfKm = new javax.swing.JTextField();
         lpCondVeiculo = new javax.swing.JLayeredPane();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -138,6 +143,8 @@ public class JVeiculo extends javax.swing.JDialog {
             }
         });
 
+        jLabel4.setText("Quilometragem:");
+
         lpIdtVeiculo.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(tfVeiculo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -150,6 +157,8 @@ public class JVeiculo extends javax.swing.JDialog {
         lpIdtVeiculo.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(bRefreshModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(tfKm, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpIdtVeiculoLayout = new javax.swing.GroupLayout(lpIdtVeiculo);
         lpIdtVeiculo.setLayout(lpIdtVeiculoLayout);
@@ -169,22 +178,25 @@ public class JVeiculo extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
+                                .addComponent(tfVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lpIdtVeiculoLayout.createSequentialGroup()
                                 .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(bRefreshModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
-                                .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
-                                        .addComponent(tfVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(cbCor, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(cbCor, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfKm)))))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         lpIdtVeiculoLayout.setVerticalGroup(
             lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,7 +217,9 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(cbCor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbCor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(tfKm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -416,7 +430,8 @@ public class JVeiculo extends javax.swing.JDialog {
     }//GEN-LAST:event_tfDataCdtActionPerformed
 
     private void bNewCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNewCdtVeiculoActionPerformed
-        
+        operacao = 1;
+        liberarCampos(true);        
     }//GEN-LAST:event_bNewCdtVeiculoActionPerformed
 
     private void bRefreshCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshCdtVeiculoActionPerformed
@@ -424,7 +439,16 @@ public class JVeiculo extends javax.swing.JDialog {
     }//GEN-LAST:event_bRefreshCdtVeiculoActionPerformed
 
     private void bSaveCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveCdtVeiculoActionPerformed
-        // TODO add your handling code here:
+        switch (operacao) {
+            case 1:
+                cadastrarNovo();
+                break;
+            case 2:
+                
+                break;
+        }
+        initTable();
+        tVeiculo.setModel(dtm); 
     }//GEN-LAST:event_bSaveCdtVeiculoActionPerformed
 
     private void bEditCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCdtVeiculoActionPerformed
@@ -466,59 +490,102 @@ public class JVeiculo extends javax.swing.JDialog {
         });
     }
     
-    public String[] carregarModelos(){
+    public Modelo[] carregarModelos(){
         ExecutaSQL sql = new ExecutaSQL();
         m = new ArrayList<Modelo>();
         m = sql.SELECT_ALL_MODELO_VEICULO();
-        String[] modelos = new String[m.size()+1];
+        Modelo[] modelos = new Modelo[m.size()+1];
         
-        modelos[0] = "";
+        modelos[0] = null;
         for(int i=1; i<=m.size(); i++){
-            modelos[i] = m.get(i-1).getModelo();
+            modelos[i] = m.get(i-1);
         }
         
         return modelos;
     }
     
-    public String[] carregarCores(){
+    public Cor[] carregarCores(){
         ExecutaSQL sql = new ExecutaSQL();
         cor = new ArrayList<Cor>();
         cor = sql.SELECT_ALL_COR();
-        String[] cores = new String[cor.size()+1];
+        Cor[] cores = new Cor[cor.size()+1];
         
-        cores[0] = "";
+        cores[0] = null;
         for(int i=1; i<=cor.size(); i++){
-            cores[i] = cor.get(i-1).getCor();
+            cores[i] = cor.get(i-1);
         }
         
         return cores;
     }
     
-    public void fecharJanelas(){
-        jm.fecharJanelas();
-        dispose();
+    private void cadastrarNovo(){
+        ExecutaSQL sql = new ExecutaSQL();
+        Veiculo veiculo = new Veiculo();
+        Modelo modelo = (Modelo) cbModelo.getSelectedItem();
+        Cor cor = (Cor) cbCor.getSelectedItem();
+        Float km = (tfKm.getText().compareTo("")==0) ? null : Float.parseFloat(tfKm.getText());
+        
+        if(modelo != null){
+            veiculo.setModelo(modelo);
+            veiculo.setCor(cor);
+            veiculo.setNome(tfVeiculo.getText());
+            veiculo.setPlaca(tfPlaca.getText());
+            if(km != null)
+                veiculo.setKm(km);
+            veiculo.setObservacao(tpObs.getText());
+            veiculo.setRfid(tfTagRfid.getText());
+            veiculo.setRegistro(new Timestamp(new Date().getTime()));
+            
+            if(!sql.INSERT_VEICULO(veiculo)){
+                JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
+                liberarCampos(false);
+            }else{
+                JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
+            }
+
+        }else{
+            JOptionPane.showMessageDialog(null,"Escolha o modelo do seu veículo");
+        }
     }
     
     public void initTable(){
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Veiculo> aux = new ArrayList<Veiculo>();
-        ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Nome", "Modelo", "Km", "Registrado", "rfid"},
-                new boolean [] {false, false, false, false},
-                new Class [] {java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class}
+        ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Nome", "Modelo", "Km", "Registrado", "RFID"},
+                new boolean [] {false, false, false, false, false},
+                new Class [] {java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class}
         );
-                
+                        
         aux = sql.SELECT_ALL_VEICULO();
-        Object valores[] = new Object[aux.size()];
         for(int i=0; i<aux.size(); i++){
+            String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
             confTabela.addLinha(new Object[] {
                     aux.get(i).getNome(),
                     aux.get(i).getModelo().getModelo(),
                     aux.get(i).getKm(),
-                    aux.get(i).getDataHora(),
+                    registro,
                     aux.get(i).getRfid()}
             );
         }     
         dtm = confTabela.getDtm();
+    }
+    
+    public void liberarCampos(boolean b){
+        tfVeiculo.setText("");
+        tfPlaca.setText("");
+        tfTagRfid.setText("");
+        tfKm.setText("");
+        tpObs.setText("");
+        cbModelo.setSelectedItem(null);
+        cbCor.setSelectedItem(null);
+        
+        tfVeiculo.setEnabled(b);
+        tfPlaca.setEnabled(b);
+        tfTagRfid.setEnabled(b);
+        tfKm.setEnabled(b);
+        tpObs.setEnabled(b);
+        cbModelo.setEnabled(b);
+        cbCor.setEnabled(b);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -535,6 +602,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -549,6 +617,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JToggleButton tbHelpCdtVeiculo;
     private javax.swing.JToolBar tbVeiculo;
     private javax.swing.JTextField tfDataCdt;
+    private javax.swing.JTextField tfKm;
     private javax.swing.JTextField tfPlaca;
     private javax.swing.JTextField tfTagRfid;
     private javax.swing.JTextField tfVeiculo;
@@ -569,11 +638,11 @@ public class Campos extends Thread{
         }
         
         public void verificarCampos(){
-            String modelo = (String) cbModelo.getSelectedItem();
+            Modelo modelo = (Modelo) cbModelo.getSelectedItem();
+            Cor cor = (Cor) cbCor.getSelectedItem();
             int aux = tfVeiculo.getText().compareTo("");
             aux *= tfPlaca.getText().compareTo("");
-            aux *= modelo.compareTo("");
-            if(aux==0 || !tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
+            if(aux==0 || modelo==null || cor==null || !tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
                 bSaveCdtVeiculo.setEnabled(false);
             }else{
                 bSaveCdtVeiculo.setEnabled(true);
