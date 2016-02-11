@@ -31,7 +31,6 @@ public class JVeiculo extends javax.swing.JDialog {
      * Creates new form JVeiculo
      */
     
-    private JModelo jm;
     private ArrayList<Modelo> m;
     private ArrayList<Cor> cor;
     private DefaultTableModel dtm;
@@ -43,7 +42,6 @@ public class JVeiculo extends javax.swing.JDialog {
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         initTable();
         initComponents();
-        jm = new JModelo(true);
         new Campos().start();
         liberarCampos(false);   
     }
@@ -70,7 +68,6 @@ public class JVeiculo extends javax.swing.JDialog {
         cbCor = new javax.swing.JComboBox();
         cbModelo = new javax.swing.JComboBox();
         bCustomModelo = new javax.swing.JButton();
-        bRefreshModelo = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         tfKm = new javax.swing.JTextField();
         lpCondVeiculo = new javax.swing.JLayeredPane();
@@ -134,15 +131,6 @@ public class JVeiculo extends javax.swing.JDialog {
             }
         });
 
-        bRefreshModelo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 32x32/refresh.png"))); // NOI18N
-        bRefreshModelo.setToolTipText("Atualizar Lista de Modelos");
-        bRefreshModelo.setPreferredSize(new java.awt.Dimension(32, 32));
-        bRefreshModelo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bRefreshModeloActionPerformed(evt);
-            }
-        });
-
         jLabel4.setText("Quilometragem:");
 
         lpIdtVeiculo.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -156,7 +144,6 @@ public class JVeiculo extends javax.swing.JDialog {
         lpIdtVeiculo.setLayer(cbCor, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(bRefreshModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(tfKm, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -183,11 +170,9 @@ public class JVeiculo extends javax.swing.JDialog {
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(0, 30, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lpIdtVeiculoLayout.createSequentialGroup()
-                                .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(bRefreshModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbModelo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
@@ -196,7 +181,7 @@ public class JVeiculo extends javax.swing.JDialog {
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tfKm)))))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         lpIdtVeiculoLayout.setVerticalGroup(
             lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,8 +197,7 @@ public class JVeiculo extends javax.swing.JDialog {
                     .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addComponent(bRefreshModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -223,7 +207,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addGap(11, 11, 11)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -384,7 +368,7 @@ public class JVeiculo extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lpCondVeiculo)
                             .addComponent(jScrollPane2))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 16, Short.MAX_VALUE))
                     .addComponent(tpVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, 754, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -409,21 +393,17 @@ public class JVeiculo extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCustomModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCustomModeloActionPerformed
-        jm.setVisible(true);
+        new JModelo(true).setVisible(true);
+        cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
     }//GEN-LAST:event_bCustomModeloActionPerformed
 
     private void bCancelCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelCdtVeiculoActionPerformed
-
         int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cancelar as alterações feitas?","Tem certeza?",JOptionPane.YES_NO_OPTION);
         if(resp==0){
-            jm.dispose();
+            killThread = true;
             dispose();
         }
     }//GEN-LAST:event_bCancelCdtVeiculoActionPerformed
-
-    private void bRefreshModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshModeloActionPerformed
-        cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
-    }//GEN-LAST:event_bRefreshModeloActionPerformed
 
     private void tfDataCdtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDataCdtActionPerformed
         // TODO add your handling code here:
@@ -595,7 +575,6 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JButton bEditCdtVeiculo;
     private javax.swing.JButton bNewCdtVeiculo;
     private javax.swing.JButton bRefreshCdtVeiculo;
-    private javax.swing.JButton bRefreshModelo;
     private javax.swing.JButton bSaveCdtVeiculo;
     private javax.swing.JComboBox cbCor;
     private javax.swing.JComboBox cbModelo;
@@ -632,7 +611,7 @@ public class Campos extends Thread{
                 try{
                     tfDataCdt.setText(sdf.format(new Date()));                    
                 }catch(Exception ex){
-                    new JErro(true, ex.getMessage(), false, true, false);
+                    new JErro(true, ex.getMessage(), true, true, false);
                 }
             }
         }

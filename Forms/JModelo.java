@@ -36,6 +36,7 @@ public class JModelo extends javax.swing.JDialog {
         initTable();
         initComponents();
         new Campos().start();
+        liberarCampos(false);
     }
 
     /**
@@ -67,7 +68,7 @@ public class JModelo extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         tModelo = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Customizar Modelo");
         setMinimumSize(new java.awt.Dimension(627, 353));
         setResizable(false);
@@ -242,6 +243,7 @@ public class JModelo extends javax.swing.JDialog {
     private void bCancelCdtModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelCdtModeloActionPerformed
         int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cancelar as alterações?","Tem certeza?",JOptionPane.YES_NO_OPTION);
         if(resp==0){
+            killThread = true;
             dispose();
         }
     }//GEN-LAST:event_bCancelCdtModeloActionPerformed
@@ -269,17 +271,16 @@ public class JModelo extends javax.swing.JDialog {
         tModelo.setModel(dtm); 
     }//GEN-LAST:event_bRefreshCdtModeloActionPerformed
     
-    public String[] carregarClasses(Boolean tipo){
+    public Classe[] carregarClasses(Boolean tipo){
         ExecutaSQL sql = new ExecutaSQL();
         classes = new ArrayList<Classe>();
         classes = sql.SELECT_CLASSE_TIPO(true);
-        String c[] = new String[classes.size()+2];
-        c[0] = "";
-        for(int i=0;i<classes.size();i++){
-            //System.out.println((i+1)+" - "+classes.get(i).getNome());
-            c[i+1] = classes.get(i).getNome();
+        Classe c[] = new Classe[classes.size()+1];
+        
+        c[0] = null;
+        for(int i=1;i<=classes.size();i++){
+            c[i] = classes.get(i-1);
         }
-        c[c.length-1] = "Outro";
         return c;
     }
     
@@ -287,7 +288,7 @@ public class JModelo extends javax.swing.JDialog {
         tfModelo.setText("");
         tfLayout.setText("");
         tfMarca.setText("");
-        cbClasse.setSelectedItem("");
+        cbClasse.setSelectedItem(null);
         
         tfModelo.setEnabled(b);
         tfLayout.setEnabled(b);
@@ -318,28 +319,23 @@ public class JModelo extends javax.swing.JDialog {
     
     private void cadastrarNovo(){
         ExecutaSQL sql = new ExecutaSQL();
-        int aux = -1;
         Modelo m =  new Modelo();
-        for(int i=0; i<classes.size(); i++){
-            if(classes.get(i).getNome().compareTo((String) cbClasse.getSelectedItem())==0){
-                aux=i;
-            }
-        }
-        if(aux>-1){
+        Classe classe = (Classe) cbClasse.getSelectedItem();
+        
+        if(classe!=null){
             m.setLayout(tfLayout.getText());
             m.setMarca(tfMarca.getText());
             m.setModelo(tfModelo.getText());
-            m.setClasse(classes.get(aux));
+            m.setClasse(classe);
             
             if(!sql.INSERT_MODELO(m)){
-                JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
+                JOptionPane.showMessageDialog(null,"Cadastrado com sucesso.");
                 liberarCampos(false);
             }else{
                 JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
             }
-
         }else{
-            JOptionPane.showMessageDialog(null,"Escolha a classe do seu veículo");
+            JOptionPane.showMessageDialog(null,"Escolha a classe do seu veículo.");
         }
     }
     
@@ -374,12 +370,11 @@ public class JModelo extends javax.swing.JDialog {
         }
         
         public void verificarCampos(){
-            String classe = (String) cbClasse.getSelectedItem();
+            Classe classe = (Classe) cbClasse.getSelectedItem();
             int aux = tfModelo.getText().compareTo("");
             aux *= tfLayout.getText().compareTo("");
             aux *= tfMarca.getText().compareTo("");
-            aux *= classe.compareTo("");
-            if(aux==0){
+            if(aux==0 || classe==null){
                 bSaveCdtModelo.setEnabled(false);
             }else{
                 bSaveCdtModelo.setEnabled(true);
