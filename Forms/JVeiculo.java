@@ -43,7 +43,6 @@ public class JVeiculo extends javax.swing.JDialog {
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         initTable();
         initComponents();
-        jm = new JModelo(true);
         new Campos().start();
         liberarCampos(false);   
     }
@@ -409,14 +408,13 @@ public class JVeiculo extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCustomModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCustomModeloActionPerformed
-        jm.setVisible(true);
+        new JModelo(true).setVisible(true);
     }//GEN-LAST:event_bCustomModeloActionPerformed
 
     private void bCancelCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelCdtVeiculoActionPerformed
 
         int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cancelar as alterações feitas?","Tem certeza?",JOptionPane.YES_NO_OPTION);
         if(resp==0){
-            jm.dispose();
             dispose();
         }
     }//GEN-LAST:event_bCancelCdtVeiculoActionPerformed
@@ -642,7 +640,7 @@ public class Campos extends Thread{
             Cor cor = (Cor) cbCor.getSelectedItem();
             int aux = tfVeiculo.getText().compareTo("");
             aux *= tfPlaca.getText().compareTo("");
-            if(aux==0 || modelo==null || cor==null || !tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
+            if(aux==0 || modelo==null || !tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
                 bSaveCdtVeiculo.setEnabled(false);
             }else{
                 bSaveCdtVeiculo.setEnabled(true);

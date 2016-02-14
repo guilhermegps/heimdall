@@ -25,7 +25,6 @@ public class Principal extends javax.swing.JFrame {
     
     private Boolean logado = false;
     private JLogin login;
-    private JVeiculo novoVeiculo = new JVeiculo();
     private Usuario usuario;
     private JNovoUsuario newUser = new JNovoUsuario();
     
@@ -201,7 +200,7 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void miNewVeicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNewVeicleActionPerformed
-        novoVeiculo.setVisible(true);
+        new JVeiculo().setVisible(true);
     }//GEN-LAST:event_miNewVeicleActionPerformed
 
     private void miLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLogoutActionPerformed

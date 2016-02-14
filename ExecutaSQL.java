@@ -267,7 +267,7 @@ public class ExecutaSQL {
             while(rs.next()){
                 Veiculo veiculo = new Veiculo();
                 Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", Integer.toString(rs.getInt("modelo_id_modelo"))).get(0);
-                Cor cor = (Cor) SELECT_COR("id_cor", Integer.toString(rs.getInt("cor_id_cor"))).get(0);
+                Cor cor = (SELECT_COR("id_cor", Integer.toString(rs.getInt("cor_id_cor"))).size()>0) ? (Cor) SELECT_COR("id_cor", Integer.toString(rs.getInt("cor_id_cor"))).get(0) : null;
                 
                 veiculo.setModelo(modelo);
                 veiculo.setCor(cor);
@@ -327,7 +327,10 @@ public class ExecutaSQL {
 "    VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?, ?);");
             
             comando.setInt(1, veiculo.getModelo().getId());
-            comando.setInt(2, veiculo.getCor().getId());
+            if(veiculo.getCor() != null)
+                comando.setInt(2, veiculo.getCor().getId());
+            else
+                comando.setNull(2, 0);
             comando.setString(3,veiculo.getNome());
             comando.setString(4, veiculo.getRfid());
             comando.setString(5, veiculo.getPlaca());
