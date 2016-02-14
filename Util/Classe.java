@@ -50,6 +50,6 @@ public class Classe {
 
     @Override
     public String toString() {
-        return "Classe{" + "id=" + id + ", nome=" + nome + ", tipo=" + tipo + '}';
+        return nome;
     }    
 }
