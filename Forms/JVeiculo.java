@@ -33,17 +33,16 @@ public class JVeiculo extends javax.swing.JDialog {
     
     private ArrayList<Modelo> m;
     private ArrayList<Cor> cor;
-    private DefaultTableModel dtm;
     private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private boolean killThread = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
     public JVeiculo() {
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
-        initTable();
         initComponents();
+        initTable();
         new Campos().start();
-        liberarCampos(false);   
+        liberarCampos(false); 
     }
 
     /**
@@ -86,7 +85,8 @@ public class JVeiculo extends javax.swing.JDialog {
         bCancelCdtVeiculo = new javax.swing.JButton();
         tbHelpCdtVeiculo = new javax.swing.JToggleButton();
         tpVeiculo = new javax.swing.JTabbedPane();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jScrollPane7 = new javax.swing.JScrollPane();
         tVeiculo = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -347,12 +347,40 @@ public class JVeiculo extends javax.swing.JDialog {
         tbHelpCdtVeiculo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         tbVeiculo.add(tbHelpCdtVeiculo);
 
-        tVeiculo.setAutoCreateRowSorter(true);
-        tVeiculo.setModel(dtm);
-        tVeiculo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane3.setViewportView(tVeiculo);
+        jScrollPane6.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-        tpVeiculo.addTab("Veículos", jScrollPane3);
+        tVeiculo.setAutoCreateRowSorter(true);
+        tVeiculo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nome", "Modelo", "Quilometragem", "Registro", "Código RFID"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tVeiculo.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tVeiculo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane7.setViewportView(tVeiculo);
+        if (tVeiculo.getColumnModel().getColumnCount() > 0) {
+            tVeiculo.getColumnModel().getColumn(0).setPreferredWidth(80);
+            tVeiculo.getColumnModel().getColumn(1).setPreferredWidth(80);
+            tVeiculo.getColumnModel().getColumn(2).setPreferredWidth(100);
+            tVeiculo.getColumnModel().getColumn(3).setPreferredWidth(80);
+            tVeiculo.getColumnModel().getColumn(4).setPreferredWidth(120);
+        }
+        tVeiculo.getAccessibleContext().setAccessibleParent(jScrollPane6);
+
+        jScrollPane6.setViewportView(jScrollPane7);
+
+        tpVeiculo.addTab("Veículos", jScrollPane6);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -369,7 +397,7 @@ public class JVeiculo extends javax.swing.JDialog {
                             .addComponent(lpCondVeiculo)
                             .addComponent(jScrollPane2))
                         .addGap(0, 16, Short.MAX_VALUE))
-                    .addComponent(tpVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, 754, Short.MAX_VALUE))
+                    .addComponent(tpVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, 752, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -384,7 +412,7 @@ public class JVeiculo extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tpVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                .addComponent(tpVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -427,8 +455,6 @@ public class JVeiculo extends javax.swing.JDialog {
                 
                 break;
         }
-        initTable();
-        tVeiculo.setModel(dtm); 
     }//GEN-LAST:event_bSaveCdtVeiculoActionPerformed
 
     private void bEditCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCdtVeiculoActionPerformed
@@ -522,24 +548,26 @@ public class JVeiculo extends javax.swing.JDialog {
             }else{
                 JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
             }
-
         }else{
             JOptionPane.showMessageDialog(null,"Escolha o modelo do seu veículo");
         }
+        
+        initTable();
     }
     
     public void initTable(){
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Veiculo> aux = new ArrayList<Veiculo>();
-        ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Nome", "Modelo", "Km", "Registrado", "RFID"},
-                new boolean [] {false, false, false, false, false},
-                new Class [] {java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class}
-        );
-                        
+        DefaultTableModel dtm = (DefaultTableModel) tVeiculo.getModel();
+        
+        while(dtm.getRowCount()>0){
+            dtm.removeRow(0);
+        }
+        
         aux = sql.SELECT_ALL_VEICULO();
         for(int i=0; i<aux.size(); i++){
             String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
-            confTabela.addLinha(new Object[] {
+            dtm.addRow(new Object[] {
                     aux.get(i).getNome(),
                     aux.get(i).getModelo().getModelo(),
                     aux.get(i).getKm(),
@@ -547,7 +575,7 @@ public class JVeiculo extends javax.swing.JDialog {
                     aux.get(i).getRfid()}
             );
         }     
-        dtm = confTabela.getDtm();
+        tVeiculo.setModel(dtm);
     }
     
     public void liberarCampos(boolean b){
@@ -588,7 +616,8 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLayeredPane lpCondVeiculo;
     private javax.swing.JLayeredPane lpIdtVeiculo;

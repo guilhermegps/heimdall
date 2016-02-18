@@ -239,13 +239,13 @@ public class JLogin extends javax.swing.JDialog {
         String login = tfUser.getText();
         String senha = new String(pfSenha.getPassword());
         int comp1, comp2;
+        comp1 = comp2 = 0;
         
         if(!trata.whiteList(login)){
             JOptionPane.showMessageDialog(null,"O usuário contem caracteres inválidos ou está vazio.");
         } else if(!trata.whiteList(senha)){
             JOptionPane.showMessageDialog(null,"A senha contem caracteres inválidos ou está vazia. Por favor, digite novamente.");
         } else{
-
             user = sql.SELECT_USUARIO_ATIVO("vc_login_usuario", "\'"+login+"\'");
             if(user.size()==1){
                 SenhaAutomatica aux = new SenhaAutomatica(WIDTH);
@@ -254,17 +254,22 @@ public class JLogin extends javax.swing.JDialog {
 
                 comp1 = user.get(0).getLogin().compareTo(login);
                 comp2 = user.get(0).getSenha().compareTo(senha);
+                
+                if(comp1==0 && comp2==0){
+                    logado = true;
+                    usuario = user.get(0);
+                    dispose();
+                } else{
+                    JOptionPane.showMessageDialog(null,"Login incorreto");
+                    return;
+                }
+            } else if(user.size()==0){
+                JOptionPane.showMessageDialog(null,"Login incorreto");
+                return;
             } else{
                 new JErro(true, "Houve um problema ao tentar encontrar este usuário.\n"
                         + "Favor, verificar o banco de dados.", true, false, false);
                 return;
-            }
-            if(comp1==0 && comp2==0){
-                logado = true;
-                usuario = user.get(0);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(null,"Login incorreto");
             }
         }
         
