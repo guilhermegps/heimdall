@@ -6,7 +6,6 @@
 
 package heimdall.Forms;
 
-import heimdall.ConfiguraTabelaPadrao;
 import heimdall.ExecutaSQL;
 import heimdall.Util.Classe;
 import heimdall.Util.Modelo;
@@ -25,7 +24,6 @@ public class JModelo extends javax.swing.JDialog {
      */
     
     private Boolean classe;
-    private DefaultTableModel dtm;
     private ArrayList<Classe> classes;
     private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private boolean killThread = false;
@@ -33,8 +31,8 @@ public class JModelo extends javax.swing.JDialog {
     public JModelo(Boolean classe) {
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         this.classe = classe;
-        initTable();
         initComponents();
+        initTable();
         new Campos().start();
         liberarCampos(false);
     }
@@ -65,13 +63,15 @@ public class JModelo extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         tfLayout = new javax.swing.JTextField();
         tpModelo = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        tfLinhasTabela = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tModelo = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Customizar Modelo");
         setMinimumSize(new java.awt.Dimension(627, 353));
-        setResizable(false);
 
         tbModelo.setFloatable(false);
         tbModelo.setRollover(true);
@@ -177,7 +177,7 @@ public class JModelo extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tfMarca)
-                    .addComponent(tfModelo, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE))
+                    .addComponent(tfModelo))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4)
@@ -208,19 +208,68 @@ public class JModelo extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        tfLinhasTabela.setEditable(false);
+
         tModelo.setAutoCreateRowSorter(true);
-        tModelo.setModel(dtm);
+        tModelo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Modelo", "Layout", "Marca", "Classe"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tModelo.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tModelo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tModelo);
+        if (tModelo.getColumnModel().getColumnCount() > 0) {
+            tModelo.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tModelo.getColumnModel().getColumn(1).setPreferredWidth(100);
+            tModelo.getColumnModel().getColumn(2).setPreferredWidth(100);
+            tModelo.getColumnModel().getColumn(3).setPreferredWidth(100);
+        }
 
-        tpModelo.addTab("Modelos", jScrollPane1);
+        jLabel5.setText("Nº");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)))
+        );
+
+        tpModelo.addTab("Modelos", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(tbModelo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(tpModelo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+            .addComponent(tpModelo, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -230,7 +279,7 @@ public class JModelo extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tpModelo, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                .addComponent(tpModelo)
                 .addContainerGap())
         );
 
@@ -262,13 +311,10 @@ public class JModelo extends javax.swing.JDialog {
                 
                 break;
         }
-        initTable();
-        tModelo.setModel(dtm); 
     }//GEN-LAST:event_bSaveCdtModeloActionPerformed
 
     private void bRefreshCdtModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshCdtModeloActionPerformed
         initTable();
-        tModelo.setModel(dtm); 
     }//GEN-LAST:event_bRefreshCdtModeloActionPerformed
     
     public Classe[] carregarClasses(Boolean tipo){
@@ -299,22 +345,26 @@ public class JModelo extends javax.swing.JDialog {
     public void initTable(){
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Modelo> aux = new ArrayList<Modelo>();
-        ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Modelo", "Marca", "Layout", "Classe"},
-                new boolean [] {false, false, false, false},
-                new Class [] {java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class}
-        );
+        DefaultTableModel dtm = (DefaultTableModel) tModelo.getModel();
+        
+        while(dtm.getRowCount()>0){
+            dtm.removeRow(0);
+        }
                 
         aux = sql.SELECT_ALL_MODELO_VEICULO();
         Object valores[] = new Object[aux.size()];
         for(int i=0; i<aux.size(); i++){
-            confTabela.addLinha(new Object[] {
+            String classe = (aux.get(i).getClasse() != null) ? aux.get(i).getClasse().getNome() : null;
+            
+            dtm.addRow(new Object[] {
                     aux.get(i).getModelo(),
                     aux.get(i).getMarca(),
                     aux.get(i).getLayout(),
-                    aux.get(i).getClasse().getNome()}
+                    classe}
             );
         }     
-        dtm = confTabela.getDtm();
+        tModelo.setModel(dtm);
+        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
     private void cadastrarNovo(){
@@ -337,6 +387,8 @@ public class JModelo extends javax.swing.JDialog {
         }else{
             JOptionPane.showMessageDialog(null,"Escolha a classe do seu veículo.");
         }
+        
+        initTable();
     }
     
 
@@ -352,11 +404,14 @@ public class JModelo extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tModelo;
     private javax.swing.JToolBar tbModelo;
     private javax.swing.JTextField tfLayout;
+    private javax.swing.JTextField tfLinhasTabela;
     private javax.swing.JTextField tfMarca;
     private javax.swing.JTextField tfModelo;
     private javax.swing.JTabbedPane tpModelo;

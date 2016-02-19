@@ -6,7 +6,6 @@
 
 package heimdall.Forms;
 
-import heimdall.ConfiguraTabelaPadrao;
 import heimdall.ExecutaSQL;
 import heimdall.Util.Cor;
 import heimdall.Util.Modelo;
@@ -85,7 +84,9 @@ public class JVeiculo extends javax.swing.JDialog {
         bCancelCdtVeiculo = new javax.swing.JButton();
         tbHelpCdtVeiculo = new javax.swing.JToggleButton();
         tpVeiculo = new javax.swing.JTabbedPane();
-        jScrollPane6 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
+        tfLinhasTabela = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
         tVeiculo = new javax.swing.JTable();
 
@@ -181,7 +182,7 @@ public class JVeiculo extends javax.swing.JDialog {
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tfKm)))))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         lpIdtVeiculoLayout.setVerticalGroup(
             lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,7 +208,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addGap(11, 11, 11)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -347,7 +348,9 @@ public class JVeiculo extends javax.swing.JDialog {
         tbHelpCdtVeiculo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         tbVeiculo.add(tbHelpCdtVeiculo);
 
-        jScrollPane6.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        tfLinhasTabela.setEditable(false);
+
+        jLabel9.setText("Nº");
 
         tVeiculo.setAutoCreateRowSorter(true);
         tVeiculo.setModel(new javax.swing.table.DefaultTableModel(
@@ -355,11 +358,11 @@ public class JVeiculo extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Nome", "Modelo", "Quilometragem", "Registro", "Código RFID"
+                "Nome", "Modelo", "Placa", "Cor", "Código RFID", "Km", "Registro"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -367,20 +370,46 @@ public class JVeiculo extends javax.swing.JDialog {
             }
         });
         tVeiculo.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tVeiculo.setAutoscrolls(false);
         tVeiculo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane7.setViewportView(tVeiculo);
         if (tVeiculo.getColumnModel().getColumnCount() > 0) {
-            tVeiculo.getColumnModel().getColumn(0).setPreferredWidth(80);
-            tVeiculo.getColumnModel().getColumn(1).setPreferredWidth(80);
+            tVeiculo.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tVeiculo.getColumnModel().getColumn(1).setPreferredWidth(100);
             tVeiculo.getColumnModel().getColumn(2).setPreferredWidth(100);
-            tVeiculo.getColumnModel().getColumn(3).setPreferredWidth(80);
-            tVeiculo.getColumnModel().getColumn(4).setPreferredWidth(120);
+            tVeiculo.getColumnModel().getColumn(3).setPreferredWidth(100);
+            tVeiculo.getColumnModel().getColumn(4).setPreferredWidth(130);
+            tVeiculo.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tVeiculo.getColumnModel().getColumn(6).setPreferredWidth(170);
         }
-        tVeiculo.getAccessibleContext().setAccessibleParent(jScrollPane6);
 
-        jScrollPane6.setViewportView(jScrollPane7);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(712, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 143, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 33, Short.MAX_VALUE)))
+        );
 
-        tpVeiculo.addTab("Veículos", jScrollPane6);
+        tpVeiculo.addTab("Veículos", jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -390,33 +419,32 @@ public class JVeiculo extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tpVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lpIdtVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lpCondVeiculo)
-                            .addComponent(jScrollPane2))
-                        .addGap(0, 16, Short.MAX_VALUE))
-                    .addComponent(tpVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, 752, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addComponent(lpIdtVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lpCondVeiculo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tbVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lpIdtVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lpCondVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2)))
+                        .addGap(12, 12, 12)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tpVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addComponent(tpVeiculo)
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(788, 552));
+        setSize(new java.awt.Dimension(829, 581));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -496,7 +524,7 @@ public class JVeiculo extends javax.swing.JDialog {
         });
     }
     
-    public Modelo[] carregarModelos(){
+    private Modelo[] carregarModelos(){
         ExecutaSQL sql = new ExecutaSQL();
         m = new ArrayList<Modelo>();
         m = sql.SELECT_ALL_MODELO_VEICULO();
@@ -510,7 +538,7 @@ public class JVeiculo extends javax.swing.JDialog {
         return modelos;
     }
     
-    public Cor[] carregarCores(){
+    private Cor[] carregarCores(){
         ExecutaSQL sql = new ExecutaSQL();
         cor = new ArrayList<Cor>();
         cor = sql.SELECT_ALL_COR();
@@ -555,7 +583,7 @@ public class JVeiculo extends javax.swing.JDialog {
         initTable();
     }
     
-    public void initTable(){
+    private void initTable(){
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Veiculo> aux = new ArrayList<Veiculo>();
         DefaultTableModel dtm = (DefaultTableModel) tVeiculo.getModel();
@@ -567,18 +595,24 @@ public class JVeiculo extends javax.swing.JDialog {
         aux = sql.SELECT_ALL_VEICULO();
         for(int i=0; i<aux.size(); i++){
             String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
+            String cor = (aux.get(i).getCor() != null) ? aux.get(i).getCor().getCor() : null;
+            String modelo = (aux.get(i).getModelo() != null) ? aux.get(i).getModelo().getModelo() : null;
+            
             dtm.addRow(new Object[] {
                     aux.get(i).getNome(),
-                    aux.get(i).getModelo().getModelo(),
+                    modelo,
+                    aux.get(i).getPlaca(),
+                    cor,
+                    aux.get(i).getRfid(),                    
                     aux.get(i).getKm(),
-                    registro,
-                    aux.get(i).getRfid()}
+                    registro}
             );
         }     
         tVeiculo.setModel(dtm);
+        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
-    public void liberarCampos(boolean b){
+    private void liberarCampos(boolean b){
         tfVeiculo.setText("");
         tfPlaca.setText("");
         tfTagRfid.setText("");
@@ -614,9 +648,10 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLayeredPane lpCondVeiculo;
@@ -626,6 +661,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JToolBar tbVeiculo;
     private javax.swing.JTextField tfDataCdt;
     private javax.swing.JTextField tfKm;
+    private javax.swing.JTextField tfLinhasTabela;
     private javax.swing.JTextField tfPlaca;
     private javax.swing.JTextField tfTagRfid;
     private javax.swing.JTextField tfVeiculo;

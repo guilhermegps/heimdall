@@ -5,7 +5,6 @@
  */
 package heimdall.Forms;
 
-import heimdall.ConfiguraTabelaPadrao;
 import heimdall.ExecutaSQL;
 import heimdall.Util.Componente;
 import heimdall.Util.Veiculo;
@@ -121,7 +120,7 @@ public class JRevisao extends javax.swing.JDialog {
     }//GEN-LAST:event_bBuscaActionPerformed
     
     public void initTable(){
-        ExecutaSQL sql = new ExecutaSQL();
+        /*ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Componente> aux = new ArrayList<Componente>();
         ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Verificado", "Codigo", "Componente"},
                 new boolean [] {false, false},
@@ -137,7 +136,7 @@ public class JRevisao extends javax.swing.JDialog {
                     aux.get(i).getRfid()}
             );
         }     
-        dtm = confTabela.getDtm();
+        dtm = confTabela.getDtm();*/
     }
     
     public String abrir(){
