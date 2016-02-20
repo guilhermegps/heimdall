@@ -83,12 +83,27 @@ public class ExecutaSQL {
         return false;
     }
     
-    public void UPDATE_USUARIO(String cond, Usuario user){
+    public boolean UPDATE_USUARIO(Usuario user){
         try{
-               
+            comando = conexao.getConexao().prepareStatement("UPDATE usuario\n" +
+                "   SET id_usuario=?, vc_senha_usuario=?, vc_nome_usuario=?, in_nivel_usuario=?, \n" +
+                "       vc_login_usuario=?, vc_cpf_usuario=?, bo_registro_ativo_usuario=?\n" +
+                " WHERE id_usuario=?");
+            
+            comando.setInt(1, user.getId());
+            comando.setString(2, user.getSenha());
+            comando.setString(3, user.getNome());
+            comando.setInt(4,user.getNivel());
+            comando.setString(5, user.getLogin());
+            comando.setString(6, user.getCpf());
+            comando.setBoolean(7, user.isAtivo());
+            comando.setInt(8, user.getId());
+            
+            return comando.execute();  
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
         }        
+        return false;
     }
     
     public void DELETE_USUARIO(String cnd){

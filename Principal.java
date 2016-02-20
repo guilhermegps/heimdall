@@ -6,11 +6,7 @@
 
 package heimdall;
 
-import heimdall.Forms.JErro;
-import heimdall.Forms.JNovoUsuario;
-import heimdall.Forms.JLogin;
-import heimdall.Forms.JVeiculo;
-import heimdall.Forms.JRevisao;
+import heimdall.Forms.*;
 import heimdall.Util.Usuario;
 
 /**
@@ -26,7 +22,6 @@ public class Principal extends javax.swing.JFrame {
     private Boolean logado = false;
     private JLogin login;
     private Usuario usuario;
-    private JNovoUsuario newUser = new JNovoUsuario();
     
     public Principal() { 
         try{
@@ -61,7 +56,7 @@ public class Principal extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         menuUsuarios = new javax.swing.JMenu();
         miNewUser = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        miAlterPasswd = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
 
@@ -171,8 +166,14 @@ public class Principal extends javax.swing.JFrame {
         });
         menuUsuarios.add(miNewUser);
 
-        jMenuItem2.setText("jMenuItem2");
-        menuUsuarios.add(jMenuItem2);
+        miAlterPasswd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/key_go.png"))); // NOI18N
+        miAlterPasswd.setText("Alterar Senha");
+        miAlterPasswd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miAlterPasswdActionPerformed(evt);
+            }
+        });
+        menuUsuarios.add(miAlterPasswd);
 
         jMenuItem3.setText("jMenuItem3");
         menuUsuarios.add(jMenuItem3);
@@ -205,6 +206,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void miLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLogoutActionPerformed
         logado = false;
+        usuario = null;
         dispose();
         new Principal();
     }//GEN-LAST:event_miLogoutActionPerformed
@@ -214,9 +216,14 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_miExitActionPerformed
 
     private void miNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNewUserActionPerformed
-        newUser = new JNovoUsuario(usuario);
-        newUser.setVisible(true);
+        new JNovoUsuario(usuario);
     }//GEN-LAST:event_miNewUserActionPerformed
+
+    private void miAlterPasswdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAlterPasswdActionPerformed
+        JNovaSenha novaSenha = new JNovaSenha(usuario);
+        novaSenha.setVisible(true);
+        usuario = novaSenha.getUsuario();
+    }//GEN-LAST:event_miAlterPasswdActionPerformed
 
     /**
      * @param args the command line arguments
@@ -267,7 +274,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
@@ -276,6 +282,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenu menuArq;
     private javax.swing.JMenu menuUsuarios;
+    private javax.swing.JMenuItem miAlterPasswd;
     private javax.swing.JMenuItem miExit;
     private javax.swing.JMenuItem miLogout;
     private javax.swing.JMenuItem miNewUser;
