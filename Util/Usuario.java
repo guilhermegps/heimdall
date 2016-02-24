@@ -17,18 +17,20 @@ public class Usuario {
     private int nivel;
     private String login;
     private String cpf;
+    private boolean primeiroLogin;
     private boolean ativo;
 
     public Usuario() {
     }
 
-    public Usuario(int id, String nome, String senha, int nivel, String login, String cpf, boolean ativo) {
+    public Usuario(int id, String nome, String senha, int nivel, String login, String cpf, boolean primeiroLogin, boolean ativo) {
         this.id = id;
         this.nome = nome;
         this.senha = senha;
         this.nivel = nivel;
         this.login = login;
         this.cpf = cpf;
+        this.primeiroLogin = primeiroLogin;
         this.ativo = ativo;
     }
 
@@ -80,6 +82,14 @@ public class Usuario {
         this.cpf = cpf;
     }
 
+    public boolean isPrimeiroLogin() {
+        return primeiroLogin;
+    }
+
+    public void setPrimeiroLogin(boolean primeiroLogin) {
+        this.primeiroLogin = primeiroLogin;
+    }
+
     public boolean isAtivo() {
         return ativo;
     }
@@ -90,7 +100,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario{" + "id=" + id + ", nome=" + nome + ", senha=" + senha + ", nivel=" + nivel + ", login=" + login + ", cpf=" + cpf + ", ativo=" + ativo + '}';
+        return "Usuario{" + "id=" + id + ", nome=" + nome + ", senha=" + senha + ", nivel=" + nivel + ", login=" + login + ", cpf=" + cpf + ", primeiroLogin=" + primeiroLogin + ", ativo=" + ativo + '}';
     }
     
 }

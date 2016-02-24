@@ -27,6 +27,7 @@ public class ExecutaSQL {
     private ConexaoDB conexao;
     private TratarEntrada trata;
     private final String chavePrimaria = "NEXTVAL('SEQ_CHAVE_PRIMARIA')";
+    private final String codigoregistro = "NEXTVAL('SEQ_CODIGO_REGISTRO')";
 
     public ExecutaSQL() {
         conexao = new ConexaoDB();
@@ -54,6 +55,7 @@ public class ExecutaSQL {
                 user.setNivel(rs.getInt("in_nivel_usuario"));
                 user.setLogin(rs.getString("vc_login_usuario"));
                 user.setCpf(rs.getString("vc_cpf_usuario"));
+                user.setPrimeiroLogin(rs.getBoolean("bo_primeiro_login_usuario"));
                 user.setAtivo(rs.getBoolean("bo_registro_ativo_usuario"));
                 
                 usuario.add(user);
@@ -67,14 +69,15 @@ public class ExecutaSQL {
     
     public boolean INSERT_USUARIO(Usuario user){
         try{
-            comando = conexao.getConexao().prepareStatement("INSERT INTO usuario VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?);");
+            comando = conexao.getConexao().prepareStatement("INSERT INTO usuario VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?);");
             
             comando.setString(1, user.getSenha());
             comando.setString(2, user.getNome());
             comando.setInt(3,user.getNivel());
             comando.setString(4, user.getLogin());
             comando.setString(5, user.getCpf());
-            comando.setBoolean(6, user.isAtivo());
+            comando.setBoolean(6, user.isPrimeiroLogin());
+            comando.setBoolean(7, user.isAtivo());
             
             return comando.execute();  
         }catch(Exception ex){
@@ -87,7 +90,8 @@ public class ExecutaSQL {
         try{
             comando = conexao.getConexao().prepareStatement("UPDATE usuario\n" +
                 "   SET id_usuario=?, vc_senha_usuario=?, vc_nome_usuario=?, in_nivel_usuario=?, \n" +
-                "       vc_login_usuario=?, vc_cpf_usuario=?, bo_registro_ativo_usuario=?\n" +
+                "       vc_login_usuario=?, vc_cpf_usuario=?, bo_primeiro_login_usuario=?, \n" +
+                "       bo_registro_ativo_usuario=?"+
                 " WHERE id_usuario=?");
             
             comando.setInt(1, user.getId());
@@ -96,8 +100,9 @@ public class ExecutaSQL {
             comando.setInt(4,user.getNivel());
             comando.setString(5, user.getLogin());
             comando.setString(6, user.getCpf());
-            comando.setBoolean(7, user.isAtivo());
-            comando.setInt(8, user.getId());
+            comando.setBoolean(7, user.isPrimeiroLogin());
+            comando.setBoolean(8, user.isAtivo());
+            comando.setInt(9, user.getId());
             
             return comando.execute();  
         }catch(Exception ex){
