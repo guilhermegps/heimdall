@@ -19,6 +19,27 @@ $BODY$
 ALTER FUNCTION f_veiculo_tbiu()
   OWNER TO postgres;
 
+/*-- Function: f_usuario_tbiud()
+
+-- DROP FUNCTION f_usuario_tbiud();
+
+CREATE OR REPLACE FUNCTION f_usuario_tbiud()
+  RETURNS trigger AS
+$BODY$
+ BEGIN
+ 
+ 	IF (TG_OP = 'INSERT') THEN
+ 		
+	END IF;
+ 	
+ 	RETURN NEW;
+ END;
+ $BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION f_usuario_tbiud()
+  OWNER TO postgres;*/
+
 
 
 /* -----Exemplo------
@@ -55,4 +76,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION f_item_tbiu()
-  OWNER TO postgres;
+  OWNER TO postgres;*/
