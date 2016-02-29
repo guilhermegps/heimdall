@@ -14,9 +14,9 @@ import java.util.Date;
  */
 public class Componente {
     private int id;
-    private int codigo;
     private Modelo modelo;
     private Veiculo veiculo;
+    private int codigo;
     private String rfid;
     private String nome;
     private String descricao;
@@ -25,21 +25,21 @@ public class Componente {
 
     public Componente() {
         this.id = 0;
-        this.codigo = 0;
         this.modelo = null;
         this.veiculo = null;
-        this.rfid = "";
-        this.nome = "";
-        this.descricao = "";
-        this.validade = null;
-        this.registro = null;
+        this.codigo = 0;
+        this.rfid = new String();
+        this.nome = new String();
+        this.descricao = new String();
+        this.validade = new Date();
+        this.registro = new Timestamp(0);
     }
 
-    public Componente(int id, int codigo, Modelo modelo, Veiculo veiculo, String rfid, String nome, String descricao, Date validade, Timestamp registro) {
+    public Componente(int id, Modelo modelo, Veiculo veiculo, int codigo, String rfid, String nome, String descricao, Date validade, Timestamp registro) {
         this.id = id;
-        this.codigo = codigo;
         this.modelo = modelo;
         this.veiculo = veiculo;
+        this.codigo = codigo;
         this.rfid = rfid;
         this.nome = nome;
         this.descricao = descricao;

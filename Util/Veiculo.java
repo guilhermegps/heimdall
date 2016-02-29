@@ -17,6 +17,7 @@ public class Veiculo {
     private int id;
     private Modelo modelo;
     private Cor cor;
+    private int codigo;
     private String nome;
     private String rfid;
     private String placa;
@@ -26,20 +27,22 @@ public class Veiculo {
 
     public Veiculo() {
         this.id = 0;
-        this.modelo = null;
-        this.cor = null;
-        this.nome = "";
-        this.rfid = "";
-        this.placa = "";
+        this.modelo = new Modelo();
+        this.cor = new Cor();
+        this.codigo = 0;
+        this.nome = new String();
+        this.rfid = new String();
+        this.placa = new String();
         this.km = 0;
-        this.observacao = "";
-        this.registro = null;
+        this.observacao = new String();
+        this.registro = new Timestamp(0);
     }
-    
-    public Veiculo(int id, Modelo modelo, Cor cor, String nome, String rfid, String placa, float km, String observacao, Timestamp registro) {
+
+    public Veiculo(int id, Modelo modelo, Cor cor, int codigo, String nome, String rfid, String placa, float km, String observacao, Timestamp registro) {
         this.id = id;
         this.modelo = modelo;
         this.cor = cor;
+        this.codigo = codigo;
         this.nome = nome;
         this.rfid = rfid;
         this.placa = placa;
@@ -70,6 +73,14 @@ public class Veiculo {
 
     public void setCor(Cor cor) {
         this.cor = cor;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String getNome() {

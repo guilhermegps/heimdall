@@ -13,18 +13,19 @@ package heimdall.Util;
 public class Modelo {
     
     private int id;
-    private int codigo;
     private Classe classe;
+    private int codigo;
     private String modelo;
     private String marca;
     private String layout;
 
     public Modelo() {
         this.id = 0;
-        this.classe = null;
-        this.modelo = null;
-        this.marca = null;
-        this.layout = null;
+        this.classe = new Classe();
+        this.codigo = 0;
+        this.modelo = new String();
+        this.marca = new String();
+        this.layout = new String();
     }
 
     public Modelo(int id, int codigo, Classe classe, String modelo, String marca, String layout) {
@@ -44,20 +45,20 @@ public class Modelo {
         this.id = id;
     }
 
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
-    }
-
     public Classe getClasse() {
         return classe;
     }
 
     public void setClasse(Classe classe) {
         this.classe = classe;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String getModelo() {

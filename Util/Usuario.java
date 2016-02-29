@@ -21,6 +21,14 @@ public class Usuario {
     private boolean ativo;
 
     public Usuario() {
+        this.id = 0;
+        this.nome = new String();
+        this.senha =  new String();
+        this.nivel = 0;
+        this.login =  new String();
+        this.cpf =  new String();
+        this.primeiroLogin = true;
+        this.ativo = false;
     }
 
     public Usuario(int id, String nome, String senha, int nivel, String login, String cpf, boolean primeiroLogin, boolean ativo) {
