@@ -6,10 +6,21 @@ CREATE OR REPLACE FUNCTION f_veiculo_tbiu()
   RETURNS trigger AS
 $BODY$
  BEGIN
- 
+	
  	NEW.vc_placa_veiculo := UPPER(NEW.vc_placa_veiculo);
  	
  	NEW.vc_rfid_veiculo := UPPER(NEW.vc_rfid_veiculo);
+	
+	IF (TG_OP = 'INSERT') THEN
+ 		IF (NEW.nu_codigo_veiculo = 0) THEN
+			NEW.nu_codigo_veiculo = NEXTVAL('SEQ_CODIGO_REGISTRO');
+		END IF;
+	ELSE
+ 		IF (NEW.nu_codigo_veiculo = 0) THEN
+			RAISE EXCEPTION 'Não é permitido zerar o código do veículo.';
+			RETURN OLD;
+		END IF;
+	END IF;
  	
  	RETURN NEW;
  END;
