@@ -14,10 +14,13 @@ $BODY$
 	IF (TG_OP = 'INSERT') THEN
  		IF (NEW.nu_codigo_veiculo = 0) THEN
 			NEW.nu_codigo_veiculo = NEXTVAL('SEQ_CODIGO_REGISTRO');
+		ELSIF (NEW.nu_codigo_veiculo < 0) THEN
+			RAISE EXCEPTION 'Valor inválido para o campo do código.';
+			RETURN NULL;
 		END IF;
 	ELSE
- 		IF (NEW.nu_codigo_veiculo = 0) THEN
-			RAISE EXCEPTION 'Não é permitido zerar o código do veículo.';
+ 		IF (NEW.nu_codigo_veiculo <= 0) THEN
+			RAISE EXCEPTION 'Valor inválido para o campo do código.';
 			RETURN OLD;
 		END IF;
 	END IF;
@@ -28,6 +31,68 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION f_veiculo_tbiu()
+  OWNER TO postgres;
+  
+-- Function: f_modelo_tbiud()
+
+-- DROP FUNCTION f_modelo_tbiud();
+
+CREATE OR REPLACE FUNCTION f_modelo_tbiud()
+  RETURNS trigger AS
+$BODY$
+ BEGIN
+	
+	IF (TG_OP = 'INSERT') THEN
+ 		IF (NEW.nu_codigo_modelo = 0) THEN
+			NEW.nu_codigo_modelo = NEXTVAL('SEQ_CODIGO_REGISTRO');
+		ELSIF (NEW.nu_codigo_modelo < 0) THEN
+			RAISE EXCEPTION 'Valor inválido para o campo do código.';
+			RETURN NULL;
+		END IF;
+	ELSE
+ 		IF (NEW.nu_codigo_modelo <= 0) THEN
+			RAISE EXCEPTION 'Valor inválido para o campo do código.';
+			RETURN OLD;
+		END IF;
+	END IF;
+ 	
+ 	RETURN NEW;
+ END;
+ $BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION f_modelo_tbiud()
+  OWNER TO postgres;
+  
+-- Function: f_componente_tbiud()
+
+-- DROP FUNCTION f_componente_tbiud();
+
+CREATE OR REPLACE FUNCTION f_componente_tbiud()
+  RETURNS trigger AS
+$BODY$
+ BEGIN
+	
+	IF (TG_OP = 'INSERT') THEN
+ 		IF (NEW.nu_codigo_componente = 0) THEN
+			NEW.nu_codigo_componente = NEXTVAL('SEQ_CODIGO_REGISTRO');
+		ELSIF (NEW.nu_codigo_componente < 0) THEN
+			RAISE EXCEPTION 'Valor inválido para o campo do código.';
+			RETURN NULL;
+		END IF;
+	ELSE
+ 		IF (NEW.nu_codigo_componente <= 0) THEN
+			RAISE EXCEPTION 'Valor inválido para o campo do código.';
+			RETURN OLD;
+		END IF;
+	END IF;
+ 	
+ 	RETURN NEW;
+ END;
+ $BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION f_componente_tbiud()
   OWNER TO postgres;
 
 /*-- Function: f_usuario_tbiud()

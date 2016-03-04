@@ -8,5 +8,25 @@ CREATE TRIGGER veiculo_tbiu
   FOR EACH ROW
   EXECUTE PROCEDURE f_veiculo_tbiu();
 
--------------------------------------------------------------------------
+-- Trigger: modelo_tbiud on modelo
+
+-- DROP TRIGGER modelo_tbiud ON modelo;
+
+CREATE TRIGGER modelo_tbiud
+  BEFORE INSERT OR UPDATE
+  ON modelo
+  FOR EACH ROW
+  EXECUTE PROCEDURE f_modelo_tbiud();
+
+-- Trigger: componente_tbiud on componente
+
+-- DROP TRIGGER componente_tbiud ON componente;
+
+CREATE TRIGGER componente_tbiud
+  BEFORE INSERT OR UPDATE
+  ON componente
+  FOR EACH ROW
+  EXECUTE PROCEDURE f_componente_tbiud();
+
+  
 
