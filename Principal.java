@@ -216,7 +216,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_miExitActionPerformed
 
     private void miNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNewUserActionPerformed
-        new JNovoUsuario(usuario);
+        new JNovoUsuario(usuario).setVisible(true);
     }//GEN-LAST:event_miNewUserActionPerformed
 
     private void miAlterPasswdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAlterPasswdActionPerformed

@@ -216,11 +216,11 @@ public class JModelo extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Modelo", "Layout", "Marca", "Classe"
+                "Código", "Modelo", "Layout", "Marca", "Classe"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -232,9 +232,11 @@ public class JModelo extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tModelo);
         if (tModelo.getColumnModel().getColumnCount() > 0) {
             tModelo.getColumnModel().getColumn(0).setPreferredWidth(100);
-            tModelo.getColumnModel().getColumn(1).setPreferredWidth(100);
-            tModelo.getColumnModel().getColumn(2).setPreferredWidth(100);
-            tModelo.getColumnModel().getColumn(3).setPreferredWidth(100);
+            tModelo.getColumnModel().getColumn(1).setPreferredWidth(130);
+            tModelo.getColumnModel().getColumn(2).setResizable(false);
+            tModelo.getColumnModel().getColumn(2).setPreferredWidth(170);
+            tModelo.getColumnModel().getColumn(3).setPreferredWidth(130);
+            tModelo.getColumnModel().getColumn(4).setPreferredWidth(130);
         }
 
         jLabel5.setText("Nº");
@@ -357,10 +359,11 @@ public class JModelo extends javax.swing.JDialog {
             String classe = (aux.get(i).getClasse() != null) ? aux.get(i).getClasse().getNome() : null;
             
             dtm.addRow(new Object[] {
-                    aux.get(i).getModelo(),
-                    aux.get(i).getMarca(),
-                    aux.get(i).getLayout(),
-                    classe}
+                aux.get(i).getCodigo(),
+                aux.get(i).getModelo(),
+                aux.get(i).getLayout(),
+                aux.get(i).getMarca(),
+                classe}
             );
         }     
         tModelo.setModel(dtm);
