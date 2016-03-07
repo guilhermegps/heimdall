@@ -67,6 +67,34 @@ public class ExecutaSQL {
         return usuario;
     }
     
+    public ArrayList<Usuario> SELECT_BUSCA_USUARIO(String val){
+        val = trata.noSQLInjection(val);
+        
+        ArrayList<Usuario> usuario = new ArrayList<Usuario>();
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM usuario WHERE vc_nome_usuario ILIKE '%%' AND bo_registro_ativo_usuario = TRUE");
+            ResultSet rs = comando.executeQuery();
+            
+            while(rs.next()){
+                Usuario user = new Usuario();
+                user.setId(rs.getInt("id_usuario"));
+                user.setNome(rs.getString("vc_nome_usuario"));
+                user.setSenha(rs.getString("vc_senha_usuario"));
+                user.setNivel(rs.getInt("in_nivel_usuario"));
+                user.setLogin(rs.getString("vc_login_usuario"));
+                user.setCpf(rs.getString("vc_cpf_usuario"));
+                user.setPrimeiroLogin(rs.getBoolean("bo_primeiro_login_usuario"));
+                user.setAtivo(rs.getBoolean("bo_registro_ativo_usuario"));
+                
+                usuario.add(user);
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+        
+        return usuario;
+    }
+    
     public boolean INSERT_USUARIO(Usuario user){
         try{
             comando = conexao.getConexao().prepareStatement("INSERT INTO usuario VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?);");

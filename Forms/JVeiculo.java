@@ -69,7 +69,7 @@ public class JVeiculo extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         tfKm = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        tfCodigo = new javax.swing.JTextField();
         lpCondVeiculo = new javax.swing.JLayeredPane();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -157,7 +157,7 @@ public class JVeiculo extends javax.swing.JDialog {
         lpIdtVeiculo.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(tfKm, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(jLabel10, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(jTextField1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(tfCodigo, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpIdtVeiculoLayout = new javax.swing.GroupLayout(lpIdtVeiculo);
         lpIdtVeiculo.setLayout(lpIdtVeiculoLayout);
@@ -167,40 +167,37 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
+                    .addComponent(jLabel2)
                     .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
                         .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
                             .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel6))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel10))
+                        .addGap(3, 3, 3)
+                        .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cbCor, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfKm, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
+                                .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(jLabel6))
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel10))
-                                .addGap(3, 3, 3)
-                                .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cbCor, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(4, 4, 4)
-                                .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tfKm, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
-                                        .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel1))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
-                                                .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(4, 4, 4)
-                                                .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(tfVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                        .addGap(5, 5, 5)))
+                                        .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(4, 4, 4)
+                                        .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(tfVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         lpIdtVeiculoLayout.setVerticalGroup(
@@ -211,7 +208,7 @@ public class JVeiculo extends javax.swing.JDialog {
                     .addComponent(tfVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel10)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -229,7 +226,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addGap(11, 11, 11)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -439,7 +436,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tpVeiculo)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lpIdtVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                        .addComponent(lpIdtVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 474, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lpCondVeiculo)
@@ -636,6 +633,7 @@ public class JVeiculo extends javax.swing.JDialog {
     }
     
     private void liberarCampos(boolean b){
+        tfCodigo.setText("");
         tfVeiculo.setText("");
         tfPlaca.setText("");
         tfTagRfid.setText("");
@@ -644,6 +642,7 @@ public class JVeiculo extends javax.swing.JDialog {
         cbModelo.setSelectedItem(null);
         cbCor.setSelectedItem(null);
         
+        tfCodigo.setEnabled(b);
         tfVeiculo.setEnabled(b);
         tfPlaca.setEnabled(b);
         tfTagRfid.setEnabled(b);
@@ -677,13 +676,13 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLayeredPane lpCondVeiculo;
     private javax.swing.JLayeredPane lpIdtVeiculo;
     private javax.swing.JTable tVeiculo;
     private javax.swing.JToggleButton tbHelpCdtVeiculo;
     private javax.swing.JToolBar tbVeiculo;
+    private javax.swing.JTextField tfCodigo;
     private javax.swing.JTextField tfDataCdt;
     private javax.swing.JTextField tfKm;
     private javax.swing.JTextField tfLinhasTabela;
@@ -711,6 +710,7 @@ public class Campos extends Thread{
             Cor cor = (Cor) cbCor.getSelectedItem();
             int aux = tfVeiculo.getText().compareTo("");
             aux *= tfPlaca.getText().compareTo("");
+            aux *= tfCodigo.getText().compareTo("");
             if(aux==0 || modelo==null || !tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
                 bSaveCdtVeiculo.setEnabled(false);
             }else{
