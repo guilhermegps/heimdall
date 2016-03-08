@@ -72,7 +72,11 @@ public class ExecutaSQL {
         
         ArrayList<Usuario> usuario = new ArrayList<Usuario>();
         try{
-            comando = conexao.getConexao().prepareStatement("SELECT * FROM usuario WHERE vc_nome_usuario ILIKE '%%' AND bo_registro_ativo_usuario = TRUE");
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM usuario "
+                    + "WHERE vc_nome_usuario ILIKE '%"+val+"%' "
+                    + "OR vc_login_usuario ILIKE '%"+val+"%'"
+                    + "OR vc_cpf_usuario ILIKE '%"+val+"%'"
+                    + "AND bo_registro_ativo_usuario = TRUE");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){

@@ -16,12 +16,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author guilherme
  */
-public class JExcluirUsuario extends javax.swing.JDialog {
+public class JAlterarUsuario extends javax.swing.JDialog {
 
     /**
      * Creates new form JExcluirUsuario
      */
-    public JExcluirUsuario(java.awt.Frame parent, boolean modal) {
+    public JAlterarUsuario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -36,7 +36,6 @@ public class JExcluirUsuario extends javax.swing.JDialog {
     private void initComponents() {
 
         tfBusca = new javax.swing.JTextField();
-        bBuscar = new javax.swing.JToggleButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tUsuarios = new javax.swing.JTable();
@@ -46,11 +45,16 @@ public class JExcluirUsuario extends javax.swing.JDialog {
         bExcluir = new javax.swing.JButton();
         bCancelar = new javax.swing.JButton();
         bTornaAdmin = new javax.swing.JButton();
+        bBuscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Excluir Usuários");
 
-        bBuscar.setText("Buscar");
+        tfBusca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tfBuscaKeyPressed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Usuários"));
 
@@ -83,7 +87,7 @@ public class JExcluirUsuario extends javax.swing.JDialog {
             tUsuarios.getColumnModel().getColumn(0).setPreferredWidth(50);
             tUsuarios.getColumnModel().getColumn(1).setPreferredWidth(150);
             tUsuarios.getColumnModel().getColumn(2).setPreferredWidth(200);
-            tUsuarios.getColumnModel().getColumn(3).setPreferredWidth(200);
+            tUsuarios.getColumnModel().getColumn(3).setPreferredWidth(150);
         }
 
         jLabel9.setText("Nº");
@@ -91,6 +95,11 @@ public class JExcluirUsuario extends javax.swing.JDialog {
         tfLinhasTabela.setEditable(false);
 
         bMarcarTodos.setText("Todos");
+        bMarcarTodos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bMarcarTodosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -121,8 +130,20 @@ public class JExcluirUsuario extends javax.swing.JDialog {
         bExcluir.setText("Excluir");
 
         bCancelar.setText("Cancelar");
+        bCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCancelarActionPerformed(evt);
+            }
+        });
 
         bTornaAdmin.setText("Tornar Administrador");
+
+        bBuscar.setText("Buscar");
+        bBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bBuscarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -135,7 +156,7 @@ public class JExcluirUsuario extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(tfBusca)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(bBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(bTornaAdmin)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
@@ -148,10 +169,10 @@ public class JExcluirUsuario extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bBuscar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(13, 13, 13)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -164,6 +185,24 @@ public class JExcluirUsuario extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarActionPerformed
+        buscar(tfBusca.getText());
+    }//GEN-LAST:event_bBuscarActionPerformed
+
+    private void bCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarActionPerformed
+        dispose();
+    }//GEN-LAST:event_bCancelarActionPerformed
+
+    private void tfBuscaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfBuscaKeyPressed
+        if(evt.getKeyCode() == evt.VK_ENTER){
+            buscar(tfBusca.getText());
+        }
+    }//GEN-LAST:event_tfBuscaKeyPressed
+
+    private void bMarcarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMarcarTodosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bMarcarTodosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -182,20 +221,21 @@ public class JExcluirUsuario extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JExcluirUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JAlterarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JExcluirUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JAlterarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JExcluirUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JAlterarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JExcluirUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JAlterarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JExcluirUsuario dialog = new JExcluirUsuario(new javax.swing.JFrame(), true);
+                JAlterarUsuario dialog = new JAlterarUsuario(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -207,12 +247,17 @@ public class JExcluirUsuario extends javax.swing.JDialog {
         });
     }
     
-    private void Buscar(String valor){
+    private void marcarTodos(){
+        
+    }
+    
+    private void buscar(String valor){
+        if(valor.compareTo("")==0 || valor==null)
+            return;
+        
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Usuario> aux = new ArrayList<Usuario>();
         DefaultTableModel dtm = (DefaultTableModel) tUsuarios.getModel();
-        
-        
         
         while(dtm.getRowCount()>0){
             dtm.removeRow(0);
@@ -233,7 +278,7 @@ public class JExcluirUsuario extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton bBuscar;
+    private javax.swing.JButton bBuscar;
     private javax.swing.JButton bCancelar;
     private javax.swing.JButton bExcluir;
     private javax.swing.JButton bMarcarTodos;
