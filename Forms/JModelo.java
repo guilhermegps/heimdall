@@ -319,7 +319,7 @@ public class JModelo extends javax.swing.JDialog {
         initTable();
     }//GEN-LAST:event_bRefreshCdtModeloActionPerformed
     
-    public Classe[] carregarClasses(Boolean tipo){
+    private Classe[] carregarClasses(Boolean tipo){
         ExecutaSQL sql = new ExecutaSQL();
         classes = new ArrayList<Classe>();
         classes = sql.SELECT_CLASSE_TIPO(true);
@@ -332,7 +332,7 @@ public class JModelo extends javax.swing.JDialog {
         return c;
     }
     
-    public void liberarCampos(boolean b){
+    private void liberarCampos(boolean b){
         tfModelo.setText("");
         tfLayout.setText("");
         tfMarca.setText("");
@@ -344,7 +344,7 @@ public class JModelo extends javax.swing.JDialog {
         cbClasse.setEnabled(b);
     }
     
-    public void initTable(){
+    private void initTable(){
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Modelo> aux = new ArrayList<Modelo>();
         DefaultTableModel dtm = (DefaultTableModel) tModelo.getModel();

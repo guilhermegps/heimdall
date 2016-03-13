@@ -48,7 +48,7 @@ public class JAlterarUsuario extends javax.swing.JDialog {
         bBuscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Excluir Usuários");
+        setTitle("Administrar Usuários");
 
         tfBusca.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
