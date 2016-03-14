@@ -6,6 +6,7 @@
 package heimdall.Util;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  *
@@ -14,18 +15,24 @@ import java.io.Serializable;
 public class ComponenteRevisao implements Serializable {
     private String RFID;
     private String idVeiculo; 
-    private boolean verificado;
+    private boolean identificado;
+    private String motivoNaoIdentificado;
+    private Timestamp identificao;
 
     public ComponenteRevisao() {
         this.RFID = "";
         this.idVeiculo = "";
-        this.verificado = false;
+        this.identificado = false;
+        this.motivoNaoIdentificado = "";
+        this.identificao = null;
     }
 
-    public ComponenteRevisao(String RFID, String idVeiculo, boolean verificado) {
+    public ComponenteRevisao(String RFID, String idVeiculo, boolean identificado, String motivoNaoIdentificado, Timestamp identificao) {
         this.RFID = RFID;
         this.idVeiculo = idVeiculo;
-        this.verificado = verificado;
+        this.identificado = identificado;
+        this.motivoNaoIdentificado = motivoNaoIdentificado;
+        this.identificao = identificao;
     }
 
     public String getRFID() {
@@ -45,10 +52,26 @@ public class ComponenteRevisao implements Serializable {
     }
 
     public boolean isVerificado() {
-        return verificado;
+        return identificado;
     }
 
-    public void setVerificado(boolean verificado) {
-        this.verificado = verificado;
+    public void setIdentificado(boolean identificado) {
+        this.identificado = identificado;
+    }
+
+    public String getMotivoNaoIdentificado() {
+        return motivoNaoIdentificado;
+    }
+
+    public void setMotivoNaoIdentificado(String motivoNaoIdentificado) {
+        this.motivoNaoIdentificado = motivoNaoIdentificado;
+    }
+
+    public Timestamp getIdentificao() {
+        return identificao;
+    }
+
+    public void setIdentificao(Timestamp identificao) {
+        this.identificao = identificao;
     }
 }

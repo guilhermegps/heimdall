@@ -15,8 +15,8 @@ import heimdall.Util.Veiculo;
 import heimdall.Util.Modelo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 /**
  *
@@ -34,7 +34,26 @@ public class ExecutaSQL {
         trata = new TratarEntrada();
     }    
     
-    // Operações tb_usuario
+    // Funções
+    public Timestamp ConvertStringTimestamp(String dataHora){
+        dataHora = trata.noSQLInjection(dataHora);
+        Timestamp convertido = new Timestamp(0);
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT CAST(? AS TIMESTAMP);");            
+            comando.setString(1, dataHora);
+            
+            ResultSet rs = comando.executeQuery();
+            while(rs.next()){
+                convertido = rs.getTimestamp(1);
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+                
+        return convertido;
+    }
+    
+    // Operações usuario
     public ArrayList<Usuario> SELECT_USUARIO_ATIVO(String camp, String val){
         if(camp.compareTo("")==0 || val.compareTo("")==0 || camp==null || val==null)
             return new ArrayList<Usuario>();

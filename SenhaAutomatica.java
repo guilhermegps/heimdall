@@ -33,7 +33,7 @@ public class SenhaAutomatica {
     }
     
     public String senhaSemiAutomatica(String valor){//Senha criptografada criada a partir de uma senha automática e um valor especificado 
-        String senha = gerarSenha(tamanho);
+        String senha = gerarSenha();
         senha = encripta(valor+senha);
         
         return senha;
@@ -84,9 +84,9 @@ public class SenhaAutomatica {
         return result;         
     }  
     
-    public String gerarSenha(int digitos){
+    public String gerarSenha(){
         String senha = new String();
-        for(int i=0;i<digitos;i++){
+        for(int i=0;i<tamanho;i++){
             int x = (49+(int)(Math.random()*42)); 
             if((x>=58&&x<=64)){
                 i--;

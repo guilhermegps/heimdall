@@ -11,6 +11,8 @@ import heimdall.SenhaAutomatica;
 import heimdall.Util.ComponenteRevisao;
 import heimdall.Util.Modelo;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,6 +21,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +40,7 @@ import javax.swing.table.TableColumnModel;
  */
 public class JIRevisao extends javax.swing.JInternalFrame {
     private ArrayList<ComponenteRevisao> componentesRevisao;
+    private boolean killThread = false;
 
     /**
      * Creates new form JIRevisao
@@ -43,7 +48,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     public JIRevisao() {
         componentesRevisao = new ArrayList<ComponenteRevisao>();
         initComponents();
-        initTable();
+        new ComunicacaoRFID().start();
     }
 
     /**
@@ -85,7 +90,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Byte.class
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 true, false, false
@@ -145,12 +150,12 @@ public class JIRevisao extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bTodos)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel9)
                         .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(bExcluirVerificaoes)))
+                        .addComponent(bExcluirVerificaoes))
+                    .addComponent(bTodos))
                 .addContainerGap())
         );
 
@@ -188,6 +193,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarActionPerformed
+        killThread = true;
         dispose();
     }//GEN-LAST:event_bCancelarActionPerformed
 
@@ -196,27 +202,27 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_bExcluirVerificaoesActionPerformed
 
     private void bConcluirRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConcluirRevisaoActionPerformed
-        gerarArquivio();
-        mostraDadosArquivo();
+        int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza de que deseja concluir essa revisão?","Concluir revisão",JOptionPane.YES_NO_OPTION);
+        if(resp==0){
+            gerarArquivio();
+            killThread = true;
+            dispose();
+        }
     }//GEN-LAST:event_bConcluirRevisaoActionPerformed
 
     private void bTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTodosActionPerformed
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
-        componentesRevisao.add(new ComponenteRevisao(sdf.format(new Date()), "001", true));
-        initTable();
+        
     }//GEN-LAST:event_bTodosActionPerformed
 
-    private void deleteRows(){
-        DefaultTableModel dtm = (DefaultTableModel) tComponentesRevisao.getModel();
-        componentesRevisao = new ArrayList<ComponenteRevisao>();
-        
-        for(int i=0;i<tComponentesRevisao.getRowCount();i++){
-            if((boolean)tComponentesRevisao.getValueAt(i,0) == false){  
-                componentesRevisao.add(new ComponenteRevisao(
-                        (String)tComponentesRevisao.getValueAt(i,1),
-                        "001",
-                        true)
-                );
+    private void deleteRows(){ // Não pode haver linhas com Código RFID repetido  
+        for(int i=0;i<tComponentesRevisao.getRowCount();i++){ // Percorre a tabela
+            if((boolean)tComponentesRevisao.getValueAt(i,0) == true){ // Verificar se a caixa está marcada naquela linha
+                for(int f=0; f<componentesRevisao.size(); f++){ // Percorre a lista de componentes
+                    if(componentesRevisao.get(f).getRFID().compareTo((String)tComponentesRevisao.getValueAt(i,1))==0){ // Verifica se o componente é o mesmo da linha da tabela
+                        componentesRevisao.remove(f); // Remove o componente da lista
+                        break;
+                    }
+                }
             }
         }
         initTable();
@@ -264,7 +270,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
             objGravar.close();
             arquivo.close();
             
-            byte[] arquivoBytes = getBytesFile(f);
+            byte[] arquivoBytes = AES.getBytesFile(f);
             f.delete(); // Apaga arquivo temporario
             arquivo = new FileOutputStream(f);
             arquivo.write(AES.encriptaAES(arquivoBytes));
@@ -275,23 +281,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
         }
     }
     
-    private byte[] getBytesFile(File file) {  
-        int len =(int)file.length();    
-        byte[] sendBuf = new byte[len];  
-        FileInputStream inFile  = null;  
-        try {  
-           inFile = new FileInputStream(file);           
-           inFile.read(sendBuf, 0, len);    
-
-        } catch (FileNotFoundException fnfex) {  
-            Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, fnfex);
-        } catch (IOException ioex) {  
-            Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, ioex);
-        }  
-        return sendBuf; 
-    }
-    
-    private void mostraDadosArquivo(){
+    private void mostraDadosArquivo(){ // Para testes
         EncriptaDecriptaAES AES = new EncriptaDecriptaAES();
         String nomeArquivo = JOptionPane.showInputDialog("Nome do arquivo");
         File f = new File("revisoes/"+nomeArquivo);
@@ -299,7 +289,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
         
         try {
             if(f.exists() && f.isFile()){
-                bytesArquivo = getBytesFile(f);
+                bytesArquivo = AES.getBytesFile(f);
                 f = new File("revisoes/temporario.temp");
                 
                 FileOutputStream esc = new FileOutputStream(f);
@@ -338,4 +328,55 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     private javax.swing.JTable tComponentesRevisao;
     private javax.swing.JTextField tfLinhasTabela;
     // End of variables declaration//GEN-END:variables
+
+    
+    public class ComunicacaoRFID extends Thread{
+        private Socket socket;
+            
+        public ComunicacaoRFID(){
+            try {
+                socket = new Socket("192.168.100.8", 2020);
+            } catch (IOException ex) {
+                Logger.getLogger(ComunicacaoRFID.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        public void run(){
+            while(!killThread){
+                try {
+                    if(socket!=null && !socket.isClosed()){
+                        DataOutputStream esc = new DataOutputStream(socket.getOutputStream());
+                        DataInputStream ler = new DataInputStream(socket.getInputStream());
+
+                        //System.out.println("Tentando Enviar");
+                        esc.writeBytes("ping");
+                        //System.out.println("Enviei");
+                        byte b[] = new byte[100];
+                        ler.read(b);//Para receber em bytes
+                        String rfid = new String(b);
+                        if(rfid != null && rfid.compareTo("")!=0 && !existeComponente(rfid)){
+                            componentesRevisao.add(new ComponenteRevisao(rfid, "001", true, "", new ExecutaSQL().ConvertStringTimestamp(new Date().toString())));
+                            initTable();
+                        }
+                        //esc.close();
+                        //ler.close();
+                    }
+                    //socket.close();
+                }
+                catch(Exception ex){
+                    System.out.println(ex.getMessage());
+                }
+                
+            }
+        }
+        
+        private boolean existeComponente(String RFID){
+            for(int i=0; i<componentesRevisao.size(); i++){
+                if(componentesRevisao.get(i).getRFID().compareTo(RFID)==0){
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

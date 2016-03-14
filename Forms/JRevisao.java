@@ -5,12 +5,21 @@
  */
 package heimdall.Forms;
 
+import heimdall.EncriptaDecriptaAES;
 import heimdall.ExecutaSQL;
+import heimdall.SenhaAutomatica;
 import heimdall.Util.Componente;
+import heimdall.Util.ComponenteRevisao;
 import heimdall.Util.Veiculo;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -27,13 +36,23 @@ public class JRevisao extends javax.swing.JDialog {
     private DefaultTableModel dtm;
     private File f;
     private Veiculo veiculo;
+    private ArrayList<ComponenteRevisao> componentes;
     
     /**
      * Creates new form JRevisao
      */
+    private JRevisao() {
+        veiculo = new Veiculo();
+        componentes = new ArrayList<ComponenteRevisao>();
+        setModal(true);
+        initTable();
+        this.f = new File("");
+        initComponents();
+    }
     
     public JRevisao(Veiculo veiculo) {
         this.veiculo = veiculo;
+        componentes = new ArrayList<ComponenteRevisao>();
         setModal(true);
         initTable();
         this.f = new File("");
@@ -51,10 +70,10 @@ public class JRevisao extends javax.swing.JDialog {
 
         tfBusca = new javax.swing.JTextField();
         bBusca = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tRevisao = new javax.swing.JTable();
         bConcluirRevisao = new javax.swing.JButton();
         bCancelarRevisao = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tRevisaoComponentes = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Revisão do Veículo");
@@ -67,12 +86,34 @@ public class JRevisao extends javax.swing.JDialog {
             }
         });
 
-        tRevisao.setModel(dtm);
-        jScrollPane1.setViewportView(tRevisao);
-
         bConcluirRevisao.setText("Concluir");
 
         bCancelarRevisao.setText("Cancelar");
+
+        tRevisaoComponentes.setAutoCreateRowSorter(true);
+        tRevisaoComponentes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Número RFID", "Verificação", "Verificado"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tRevisaoComponentes.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jScrollPane1.setViewportView(tRevisaoComponentes);
+        if (tRevisaoComponentes.getColumnModel().getColumnCount() > 0) {
+            tRevisaoComponentes.getColumnModel().getColumn(0).setMinWidth(150);
+            tRevisaoComponentes.getColumnModel().getColumn(1).setMinWidth(160);
+            tRevisaoComponentes.getColumnModel().getColumn(2).setMinWidth(95);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -85,14 +126,12 @@ public class JRevisao extends javax.swing.JDialog {
                         .addComponent(tfBusca)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bBusca))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 1, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(bCancelarRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bConcluirRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(bConcluirRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -102,9 +141,9 @@ public class JRevisao extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bBusca))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bConcluirRevisao)
                     .addComponent(bCancelarRevisao))
@@ -116,10 +155,42 @@ public class JRevisao extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscaActionPerformed
-        tfBusca.setText(abrir());
+        abrir();
     }//GEN-LAST:event_bBuscaActionPerformed
     
-    public void initTable(){
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(JRevisao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(JRevisao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(JRevisao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(JRevisao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new JRevisao().setVisible(true);
+            }
+        });
+    }
+    
+    private void initTable(){
         /*ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Componente> aux = new ArrayList<Componente>();
         ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Verificado", "Codigo", "Componente"},
@@ -139,19 +210,76 @@ public class JRevisao extends javax.swing.JDialog {
         dtm = confTabela.getDtm();*/
     }
     
-    public String abrir(){
+    private void revisar(){
+        ExecutaSQL sql = new ExecutaSQL();
+        ArrayList<Componente> aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+        
+        for(int i=0; i<componentes.size(); i++){
+            if(componentes.get(i).getIdVeiculo().compareTo(this.veiculo.getRfid())==0 ||
+                componentes.get(i).getIdVeiculo().compareTo(this.veiculo.getPlaca())==0){
+                
+            } else{
+                componentes.get(i).setIdentificado(false);
+                componentes.get(i).setMotivoNaoIdentificado("Este componente não pertence a este veículo.");
+            }
+        }
+    }
+    
+    private void abrir(){
+        EncriptaDecriptaAES AES = new EncriptaDecriptaAES();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss"); 
+        byte bytesArquivo[];
+        String caminhoArquivo = buscarArquivo();
+        
+        if(caminhoArquivo.compareTo("")==0)
+            return;
+        
+        tfBusca.setText(buscarArquivo());
+        if(this.f.exists() && this.f.isFile()){
+                bytesArquivo = AES.getBytesFile(this.f);
+                File temporario = new File(new SenhaAutomatica(16).gerarSenha()+sdf.format(new Date())+".temp"); //Gera arquivo temporário
+                
+            try {
+                FileOutputStream esc;
+                esc = new FileOutputStream(temporario);
+                esc.write(AES.decriptaAES(bytesArquivo));
+                esc.close();
+                
+                FileInputStream ler = new FileInputStream(temporario);
+                ObjectInputStream objLer = new ObjectInputStream(ler);
+                componentes = (ArrayList<ComponenteRevisao>) objLer.readObject();
+                temporario.delete();  
+                JOptionPane.showMessageDialog(null, "Revisão importada com sucesso.");
+                int resp = JOptionPane.showConfirmDialog(null,"Deseja apagar o arquivo de revisão "+this.f.getName()+"?","Apagar arquivo de revisão?",JOptionPane.YES_NO_OPTION);
+                if(resp==0){
+                    this.f.delete();
+                }
+                //revisar();
+            } catch (Exception ex) {
+                new JErro(true, ex, true, false, false);
+            }          
+        } else{
+            JOptionPane.showMessageDialog(null, "O arquivo não pode ser encontrado.");
+        }
+    }
+    
+    private String buscarArquivo(){
         try{
             JFileChooser fileChooser = new JFileChooser(this.f.getAbsolutePath());  
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivo de Texto", "*.txt"));
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivo de Revisão", "*.rev"));
             int option = fileChooser.showOpenDialog(null);
             if (option == JFileChooser.APPROVE_OPTION) {
                 this.f = fileChooser.getSelectedFile();
-                return fileChooser.getSelectedFile().toString();
+                String enderecoArquivo = fileChooser.getSelectedFile().toString();
+                if(enderecoArquivo.substring(enderecoArquivo.lastIndexOf("."), enderecoArquivo.length()).toUpperCase().compareTo(".REV")==0)
+                    return enderecoArquivo;
+                else
+                    JOptionPane.showMessageDialog(null, "O arquivo selecionado não tem extensão '.rev'.");
             } else{
-                new JErro(true, "Este endereço de arquivo é inválido", false, true, false);
+                new JErro(true, "Este endereço de arquivo é inválido", false, false, false);
             }              
         }catch(Exception ex){
-            new JErro(true, ex, true, false, false);
+            new JErro(true, ex, true, true, false);
         }
         return "";
     }
@@ -161,11 +289,8 @@ public class JRevisao extends javax.swing.JDialog {
     private javax.swing.JButton bCancelarRevisao;
     private javax.swing.JButton bConcluirRevisao;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tRevisao;
+    private javax.swing.JTable tRevisaoComponentes;
     private javax.swing.JTextField tfBusca;
     // End of variables declaration//GEN-END:variables
 
-    private JRevisao() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

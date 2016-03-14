@@ -11,12 +11,9 @@ import heimdall.Util.Cor;
 import heimdall.Util.Modelo;
 import heimdall.Util.Veiculo;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 

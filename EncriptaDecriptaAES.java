@@ -5,24 +5,18 @@
  */
 package heimdall;
 import heimdall.Forms.JErro;
-import java.io.UnsupportedEncodingException;
+import heimdall.Portatil.JIRevisao;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.BadPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
- 
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import static javax.management.Query.lt;
-import javax.swing.JOptionPane;
  
 /**
  *
@@ -87,5 +81,21 @@ public class EncriptaDecriptaAES {
             new JErro(true, ex, true, false, false);
         }
         return meiaHash;
+    }
+    
+    public byte[] getBytesFile(File file) {  
+        int len =(int)file.length();    
+        byte[] sendBuf = new byte[len];  
+        FileInputStream inFile  = null;  
+        try {  
+           inFile = new FileInputStream(file);           
+           inFile.read(sendBuf, 0, len);    
+
+        } catch (FileNotFoundException fnfex) {  
+            Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, fnfex);
+        } catch (IOException ioex) {  
+            Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, ioex);
+        }  
+        return sendBuf; 
     }
 }
