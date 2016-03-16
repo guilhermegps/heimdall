@@ -7,29 +7,23 @@ package heimdall.Portatil;
 
 import heimdall.EncriptaDecriptaAES;
 import heimdall.ExecutaSQL;
-import heimdall.SenhaAutomatica;
 import heimdall.Util.ComponenteRevisao;
-import heimdall.Util.Modelo;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -41,12 +35,19 @@ import javax.swing.table.TableColumnModel;
 public class JIRevisao extends javax.swing.JInternalFrame {
     private ArrayList<ComponenteRevisao> componentesRevisao;
     private boolean killThread = false;
+    private JIdentificacaoVeiculoRevisao jveiculo;
 
     /**
      * Creates new form JIRevisao
      */
     public JIRevisao() {
         componentesRevisao = new ArrayList<ComponenteRevisao>();
+        jveiculo = new JIdentificacaoVeiculoRevisao();
+        jveiculo.setVisible(true);
+        if(!jveiculo.isIdentificado()){
+            JOptionPane.showMessageDialog(null, "Não foi possivel iniciar uma revisão pois não foi fornecido uma dientificaçã do veículo.");
+            return;
+        }
         initComponents();
         new ComunicacaoRFID().start();
     }
@@ -257,7 +258,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     private void gerarArquivio(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss"); 
         EncriptaDecriptaAES AES = new EncriptaDecriptaAES();
-        File f = new File("revisoes/heimdallrevisao_"+sdf.format(new Date())+".rev");
+        File f = new File("revisoes/"+jveiculo.getIdVeiculo()+"_heimdallrevisao_"+sdf.format(new Date())+".rev");
         
         try {
             if(f.isFile())
@@ -337,7 +338,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
             try {
                 socket = new Socket("192.168.100.8", 2020);
             } catch (IOException ex) {
-                Logger.getLogger(ComunicacaoRFID.class.getName()).log(Level.SEVERE, null, ex);
+                
             }
         }
         
