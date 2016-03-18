@@ -38,6 +38,9 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     private ArrayList<ComponenteRevisao> componentesRevisao;
     private boolean killThread = false;
     private JIdentificacaoVeiculoRevisao jveiculo;
+    private DataOutputStream esc = new DataOutputStream(out);
+    private DataInputStream ler = new DataInputStream(in);
+    private Socket socket;
 
     /**
      * Creates new form JIRevisao
@@ -291,7 +294,14 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     private void sair(){
         componentesRevisao = new ArrayList<ComponenteRevisao>();
         killThread = true;
-        dispose();
+        try {
+            esc.close();
+            ler.close();
+            socket.close();
+            dispose();
+        } catch (IOException ex) {
+            Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void mostraDadosArquivo(){ // Para testes
@@ -344,7 +354,6 @@ public class JIRevisao extends javax.swing.JInternalFrame {
 
     
     public class ComunicacaoRFID extends Thread{
-        private Socket socket;
             
         public ComunicacaoRFID(){
             try {
@@ -354,10 +363,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
             }
         }
         
-        public void run(){
-            DataOutputStream esc = new DataOutputStream(out);
-            DataInputStream ler = new DataInputStream(in);
-            
+        public void run(){            
             while(!killThread){
                 try {
                     if(socket!=null && !socket.isClosed()){
@@ -377,13 +383,6 @@ public class JIRevisao extends javax.swing.JInternalFrame {
                 catch(Exception ex){
                     System.out.println(ex.getMessage());
                 }
-            }
-            try {
-                esc.close();
-                ler.close();
-                socket.close();
-            } catch (IOException ex) {
-                Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         

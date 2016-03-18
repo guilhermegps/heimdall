@@ -26,6 +26,7 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
     private boolean identificado=false;
     private String idVeiculo;
     private boolean killThread = false;
+    private Socket socket;
 
     /**
      * Creates new form JVeiculoRevisao
@@ -123,7 +124,12 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
         idVeiculo = tfPlaca.getText().toUpperCase();
         identificado = true;
         killThread = true;
-        dispose();
+            try {
+                socket.close();
+                dispose();
+            } catch (IOException ex) {
+                Logger.getLogger(JIdentificacaoVeiculoRevisao.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//GEN-LAST:event_bOkActionPerformed
 
     /**
@@ -194,7 +200,6 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public class ComunicacaoRFID extends Thread{
-        private Socket socket;
             
         public ComunicacaoRFID(){
             try {
@@ -221,10 +226,10 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
                         if(rfid != null && rfid.compareTo("")!=0){
                             idVeiculo = rfid;
                             identificado = true;
-                            dispose();
                             esc.close();
                             ler.close();
                             socket.close();
+                            dispose();
                             return;
                         }
                     }
@@ -237,6 +242,7 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
                 esc.close();
                 ler.close();
                 socket.close();
+                dispose();
             } catch (IOException ex) {
                 Logger.getLogger(JIdentificacaoVeiculoRevisao.class.getName()).log(Level.SEVERE, null, ex);
             }
