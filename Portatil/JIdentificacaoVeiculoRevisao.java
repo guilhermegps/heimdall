@@ -10,6 +10,8 @@ import heimdall.Util.ComponenteRevisao;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import static java.lang.System.in;
+import static java.lang.System.out;
 import java.net.Socket;
 import java.util.Date;
 import java.util.logging.Level;
@@ -23,6 +25,7 @@ import javax.swing.JOptionPane;
 public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
     private boolean identificado=false;
     private String idVeiculo;
+    private boolean killThread = false;
 
     /**
      * Creates new form JVeiculoRevisao
@@ -117,8 +120,9 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Esta placa não está em um formato válido");
             return;
         }
-        idVeiculo = tfPlaca.getText();
+        idVeiculo = tfPlaca.getText().toUpperCase();
         identificado = true;
+        killThread = true;
         dispose();
     }//GEN-LAST:event_bOkActionPerformed
 
@@ -201,14 +205,17 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
         }
         
         public void run(){
-            while(tbRFID.isSelected()){
+            DataOutputStream esc = new DataOutputStream(out);
+            DataInputStream ler = new DataInputStream(in);
+
+            while(!killThread){
                 try {
-                    if(socket!=null && !socket.isClosed()){
-                        DataOutputStream esc = new DataOutputStream(socket.getOutputStream());
-                        DataInputStream ler = new DataInputStream(socket.getInputStream());
+                    if(socket!=null && !socket.isClosed() && tbRFID.isSelected()){
+                        esc = new DataOutputStream(socket.getOutputStream());
+                        ler = new DataInputStream(socket.getInputStream());
 
                         esc.writeBytes("ping");
-                        byte b[] = new byte[100];
+                        byte b[] = new byte[11];
                         ler.read(b);//Para receber em bytes
                         String rfid = new String(b);
                         if(rfid != null && rfid.compareTo("")!=0){
@@ -225,7 +232,13 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
                 catch(Exception ex){
                     System.out.println(ex.getMessage());
                 }
-                
+            }
+            try {
+                esc.close();
+                ler.close();
+                socket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(JIdentificacaoVeiculoRevisao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

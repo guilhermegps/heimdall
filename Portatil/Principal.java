@@ -32,6 +32,7 @@ public class Principal extends javax.swing.JFrame {
         dpPrincipal = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Leitora Portátil");
 
         jToolBar1.setFloatable(false);
 

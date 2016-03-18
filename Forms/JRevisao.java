@@ -7,25 +7,24 @@ package heimdall.Forms;
 
 import heimdall.EncriptaDecriptaAES;
 import heimdall.ExecutaSQL;
+import heimdall.Portatil.JTableRenderer;
 import heimdall.SenhaAutomatica;
 import heimdall.Util.Componente;
 import heimdall.Util.ComponenteRevisao;
 import heimdall.Util.Veiculo;
-import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -40,23 +39,14 @@ public class JRevisao extends javax.swing.JDialog {
     
     /**
      * Creates new form JRevisao
-     */
-    private JRevisao() {
-        veiculo = new Veiculo();
-        componentes = new ArrayList<ComponenteRevisao>();
-        setModal(true);
-        initTable();
-        this.f = new File("");
-        initComponents();
-    }
-    
+     */    
     public JRevisao(Veiculo veiculo) {
         this.veiculo = veiculo;
         componentes = new ArrayList<ComponenteRevisao>();
         setModal(true);
-        initTable();
         this.f = new File("");
         initComponents();
+        initTable();
     }
 
     /**
@@ -72,8 +62,13 @@ public class JRevisao extends javax.swing.JDialog {
         bBusca = new javax.swing.JButton();
         bConcluirRevisao = new javax.swing.JButton();
         bCancelarRevisao = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tRevisaoComponentes = new javax.swing.JTable();
+        tfLinhasTabela = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        tfIdVeiculo = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Revisão do Veículo");
@@ -89,6 +84,11 @@ public class JRevisao extends javax.swing.JDialog {
         bConcluirRevisao.setText("Concluir");
 
         bCancelarRevisao.setText("Cancelar");
+        bCancelarRevisao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCancelarRevisaoActionPerformed(evt);
+            }
+        });
 
         tRevisaoComponentes.setAutoCreateRowSorter(true);
         tRevisaoComponentes.setModel(new javax.swing.table.DefaultTableModel(
@@ -115,6 +115,44 @@ public class JRevisao extends javax.swing.JDialog {
             tRevisaoComponentes.getColumnModel().getColumn(2).setMinWidth(95);
         }
 
+        tfLinhasTabela.setEditable(false);
+
+        jLabel9.setText("Nº");
+
+        tfIdVeiculo.setEditable(false);
+
+        jLabel1.setText("Veículo:");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(tfIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -122,6 +160,7 @@ public class JRevisao extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tfBusca)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -130,8 +169,7 @@ public class JRevisao extends javax.swing.JDialog {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(bCancelarRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bConcluirRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE))
+                        .addComponent(bConcluirRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -141,9 +179,9 @@ public class JRevisao extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bBusca))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bConcluirRevisao)
                     .addComponent(bCancelarRevisao))
@@ -157,6 +195,10 @@ public class JRevisao extends javax.swing.JDialog {
     private void bBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscaActionPerformed
         abrir();
     }//GEN-LAST:event_bBuscaActionPerformed
+
+    private void bCancelarRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarRevisaoActionPerformed
+        dispose();
+    }//GEN-LAST:event_bCancelarRevisaoActionPerformed
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -185,29 +227,36 @@ public class JRevisao extends javax.swing.JDialog {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JRevisao().setVisible(true);
+                new JRevisao(new Veiculo()).setVisible(true);
             }
         });
     }
     
     private void initTable(){
-        /*ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Componente> aux = new ArrayList<Componente>();
-        ConfiguraTabelaPadrao confTabela = new ConfiguraTabelaPadrao(new String [] {"Verificado", "Codigo", "Componente"},
-                new boolean [] {false, false},
-                new Class [] {java.awt.Image.class, java.lang.String.class, java.lang.String.class}
-        );
+        DefaultTableModel dtm = (DefaultTableModel) tRevisaoComponentes.getModel();
+        
+        while(dtm.getRowCount()>0){
+            dtm.removeRow(0);
+        }
                 
-        aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
-        Object valores[] = new Object[aux.size()];
-        for(int i=0; i<aux.size(); i++){
-            confTabela.addLinha(new Object[] {
-                    aux.get(i).getNome(),
-                    aux.get(i).getModelo().getModelo(),
-                    aux.get(i).getRfid()}
-            );
-        }     
-        dtm = confTabela.getDtm();*/
+        for(int i=0;i<componentes.size();i++){
+            ImageIcon icone = new ImageIcon();
+            
+            if(componentes.get(i).isVerificado())
+                icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/accept.png"));
+            else
+                icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png"));
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+            dtm.addRow(new Object[] {componentes.get(i).getRFID(), sdf.format(componentes.get(i).getIdentificao()), icone});   
+        }
+        
+        TableColumnModel columnModel = tRevisaoComponentes.getColumnModel();
+        JTableRenderer renderer = new JTableRenderer();
+        columnModel.getColumn(2).setCellRenderer(renderer);
+        
+        tRevisaoComponentes.setModel(dtm);
+        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
     private void revisar(){
@@ -288,9 +337,14 @@ public class JRevisao extends javax.swing.JDialog {
     private javax.swing.JButton bBusca;
     private javax.swing.JButton bCancelarRevisao;
     private javax.swing.JButton bConcluirRevisao;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tRevisaoComponentes;
     private javax.swing.JTextField tfBusca;
+    private javax.swing.JTextField tfIdVeiculo;
+    private javax.swing.JTextField tfLinhasTabela;
     // End of variables declaration//GEN-END:variables
 
 }

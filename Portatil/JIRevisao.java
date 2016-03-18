@@ -17,6 +17,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import static java.lang.System.in;
+import static java.lang.System.out;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Não foi possivel iniciar uma revisão pois não foi fornecido uma dientificaçã do veículo.");
             return;
         }
+        System.out.println(jveiculo.getIdVeiculo());
         initComponents();
         new ComunicacaoRFID().start();
     }
@@ -194,8 +197,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarActionPerformed
-        killThread = true;
-        dispose();
+        sair();
     }//GEN-LAST:event_bCancelarActionPerformed
 
     private void bExcluirVerificaoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bExcluirVerificaoesActionPerformed
@@ -203,11 +205,14 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_bExcluirVerificaoesActionPerformed
 
     private void bConcluirRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConcluirRevisaoActionPerformed
+        if(componentesRevisao.size()<1){
+            JOptionPane.showMessageDialog(null, "Não há componentes identificados nessa revisão.");
+            return;
+        }
         int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza de que deseja concluir essa revisão?","Concluir revisão",JOptionPane.YES_NO_OPTION);
         if(resp==0){
-            gerarArquivio();
-            killThread = true;
-            dispose();
+            gerarArquivo();
+            sair();
         }
     }//GEN-LAST:event_bConcluirRevisaoActionPerformed
 
@@ -255,10 +260,11 @@ public class JIRevisao extends javax.swing.JInternalFrame {
         tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
-    private void gerarArquivio(){
+    private void gerarArquivo(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss"); 
         EncriptaDecriptaAES AES = new EncriptaDecriptaAES();
-        File f = new File("revisoes/"+jveiculo.getIdVeiculo()+"_heimdallrevisao_"+sdf.format(new Date())+".rev");
+        String idVeiculo = jveiculo.getIdVeiculo().replaceAll(" ", "_").replaceAll("-", "_");
+        File f = new File("revisoes/"+idVeiculo+"_heimdallrevisao_"+sdf.format(new Date())+".rev");
         
         try {
             if(f.isFile())
@@ -280,6 +286,12 @@ public class JIRevisao extends javax.swing.JInternalFrame {
         } catch (IOException ex) {
             Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void sair(){
+        componentesRevisao = new ArrayList<ComponenteRevisao>();
+        killThread = true;
+        dispose();
     }
     
     private void mostraDadosArquivo(){ // Para testes
@@ -343,31 +355,35 @@ public class JIRevisao extends javax.swing.JInternalFrame {
         }
         
         public void run(){
+            DataOutputStream esc = new DataOutputStream(out);
+            DataInputStream ler = new DataInputStream(in);
+            
             while(!killThread){
                 try {
                     if(socket!=null && !socket.isClosed()){
-                        DataOutputStream esc = new DataOutputStream(socket.getOutputStream());
-                        DataInputStream ler = new DataInputStream(socket.getInputStream());
+                        esc = new DataOutputStream(socket.getOutputStream());
+                        ler = new DataInputStream(socket.getInputStream());
 
-                        //System.out.println("Tentando Enviar");
                         esc.writeBytes("ping");
-                        //System.out.println("Enviei");
-                        byte b[] = new byte[100];
+                        byte b[] = new byte[11];
                         ler.read(b);//Para receber em bytes
                         String rfid = new String(b);
-                        if(rfid != null && rfid.compareTo("")!=0 && !existeComponente(rfid)){
-                            componentesRevisao.add(new ComponenteRevisao(rfid, "001", true, "", new ExecutaSQL().ConvertStringTimestamp(new Date().toString())));
+                        if(rfid != null && rfid.compareTo("")!=0 && !existeComponente(rfid) && rfid.compareTo(jveiculo.getIdVeiculo())!=0){
+                            componentesRevisao.add(new ComponenteRevisao(rfid, jveiculo.getIdVeiculo(), true, "", new ExecutaSQL().ConvertStringTimestamp(new Date().toString())));
                             initTable();
                         }
-                        //esc.close();
-                        //ler.close();
                     }
-                    //socket.close();
                 }
                 catch(Exception ex){
                     System.out.println(ex.getMessage());
                 }
-                
+            }
+            try {
+                esc.close();
+                ler.close();
+                socket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
