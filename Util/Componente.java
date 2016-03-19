@@ -20,7 +20,7 @@ public class Componente {
     private String rfid;
     private String nome;
     private String descricao;
-    private Date validade;
+    private Timestamp validade;
     private Timestamp registro;
 
     public Componente() {
@@ -31,11 +31,11 @@ public class Componente {
         this.rfid = new String();
         this.nome = new String();
         this.descricao = new String();
-        this.validade = new Date();
+        this.validade = new Timestamp(0);
         this.registro = new Timestamp(0);
     }
 
-    public Componente(int id, Modelo modelo, Veiculo veiculo, int codigo, String rfid, String nome, String descricao, Date validade, Timestamp registro) {
+    public Componente(int id, Modelo modelo, Veiculo veiculo, int codigo, String rfid, String nome, String descricao, Timestamp validade, Timestamp registro) {
         this.id = id;
         this.modelo = modelo;
         this.veiculo = veiculo;
@@ -103,11 +103,11 @@ public class Componente {
         this.descricao = descricao;
     }
 
-    public Date getValidade() {
+    public Timestamp getValidade() {
         return validade;
     }
 
-    public void setValidade(Date validade) {
+    public void setValidade(Timestamp validade) {
         this.validade = validade;
     }
 

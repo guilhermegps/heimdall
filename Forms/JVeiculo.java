@@ -468,8 +468,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private void bCancelCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelCdtVeiculoActionPerformed
         int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cancelar as alterações feitas?","Tem certeza?",JOptionPane.YES_NO_OPTION);
         if(resp==0){
-            killThread = true;
-            dispose();
+            sair();
         }
     }//GEN-LAST:event_bCancelCdtVeiculoActionPerformed
 
@@ -568,6 +567,11 @@ public class JVeiculo extends javax.swing.JDialog {
         return cores;
     }
     
+    private void sair(){
+        killThread = true;
+        dispose();
+    }
+    
     private void cadastrarNovo(){
         ExecutaSQL sql = new ExecutaSQL();
         Veiculo veiculo = new Veiculo();
@@ -594,6 +598,7 @@ public class JVeiculo extends javax.swing.JDialog {
             }
         }else{
             JOptionPane.showMessageDialog(null,"Escolha o modelo do seu veículo");
+            return;
         }
         
         initTable();
@@ -690,7 +695,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JTabbedPane tpVeiculo;
     // End of variables declaration//GEN-END:variables
 
-public class Campos extends Thread{
+    public class Campos extends Thread{
         public void run(){
             while(!killThread){
                 verificarCampos();

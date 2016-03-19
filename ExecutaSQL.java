@@ -468,6 +468,33 @@ public class ExecutaSQL {
     }
     
     // Operações componente
+    public ArrayList<Componente> SELECT_ALL_COMPONENTE(){
+        
+        ArrayList<Componente> componente = new ArrayList<Componente>();
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM componente ORDER BY nu_codigo_componente;");
+            ResultSet rs = comando.executeQuery();
+            
+            while(rs.next()){
+                Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", ""+rs.getInt("modelo_id_modelo")).get(0);
+                Veiculo veiculo = (Veiculo) SELECT_VEICULO("id_veiculo", ""+rs.getInt("veiculo_id_veiculo")).get(0);
+                Componente comp = new Componente();
+                                
+                comp.setId(rs.getInt("id_componente"));
+                comp.setCodigo(rs.getInt("nu_codigo_componente"));
+                comp.setNome(rs.getString("vc_nome_componente"));
+                comp.setRfid(rs.getString("vc_rfid_componente"));
+                comp.setDescricao(rs.getString("tx_descricao_componente"));
+                comp.setValidade(rs.getTimestamp("dt_validade_componente"));
+                comp.setRegistro(rs.getTimestamp("dh_registro_componente"));
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+        
+        return componente;
+    }
+    
     public ArrayList<Componente> SELECT_COMPONENTE(String camp, String val){
         camp = trata.noSQLInjection(camp);
         val = trata.noSQLInjection(val);
@@ -484,11 +511,11 @@ public class ExecutaSQL {
                 Componente comp = new Componente();
                                 
                 comp.setId(rs.getInt("id_componente"));
-                comp.setCodigo(rs.getInt("nu_codigocomponente"));
+                comp.setCodigo(rs.getInt("nu_codigo_componente"));
                 comp.setNome(rs.getString("vc_nome_componente"));
                 comp.setRfid(rs.getString("vc_rfid_componente"));
                 comp.setDescricao(rs.getString("tx_descricao_componente"));
-                comp.setValidade(rs.getDate("dt_validade_componente"));
+                comp.setValidade(rs.getTimestamp("dt_validade_componente"));
                 comp.setRegistro(rs.getTimestamp("dh_registro_componente"));
             }       
         }catch(Exception ex){
@@ -497,6 +524,30 @@ public class ExecutaSQL {
         
         return componente;
     }
+    
+    public boolean INSERT_COMPONENTE(Componente componente){
+        try{
+            comando = conexao.getConexao().prepareStatement("INSERT INTO componente(\n" +
+                            "            id_componente, modelo_id_modelo, veiculo_id_veiculo, nu_codigo_componente, \n" +
+                            "            vc_rfid_componente, vc_nome_componente, tx_descricao_componente, \n" +
+                            "            dt_validade_componente, dh_registro_componente)\n" +
+                            "    VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?, ?);");
+            
+            comando.setInt(1, componente.getModelo().getId());
+            comando.setInt(2, componente.getVeiculo().getId());
+            comando.setInt(3, componente.getCodigo());
+            comando.setString(4,componente.getRfid());
+            comando.setString(5, componente.getNome());
+            comando.setString(6, componente.getDescricao());
+            comando.setTimestamp(7, componente.getValidade());
+            comando.setTimestamp(8, componente.getRegistro());
+            
+            return comando.execute();
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }       
+        return false;
+    }   
     
     
     

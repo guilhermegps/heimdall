@@ -6,8 +6,15 @@
 package heimdall.Forms;
 
 import heimdall.ExecutaSQL;
+import heimdall.Util.Componente;
+import heimdall.Util.Cor;
 import heimdall.Util.Modelo;
+import heimdall.Util.Veiculo;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,15 +24,21 @@ import javax.swing.table.DefaultTableModel;
 public class JComponente extends javax.swing.JDialog {
 
     private ArrayList<Modelo> m;
-    private String[] colunas = new String [] {"N°", "Modelo", "Marca", "Layout", "Classe"};
     private DefaultTableModel dtm;
+    private Veiculo veiculo;
+    private boolean killThread = false;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
     /**
      * Creates new form JComponente
      */
-    public JComponente() {
+    public JComponente(Veiculo veiculo) {
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
+        this.veiculo = veiculo;
         initComponents();
+        initTable();
+        new Campos().start();
+        liberarCampos(false); 
     }
 
     /**
@@ -37,22 +50,24 @@ public class JComponente extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tpHelp = new javax.swing.JTextPane();
         lpIdtComponente = new javax.swing.JLayeredPane();
         jLabel1 = new javax.swing.JLabel();
         tfComponente = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tpObsComponente = new javax.swing.JTextPane();
+        tpDescComponente = new javax.swing.JTextPane();
         cbModelo = new javax.swing.JComboBox();
         bCustomModelo = new javax.swing.JButton();
-        bRefreshModelo = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         tfDataValComponente = new javax.swing.JTextField();
+        tfCodigo = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         tpComponente = new javax.swing.JTabbedPane();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        jPanel2 = new javax.swing.JPanel();
+        tfLinhasTabela = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane7 = new javax.swing.JScrollPane();
         tComponente = new javax.swing.JTable();
         tbVeiculo = new javax.swing.JToolBar();
         bSaveCdtComponente = new javax.swing.JButton();
@@ -67,28 +82,30 @@ public class JComponente extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         tfTagRfid = new javax.swing.JTextField();
         tfDataCdt = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        tfNomeVeiculo = new javax.swing.JTextField();
+        tfPlacaVeiculo = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Cadastrar Componente");
-
-        tpHelp.setEditable(false);
-        jScrollPane2.setViewportView(tpHelp);
 
         lpIdtComponente.setBorder(javax.swing.BorderFactory.createTitledBorder("Informações do Componente"));
         lpIdtComponente.setToolTipText("");
         lpIdtComponente.setName(""); // NOI18N
         lpIdtComponente.setPreferredSize(new java.awt.Dimension(400, 200));
 
-        jLabel1.setText("Modelo*: ");
+        jLabel1.setText("Modelo*:");
 
         tfComponente.setToolTipText("Escreva o nome do veiculo. EX: Onibus 05");
 
         jLabel2.setText("Descrição: ");
 
-        jLabel3.setText("Nome*: ");
+        jLabel3.setText("Nome*:");
 
-        tpObsComponente.setPreferredSize(new java.awt.Dimension(5, 25));
-        jScrollPane1.setViewportView(tpObsComponente);
+        tpDescComponente.setPreferredSize(new java.awt.Dimension(5, 25));
+        jScrollPane1.setViewportView(tpDescComponente);
 
         cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
         cbModelo.setToolTipText("Escolha o modelo do veículo");
@@ -101,18 +118,14 @@ public class JComponente extends javax.swing.JDialog {
             }
         });
 
-        bRefreshModelo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 32x32/refresh.png"))); // NOI18N
-        bRefreshModelo.setToolTipText("Atualizar Lista de Modelos");
-        bRefreshModelo.setPreferredSize(new java.awt.Dimension(32, 32));
-        bRefreshModelo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bRefreshModeloActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("Data Validade: ");
+        jLabel4.setText("Data Validade:");
 
         tfDataValComponente.setToolTipText("Escreva o nome do veiculo. EX: Onibus 05");
+        tfDataValComponente.setEnabled(false);
+
+        tfCodigo.setToolTipText("Escreva o nome do veiculo. EX: Onibus 05");
+
+        jLabel5.setText("Código*:");
 
         lpIdtComponente.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtComponente.setLayer(tfComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -121,9 +134,10 @@ public class JComponente extends javax.swing.JDialog {
         lpIdtComponente.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtComponente.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtComponente.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtComponente.setLayer(bRefreshModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtComponente.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtComponente.setLayer(tfDataValComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(tfCodigo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtComponente.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpIdtComponenteLayout = new javax.swing.GroupLayout(lpIdtComponente);
         lpIdtComponente.setLayout(lpIdtComponenteLayout);
@@ -131,27 +145,32 @@ public class JComponente extends javax.swing.JDialog {
             lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2)
+                .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                         .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel5))
                         .addGap(18, 18, 18)
                         .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfComponente)
                             .addGroup(lpIdtComponenteLayout.createSequentialGroup()
-                                .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(bRefreshModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(lpIdtComponenteLayout.createSequentialGroup()
+                                .addComponent(cbModelo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lpIdtComponenteLayout.createSequentialGroup()
+                    .addGroup(lpIdtComponenteLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tfDataValComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfDataValComponente)))
+                .addGap(18, 18, 18))
         );
         lpIdtComponenteLayout.setVerticalGroup(
             lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,33 +178,89 @@ public class JComponente extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(lpIdtComponenteLayout.createSequentialGroup()
-                        .addGap(34, 34, 34)
+                        .addGap(39, 39, 39)
                         .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel1))
-                            .addComponent(bRefreshModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel1))))
                     .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
-                        .addComponent(tfComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfDataValComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                        .addComponent(tfComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5)))
+                .addGap(11, 11, 11)
+                .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(tfDataValComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
+                .addContainerGap())
         );
 
-        tComponente.setAutoCreateRowSorter(true);
-        tComponente.setModel(dtm);
-        tComponente.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane3.setViewportView(tComponente);
+        tfLinhasTabela.setEditable(false);
 
-        tpComponente.addTab("Componentes", jScrollPane3);
+        jLabel10.setText("Nº");
+
+        tComponente.setAutoCreateRowSorter(true);
+        tComponente.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Código", "Nome", "Modelo", "Código RFID", "Descrição", "Validade", "Registro"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tComponente.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tComponente.setAutoscrolls(false);
+        tComponente.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane7.setViewportView(tComponente);
+        if (tComponente.getColumnModel().getColumnCount() > 0) {
+            tComponente.getColumnModel().getColumn(0).setPreferredWidth(80);
+            tComponente.getColumnModel().getColumn(1).setPreferredWidth(100);
+            tComponente.getColumnModel().getColumn(2).setPreferredWidth(100);
+            tComponente.getColumnModel().getColumn(3).setPreferredWidth(130);
+            tComponente.getColumnModel().getColumn(4).setPreferredWidth(200);
+            tComponente.getColumnModel().getColumn(5).setPreferredWidth(150);
+            tComponente.getColumnModel().getColumn(6).setPreferredWidth(150);
+        }
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 753, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addContainerGap())
+        );
+
+        tpComponente.addTab("Componente", jPanel2);
 
         tbVeiculo.setFloatable(false);
         tbVeiculo.setRollover(true);
@@ -265,9 +340,9 @@ public class JComponente extends javax.swing.JDialog {
 
         lpCondVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Informações do Cadastro"));
 
-        jLabel7.setText("Tag RFID*: ");
+        jLabel7.setText("Tag RFID*:");
 
-        jLabel8.setText("Data Cdt.: ");
+        jLabel8.setText("Data Cdt.:");
 
         tfDataCdt.setEditable(false);
         tfDataCdt.setFocusable(false);
@@ -311,6 +386,47 @@ public class JComponente extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Informações do Veículo"));
+
+        jLabel6.setText("Veículo:");
+
+        jLabel9.setText("Placa:");
+
+        tfNomeVeiculo.setEditable(false);
+
+        tfPlacaVeiculo.setEditable(false);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tfNomeVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tfPlacaVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(tfNomeVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(tfPlacaVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -318,34 +434,34 @@ public class JComponente extends javax.swing.JDialog {
             .addComponent(tbVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tpComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lpIdtComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lpCondVeiculo)
-                            .addComponent(jScrollPane2))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(tpComponente, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE))
-                .addContainerGap())
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tbVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lpCondVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lpIdtComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lpIdtComponente, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(tpComponente, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                .addComponent(tpComponente)
                 .addContainerGap())
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void bNewCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNewCdtComponenteActionPerformed
@@ -357,12 +473,10 @@ public class JComponente extends javax.swing.JDialog {
     }//GEN-LAST:event_bRefreshCdtComponenteActionPerformed
 
     private void bCancelCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelCdtComponenteActionPerformed
-
-      /*  int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cancelar as alterações feitas?","Tem certeza?",JOptionPane.YES_NO_OPTION);
+        int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cancelar as alterações feitas?","Tem certeza?",JOptionPane.YES_NO_OPTION);
         if(resp==0){
-            jm.dispose();
-            dispose();
-        }*/
+            sair();
+        }
     }//GEN-LAST:event_bCancelCdtComponenteActionPerformed
 
     private void bEditCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCdtComponenteActionPerformed
@@ -373,12 +487,9 @@ public class JComponente extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfDataCdtActionPerformed
 
-    private void bRefreshModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshModeloActionPerformed
-        //cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
-    }//GEN-LAST:event_bRefreshModeloActionPerformed
-
     private void bCustomModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCustomModeloActionPerformed
-        //jm.setVisible(true);
+        new JModelo(false).setVisible(true);
+        cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
     }//GEN-LAST:event_bCustomModeloActionPerformed
 
     /**
@@ -411,25 +522,115 @@ public class JComponente extends javax.swing.JDialog {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JComponente().setVisible(true);
+                new JComponente(new Veiculo()).setVisible(true);
             }
         });
     }
     
-    public String[] carregarModelos(){
+    private Modelo[] carregarModelos(){
         ExecutaSQL sql = new ExecutaSQL();
         m = new ArrayList<Modelo>();
-        m = sql.SELECT_ALL_MODELO_VEICULO();
-        String[] modelos = new String[m.size()+1];
+        m = sql.SELECT_ALL_MODELO_COMPONENTE();
+        Modelo[] modelos = new Modelo[m.size()+1];
         
-        modelos[0] = "";
+        modelos[0] = null;
         for(int i=1; i<=m.size(); i++){
-            modelos[i] = m.get(i-1).getModelo();
+            modelos[i] = m.get(i-1);
         }
         
         return modelos;
     }
-
+    
+    private void sair(){
+        killThread = true;
+        dispose();
+    }
+    
+    
+    private void cadastrarNovo(){
+        ExecutaSQL sql = new ExecutaSQL();
+        Veiculo v = veiculo;
+        Modelo modelo = (Modelo) cbModelo.getSelectedItem();
+        
+        if(v == null){
+            new JErro(true, "Este componente não pode ser cadastrado pois não existe um veículo vinculado a ele.", true, false, false);
+            sair();
+            return;
+        }
+        
+        if(modelo != null){
+            Componente componente = new Componente(
+                    0,
+                    modelo,
+                    v,
+                    Integer.parseInt(tfCodigo.getText()),
+                    tfTagRfid.getText(),
+                    tfNomeVeiculo.getText(),
+                    tpDescComponente.getText(),
+                    new Timestamp(new Date().getTime()),
+                    new Timestamp(new Date().getTime())
+            );
+            
+            if(!sql.INSERT_COMPONENTE(componente)){
+                JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
+                liberarCampos(false);
+            }else{
+                JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
+            }
+        }else{
+            JOptionPane.showMessageDialog(null,"Escolha o modelo do seu componente");
+            return;
+        }
+        
+        initTable();
+    }
+    
+    private void initTable(){
+        ExecutaSQL sql = new ExecutaSQL();
+        ArrayList<Componente> aux = new ArrayList<Componente>();
+        DefaultTableModel dtm = (DefaultTableModel) tComponente.getModel();
+        
+        while(dtm.getRowCount()>0){
+            dtm.removeRow(0);
+        }
+        
+        aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+        for(int i=0; i<aux.size(); i++){
+            String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
+            String validade = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getValidade());
+            String modelo = (aux.get(i).getModelo() != null) ? aux.get(i).getModelo().getModelo() : null;
+            
+            dtm.addRow(new Object[] {
+                aux.get(i).getCodigo(),
+                aux.get(i).getNome(),
+                modelo,
+                aux.get(i).getRfid(),                    
+                aux.get(i).getDescricao(),
+                validade,
+                registro}
+            );
+        }     
+        tComponente.setModel(dtm);
+        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+    }
+    
+    private void liberarCampos(boolean b){
+        tfCodigo.setText("");
+        tfComponente.setText("");
+        tfTagRfid.setText("");
+        tfDataValComponente.setText("");
+        tpDescComponente.setText("");
+        cbModelo.setSelectedItem(null);
+        
+        tfCodigo.setEnabled(b);
+        tfComponente.setEnabled(b);
+        tfTagRfid.setEnabled(b);
+        tfDataValComponente.setEnabled(b);
+        tpDescComponente.setEnabled(b);
+        cbModelo.setEnabled(b);
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancelCdtComponente;
     private javax.swing.JButton bCustomModelo;
@@ -437,29 +638,62 @@ public class JComponente extends javax.swing.JDialog {
     private javax.swing.JButton bEditCdtComponente;
     private javax.swing.JButton bNewCdtComponente;
     private javax.swing.JButton bRefreshCdtComponente;
-    private javax.swing.JButton bRefreshModelo;
     private javax.swing.JButton bSaveCdtComponente;
     private javax.swing.JComboBox cbModelo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JLayeredPane lpCondVeiculo;
     private javax.swing.JLayeredPane lpIdtComponente;
     private javax.swing.JTable tComponente;
     private javax.swing.JToggleButton tbHelpCdtComponente;
     private javax.swing.JToolBar tbVeiculo;
+    private javax.swing.JTextField tfCodigo;
     private javax.swing.JTextField tfComponente;
     private javax.swing.JTextField tfDataCdt;
     private javax.swing.JTextField tfDataValComponente;
+    private javax.swing.JTextField tfLinhasTabela;
+    private javax.swing.JTextField tfNomeVeiculo;
+    private javax.swing.JTextField tfPlacaVeiculo;
     private javax.swing.JTextField tfTagRfid;
     private javax.swing.JTabbedPane tpComponente;
-    private javax.swing.JTextPane tpHelp;
-    private javax.swing.JTextPane tpObsComponente;
+    private javax.swing.JTextPane tpDescComponente;
     // End of variables declaration//GEN-END:variables
+
+    public class Campos extends Thread{
+        public void run(){
+            while(!killThread){
+                verificarCampos();
+                try{
+                    tfDataCdt.setText(sdf.format(new Date()));                    
+                }catch(Exception ex){
+                    new JErro(true, ex.getMessage(), true, true, false);
+                }
+            }
+        }
+        
+        public void verificarCampos(){
+            Modelo modelo = (Modelo) cbModelo.getSelectedItem();
+            
+            int aux = tfNomeVeiculo.getText().compareTo("");
+            aux *= tfTagRfid.getText().compareTo("");
+            aux *= tfCodigo.getText().compareTo("");
+            if(aux==0 || modelo==null){
+                bSaveCdtComponente.setEnabled(false);
+            }else{
+                bSaveCdtComponente.setEnabled(true);
+            }
+        }
+    }
 }
