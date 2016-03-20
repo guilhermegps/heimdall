@@ -23,12 +23,12 @@ public class JModelo extends javax.swing.JDialog {
      * Creates new form JModelo
      */
     
-    private Boolean classe;
+    private boolean classe;
     private ArrayList<Classe> classes;
     private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private boolean killThread = false;
     
-    public JModelo(Boolean classe) {
+    public JModelo(boolean classe/*true - Veiculo; false - componente*/) {
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         this.classe = classe;
         initComponents();
@@ -319,10 +319,10 @@ public class JModelo extends javax.swing.JDialog {
         initTable();
     }//GEN-LAST:event_bRefreshCdtModeloActionPerformed
     
-    private Classe[] carregarClasses(Boolean tipo){
+    private Classe[] carregarClasses(boolean tipo){
         ExecutaSQL sql = new ExecutaSQL();
         classes = new ArrayList<Classe>();
-        classes = sql.SELECT_CLASSE_TIPO(true);
+        classes = sql.SELECT_CLASSE_TIPO(tipo);
         Classe c[] = new Classe[classes.size()+1];
         
         c[0] = null;
@@ -353,7 +353,7 @@ public class JModelo extends javax.swing.JDialog {
             dtm.removeRow(0);
         }
                 
-        aux = sql.SELECT_ALL_MODELO_VEICULO();
+        aux = sql.SELECT_MODELO_TIPO_CLASSE(classe);
         Object valores[] = new Object[aux.size()];
         for(int i=0; i<aux.size(); i++){
             String classe = (aux.get(i).getClasse() != null) ? aux.get(i).getClasse().getNome() : null;

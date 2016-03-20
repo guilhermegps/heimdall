@@ -25,6 +25,7 @@ public class JComponente extends javax.swing.JDialog {
 
     private ArrayList<Modelo> m;
     private DefaultTableModel dtm;
+    private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private Veiculo veiculo;
     private boolean killThread = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
@@ -98,7 +99,7 @@ public class JComponente extends javax.swing.JDialog {
 
         jLabel1.setText("Modelo*:");
 
-        tfComponente.setToolTipText("Escreva o nome do veiculo. EX: Onibus 05");
+        tfComponente.setToolTipText("Escreva o nome do componente. EX: Radiador");
 
         jLabel2.setText("Descrição: ");
 
@@ -155,7 +156,7 @@ public class JComponente extends javax.swing.JDialog {
                         .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                                 .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tfComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -271,6 +272,11 @@ public class JComponente extends javax.swing.JDialog {
         bSaveCdtComponente.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bSaveCdtComponente.setPreferredSize(new java.awt.Dimension(50, 50));
         bSaveCdtComponente.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bSaveCdtComponente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bSaveCdtComponenteActionPerformed(evt);
+            }
+        });
         tbVeiculo.add(bSaveCdtComponente);
 
         bNewCdtComponente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 50x50/new-file.png"))); // NOI18N
@@ -393,8 +399,10 @@ public class JComponente extends javax.swing.JDialog {
         jLabel9.setText("Placa:");
 
         tfNomeVeiculo.setEditable(false);
+        tfNomeVeiculo.setText(this.veiculo.getNome());
 
         tfPlacaVeiculo.setEditable(false);
+        tfPlacaVeiculo.setText(this.veiculo.getPlaca());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -435,7 +443,7 @@ public class JComponente extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tpComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(tpComponente, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lpIdtComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -465,7 +473,8 @@ public class JComponente extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bNewCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNewCdtComponenteActionPerformed
-
+        operacao = 1;
+        liberarCampos(true);  
     }//GEN-LAST:event_bNewCdtComponenteActionPerformed
 
     private void bRefreshCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshCdtComponenteActionPerformed
@@ -491,6 +500,17 @@ public class JComponente extends javax.swing.JDialog {
         new JModelo(false).setVisible(true);
         cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
     }//GEN-LAST:event_bCustomModeloActionPerformed
+
+    private void bSaveCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveCdtComponenteActionPerformed
+        switch (operacao) {
+            case 1:
+            cadastrarNovo();
+            break;
+            case 2:
+
+            break;
+        }
+    }//GEN-LAST:event_bSaveCdtComponenteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -530,7 +550,7 @@ public class JComponente extends javax.swing.JDialog {
     private Modelo[] carregarModelos(){
         ExecutaSQL sql = new ExecutaSQL();
         m = new ArrayList<Modelo>();
-        m = sql.SELECT_ALL_MODELO_COMPONENTE();
+        m = sql.SELECT_MODELO_TIPO_CLASSE(false);
         Modelo[] modelos = new Modelo[m.size()+1];
         
         modelos[0] = null;
@@ -549,10 +569,9 @@ public class JComponente extends javax.swing.JDialog {
     
     private void cadastrarNovo(){
         ExecutaSQL sql = new ExecutaSQL();
-        Veiculo v = veiculo;
         Modelo modelo = (Modelo) cbModelo.getSelectedItem();
         
-        if(v == null){
+        if(this.veiculo == null){
             new JErro(true, "Este componente não pode ser cadastrado pois não existe um veículo vinculado a ele.", true, false, false);
             sair();
             return;
@@ -562,10 +581,10 @@ public class JComponente extends javax.swing.JDialog {
             Componente componente = new Componente(
                     0,
                     modelo,
-                    v,
+                    this.veiculo,
                     Integer.parseInt(tfCodigo.getText()),
                     tfTagRfid.getText(),
-                    tfNomeVeiculo.getText(),
+                    tfComponente.getText(),
                     tpDescComponente.getText(),
                     new Timestamp(new Date().getTime()),
                     new Timestamp(new Date().getTime())
@@ -597,7 +616,7 @@ public class JComponente extends javax.swing.JDialog {
         aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
         for(int i=0; i<aux.size(); i++){
             String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
-            String validade = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getValidade());
+            String validade = new SimpleDateFormat("dd/MM/yyyy").format(aux.get(i).getValidade());
             String modelo = (aux.get(i).getModelo() != null) ? aux.get(i).getModelo().getModelo() : null;
             
             dtm.addRow(new Object[] {

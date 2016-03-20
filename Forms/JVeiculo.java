@@ -542,7 +542,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private Modelo[] carregarModelos(){
         ExecutaSQL sql = new ExecutaSQL();
         m = new ArrayList<Modelo>();
-        m = sql.SELECT_ALL_MODELO_VEICULO();
+        m = sql.SELECT_MODELO_TIPO_CLASSE(true);
         Modelo[] modelos = new Modelo[m.size()+1];
         
         modelos[0] = null;

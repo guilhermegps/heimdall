@@ -87,6 +87,6 @@ public class Modelo {
 
     @Override
     public String toString() {
-        return modelo;
+        return classe.getNome()+" - "+marca+" - "+modelo;
     }   
 }

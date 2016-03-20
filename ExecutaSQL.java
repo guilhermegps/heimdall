@@ -220,24 +220,18 @@ public class ExecutaSQL {
     }
     
     // Operações modelo
-    public ArrayList<Modelo> SELECT_ALL_MODELO_VEICULO(){
+    public ArrayList<Modelo> SELECT_ALL_MODELO(){
         ArrayList<Modelo> m = new ArrayList<Modelo>();
         try{
-            comando = conexao.getConexao().prepareStatement("SELECT c.*, m.* FROM modelo AS m\n" +
-                                    "INNER JOIN classe c ON (c.id_classe = m.classe_id_classe)\n" +
-                                    "WHERE c.bo_tipo_classe = TRUE\n" +
-                                    "ORDER BY m.vc_descricao_modelo");
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM modelo ORDER BY vc_descricao_modelo");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
                 Modelo modelo = new Modelo();
-                Classe classe = new Classe();
-                classe.setId(rs.getInt("id_classe"));
-                classe.setNome(rs.getString("vc_nome_classe"));
-                classe.setTipo(rs.getBoolean("bo_tipo_classe"));
+                Classe classe = (Classe) SELECT_CLASSE("id_classe", ""+rs.getInt("classe_id_classe")).get(0);
                 
-                modelo.setClasse(classe);
                 modelo.setId(rs.getInt("id_modelo"));
+                modelo.setClasse(classe);
                 modelo.setCodigo(rs.getInt("nu_codigo_modelo"));
                 modelo.setModelo(rs.getString("vc_descricao_modelo"));
                 modelo.setMarca(rs.getString("vc_marca_modelo"));
@@ -251,13 +245,15 @@ public class ExecutaSQL {
         return m;
     }    
     
-    public ArrayList<Modelo> SELECT_ALL_MODELO_COMPONENTE(){
+    public ArrayList<Modelo> SELECT_MODELO_TIPO_CLASSE(boolean tipo){
         ArrayList<Modelo> m = new ArrayList<Modelo>();
         try{
             comando = conexao.getConexao().prepareStatement("SELECT c.*, m.* FROM modelo AS m\n" +
                                     "INNER JOIN classe c ON (c.id_classe = m.classe_id_classe)\n" +
-                                    "WHERE c.bo_tipo_classe = FALSE\n" +
-                                    "ORDER BY m.vc_descricao_modelo");
+                                    "WHERE c.bo_tipo_classe = "+tipo+"\n" +
+                                    "ORDER BY c.vc_nome_classe,\n" +
+                                    "m.vc_marca_modelo,\n" +
+                                    "m.vc_descricao_modelo");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
@@ -267,8 +263,8 @@ public class ExecutaSQL {
                 classe.setNome(rs.getString("vc_nome_classe"));
                 classe.setTipo(rs.getBoolean("bo_tipo_classe"));
                 
-                modelo.setClasse(classe);
                 modelo.setId(rs.getInt("id_modelo"));
+                modelo.setClasse(classe);
                 modelo.setCodigo(rs.getInt("nu_codigo_modelo"));
                 modelo.setModelo(rs.getString("vc_descricao_modelo"));
                 modelo.setMarca(rs.getString("vc_marca_modelo"));
@@ -481,12 +477,16 @@ public class ExecutaSQL {
                 Componente comp = new Componente();
                                 
                 comp.setId(rs.getInt("id_componente"));
+                comp.setModelo(modelo);
+                comp.setVeiculo(veiculo);
                 comp.setCodigo(rs.getInt("nu_codigo_componente"));
                 comp.setNome(rs.getString("vc_nome_componente"));
                 comp.setRfid(rs.getString("vc_rfid_componente"));
                 comp.setDescricao(rs.getString("tx_descricao_componente"));
                 comp.setValidade(rs.getTimestamp("dt_validade_componente"));
                 comp.setRegistro(rs.getTimestamp("dh_registro_componente"));
+                
+                componente.add(comp);
             }       
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
@@ -505,18 +505,21 @@ public class ExecutaSQL {
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                
                 Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", ""+rs.getInt("modelo_id_modelo")).get(0);
                 Veiculo veiculo = (Veiculo) SELECT_VEICULO("id_veiculo", ""+rs.getInt("veiculo_id_veiculo")).get(0);
                 Componente comp = new Componente();
                                 
                 comp.setId(rs.getInt("id_componente"));
+                comp.setModelo(modelo);
+                comp.setVeiculo(veiculo);
                 comp.setCodigo(rs.getInt("nu_codigo_componente"));
                 comp.setNome(rs.getString("vc_nome_componente"));
                 comp.setRfid(rs.getString("vc_rfid_componente"));
                 comp.setDescricao(rs.getString("tx_descricao_componente"));
                 comp.setValidade(rs.getTimestamp("dt_validade_componente"));
                 comp.setRegistro(rs.getTimestamp("dh_registro_componente"));
+                
+                componente.add(comp);
             }       
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
@@ -545,8 +548,8 @@ public class ExecutaSQL {
             return comando.execute();
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
+            return false;
         }       
-        return false;
     }   
     
     

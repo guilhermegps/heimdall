@@ -28,7 +28,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="tpComponente" pref="0" max="32767" attributes="0"/>
+                  <Component id="tpComponente" pref="764" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="lpIdtComponente" min="-2" pref="443" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -93,7 +93,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="tfCodigo" min="-2" pref="120" max="-2" attributes="0"/>
-                                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="tfComponente" min="-2" pref="120" max="-2" attributes="0"/>
@@ -163,7 +163,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="tfComponente">
           <Properties>
-            <Property name="toolTipText" type="java.lang.String" value="Escreva o nome do veiculo. EX: Onibus 05"/>
+            <Property name="toolTipText" type="java.lang.String" value="Escreva o nome do componente. EX: Radiador"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
@@ -385,6 +385,9 @@
             </Property>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bSaveCdtComponenteActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="bNewCdtComponente">
           <Properties>
@@ -610,11 +613,17 @@
         <Component class="javax.swing.JTextField" name="tfNomeVeiculo">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="this.veiculo.getNome()" type="code"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tfPlacaVeiculo">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="this.veiculo.getPlaca()" type="code"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>

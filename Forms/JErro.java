@@ -17,14 +17,14 @@ import java.util.logging.Logger;
 public class JErro extends javax.swing.JDialog {
     
     private String icone = "", mensagemDetalhes, tituloJanela, mensagemJanela; 
-    private boolean gerarLog, tipoLog /*true = erro, false = Alerta*/, gerarJanela, sairSistema /*Sai do sistema após encerrar a janela*/;
+    private boolean gerarLog, isError /*true = erro, false = Alerta*/, gerarJanela, sairSistema /*Sai do sistema após encerrar a janela*/;
 
     /**
      * Creates new form JErro
      */
-    public JErro(boolean janela, Throwable exception, boolean log, boolean tipo, boolean sair) {
+    public JErro(boolean janela, Throwable exception, boolean log, boolean isError, boolean sair) {
         gerarLog = log;
-        tipoLog = tipo;
+        isError = isError;
         gerarJanela = janela;
         sairSistema = sair;     
         mensagemDetalhes = getStack(exception); 
@@ -35,7 +35,7 @@ public class JErro extends javax.swing.JDialog {
     public JErro(boolean janela, String mensagem, boolean log, boolean tipo, boolean sair) {
         mensagemDetalhes = mensagem;
         gerarLog = log;
-        tipoLog = tipo;
+        isError = tipo;
         gerarJanela = janela;
         sairSistema = sair;       
         
@@ -140,7 +140,7 @@ public class JErro extends javax.swing.JDialog {
             mensagemDetalhes = "Um erro foi identificado, mas não possui detalhes especificados.";
         }
         
-        if(tipoLog){
+        if(isError){
             tituloJanela = "ERRO";
             mensagemJanela = "<html> <b><font color=\"red\" align=\"justify\">Houve um erro no sistema ao tentar realizar uma operação.<br/> Favor, entrar em contato com o suporte. <br/> Detalhes do erro a seguir: </font></b>";
             icone = "/heimdall/img/icons 80x80/error.png";

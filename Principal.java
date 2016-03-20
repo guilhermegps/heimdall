@@ -8,6 +8,8 @@ package heimdall;
 
 import heimdall.Forms.*;
 import heimdall.Util.Usuario;
+import heimdall.Util.Veiculo;
+import java.util.ArrayList;
 
 /**
  *
@@ -47,16 +49,18 @@ public class Principal extends javax.swing.JFrame {
         tPrincipal = new javax.swing.JTable();
         jToolBar1 = new javax.swing.JToolBar();
         jMenuBar1 = new javax.swing.JMenuBar();
-        menuArq = new javax.swing.JMenu();
-        miNewVeicle = new javax.swing.JMenuItem();
+        miLofout = new javax.swing.JMenu();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         miLogout = new javax.swing.JMenuItem();
-        miExit = new javax.swing.JMenuItem();
+        miSair = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenu1 = new javax.swing.JMenu();
+        miVeiculo = new javax.swing.JMenuItem();
+        miComponente = new javax.swing.JMenuItem();
         menuUsuarios = new javax.swing.JMenu();
-        miNewUser = new javax.swing.JMenuItem();
-        miAlterPasswd = new javax.swing.JMenuItem();
+        miNovoUsuario = new javax.swing.JMenuItem();
+        miAlterarSenha = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
 
@@ -120,18 +124,9 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        menuArq.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/page.png"))); // NOI18N
-        menuArq.setText("Arquivos");
-
-        miNewVeicle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/car_add.png"))); // NOI18N
-        miNewVeicle.setText("Veículo");
-        miNewVeicle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miNewVeicleActionPerformed(evt);
-            }
-        });
-        menuArq.add(miNewVeicle);
-        menuArq.add(jSeparator3);
+        miLofout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cog.png"))); // NOI18N
+        miLofout.setText("Sistema");
+        miLofout.add(jSeparator3);
 
         miLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/status_offline.png"))); // NOI18N
         miLogout.setText("Logout");
@@ -140,40 +135,65 @@ public class Principal extends javax.swing.JFrame {
                 miLogoutActionPerformed(evt);
             }
         });
-        menuArq.add(miLogout);
+        miLofout.add(miLogout);
 
-        miExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cross.png"))); // NOI18N
-        miExit.setText("Sair");
-        miExit.addActionListener(new java.awt.event.ActionListener() {
+        miSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/door_in.png"))); // NOI18N
+        miSair.setText("Sair");
+        miSair.setToolTipText("");
+        miSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miExitActionPerformed(evt);
+                miSairActionPerformed(evt);
             }
         });
-        menuArq.add(miExit);
-        menuArq.add(jSeparator1);
-        menuArq.add(jSeparator2);
+        miLofout.add(miSair);
+        miLofout.add(jSeparator1);
+        miLofout.add(jSeparator2);
 
-        jMenuBar1.add(menuArq);
+        jMenuBar1.add(miLofout);
 
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/car.png"))); // NOI18N
+        jMenu1.setText("Frota");
+
+        miVeiculo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/car_add.png"))); // NOI18N
+        miVeiculo.setText("Veículo");
+        miVeiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miVeiculoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miVeiculo);
+
+        miComponente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/brick_add.png"))); // NOI18N
+        miComponente.setText("Componente");
+        miComponente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miComponenteActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miComponente);
+
+        jMenuBar1.add(jMenu1);
+
+        menuUsuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/group.png"))); // NOI18N
         menuUsuarios.setText("Usuários");
 
-        miNewUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/user_add.png"))); // NOI18N
-        miNewUser.setText("Novo usuário");
-        miNewUser.addActionListener(new java.awt.event.ActionListener() {
+        miNovoUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/user_add.png"))); // NOI18N
+        miNovoUsuario.setText("Novo usuário");
+        miNovoUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miNewUserActionPerformed(evt);
+                miNovoUsuarioActionPerformed(evt);
             }
         });
-        menuUsuarios.add(miNewUser);
+        menuUsuarios.add(miNovoUsuario);
 
-        miAlterPasswd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/key_go.png"))); // NOI18N
-        miAlterPasswd.setText("Alterar Senha");
-        miAlterPasswd.addActionListener(new java.awt.event.ActionListener() {
+        miAlterarSenha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/key_go.png"))); // NOI18N
+        miAlterarSenha.setText("Alterar Senha");
+        miAlterarSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miAlterPasswdActionPerformed(evt);
+                miAlterarSenhaActionPerformed(evt);
             }
         });
-        menuUsuarios.add(miAlterPasswd);
+        menuUsuarios.add(miAlterarSenha);
 
         jMenuItem3.setText("jMenuItem3");
         menuUsuarios.add(jMenuItem3);
@@ -200,9 +220,9 @@ public class Principal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void miNewVeicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNewVeicleActionPerformed
+    private void miVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miVeiculoActionPerformed
         new JVeiculo().setVisible(true);
-    }//GEN-LAST:event_miNewVeicleActionPerformed
+    }//GEN-LAST:event_miVeiculoActionPerformed
 
     private void miLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLogoutActionPerformed
         logado = false;
@@ -211,19 +231,33 @@ public class Principal extends javax.swing.JFrame {
         new Principal();
     }//GEN-LAST:event_miLogoutActionPerformed
 
-    private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
+    private void miSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSairActionPerformed
         System.exit(0);
-    }//GEN-LAST:event_miExitActionPerformed
+    }//GEN-LAST:event_miSairActionPerformed
 
-    private void miNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNewUserActionPerformed
+    private void miNovoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNovoUsuarioActionPerformed
         new JNovoUsuario(usuario).setVisible(true);
-    }//GEN-LAST:event_miNewUserActionPerformed
+    }//GEN-LAST:event_miNovoUsuarioActionPerformed
 
-    private void miAlterPasswdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAlterPasswdActionPerformed
+    private void miAlterarSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAlterarSenhaActionPerformed
         JNovaSenha novaSenha = new JNovaSenha(usuario);
         novaSenha.setVisible(true);
         usuario = novaSenha.getUsuario();
-    }//GEN-LAST:event_miAlterPasswdActionPerformed
+    }//GEN-LAST:event_miAlterarSenhaActionPerformed
+
+    private void miComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miComponenteActionPerformed
+        JSelecionaItem selecionaItem = new JSelecionaItem("Selecione um Veículo", "Código", "Nome do Veículo", true);
+        
+        ExecutaSQL sql = new ExecutaSQL();
+        ArrayList<Veiculo> veiculo = sql.SELECT_ALL_VEICULO();
+        for(int i=0; i<veiculo.size(); i++)
+            selecionaItem.add(veiculo.get(i).getCodigo(), veiculo.get(i).getNome(), veiculo.get(i));
+        
+        selecionaItem.setVisible(true);
+        
+        if(selecionaItem.getObjetoSelecionado()!=null)
+            new JComponente((Veiculo)selecionaItem.getObjetoSelecionado()).setVisible(true);
+    }//GEN-LAST:event_miComponenteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,6 +306,7 @@ public class Principal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem3;
@@ -280,13 +315,14 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JMenu menuArq;
     private javax.swing.JMenu menuUsuarios;
-    private javax.swing.JMenuItem miAlterPasswd;
-    private javax.swing.JMenuItem miExit;
+    private javax.swing.JMenuItem miAlterarSenha;
+    private javax.swing.JMenuItem miComponente;
+    private javax.swing.JMenu miLofout;
     private javax.swing.JMenuItem miLogout;
-    private javax.swing.JMenuItem miNewUser;
-    private javax.swing.JMenuItem miNewVeicle;
+    private javax.swing.JMenuItem miNovoUsuario;
+    private javax.swing.JMenuItem miSair;
+    private javax.swing.JMenuItem miVeiculo;
     private javax.swing.JTable tPrincipal;
     // End of variables declaration//GEN-END:variables
 }
