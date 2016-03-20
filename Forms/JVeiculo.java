@@ -582,12 +582,12 @@ public class JVeiculo extends javax.swing.JDialog {
         if(modelo != null){
             veiculo.setModelo(modelo);
             veiculo.setCor(cor);
-            veiculo.setNome(tfVeiculo.getText());
+            veiculo.setNome(tfVeiculo.getText().trim());
             veiculo.setPlaca(tfPlaca.getText());
             if(km != null)
                 veiculo.setKm(km);
             veiculo.setObservacao(tpObs.getText());
-            veiculo.setRfid(tfTagRfid.getText());
+            veiculo.setRfid(tfTagRfid.getText().trim());
             veiculo.setRegistro(new Timestamp(new Date().getTime()));
             
             if(!sql.INSERT_VEICULO(veiculo)){

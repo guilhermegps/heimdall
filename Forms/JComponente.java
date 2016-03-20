@@ -583,8 +583,8 @@ public class JComponente extends javax.swing.JDialog {
                     modelo,
                     this.veiculo,
                     Integer.parseInt(tfCodigo.getText()),
-                    tfTagRfid.getText(),
-                    tfComponente.getText(),
+                    tfTagRfid.getText().trim(),
+                    tfComponente.getText().trim(),
                     tpDescComponente.getText(),
                     new Timestamp(new Date().getTime()),
                     new Timestamp(new Date().getTime())

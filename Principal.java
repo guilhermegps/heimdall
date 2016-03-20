@@ -200,7 +200,8 @@ public class Principal extends javax.swing.JFrame {
 
         jMenuBar1.add(menuUsuarios);
 
-        jMenu3.setText("Exibir");
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/page.png"))); // NOI18N
+        jMenu3.setText("Relatórios");
         jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);

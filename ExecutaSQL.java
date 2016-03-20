@@ -483,7 +483,7 @@ public class ExecutaSQL {
                 comp.setNome(rs.getString("vc_nome_componente"));
                 comp.setRfid(rs.getString("vc_rfid_componente"));
                 comp.setDescricao(rs.getString("tx_descricao_componente"));
-                comp.setValidade(rs.getTimestamp("dt_validade_componente"));
+                comp.setValidade(rs.getTimestamp("dh_validade_componente"));
                 comp.setRegistro(rs.getTimestamp("dh_registro_componente"));
                 
                 componente.add(comp);
@@ -516,7 +516,7 @@ public class ExecutaSQL {
                 comp.setNome(rs.getString("vc_nome_componente"));
                 comp.setRfid(rs.getString("vc_rfid_componente"));
                 comp.setDescricao(rs.getString("tx_descricao_componente"));
-                comp.setValidade(rs.getTimestamp("dt_validade_componente"));
+                comp.setValidade(rs.getTimestamp("dh_validade_componente"));
                 comp.setRegistro(rs.getTimestamp("dh_registro_componente"));
                 
                 componente.add(comp);
@@ -533,7 +533,7 @@ public class ExecutaSQL {
             comando = conexao.getConexao().prepareStatement("INSERT INTO componente(\n" +
                             "            id_componente, modelo_id_modelo, veiculo_id_veiculo, nu_codigo_componente, \n" +
                             "            vc_rfid_componente, vc_nome_componente, tx_descricao_componente, \n" +
-                            "            dt_validade_componente, dh_registro_componente)\n" +
+                            "            dh_validade_componente, dh_registro_componente)\n" +
                             "    VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?, ?);");
             
             comando.setInt(1, componente.getModelo().getId());
