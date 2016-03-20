@@ -29,7 +29,6 @@ INSERT INTO classe VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Automóvel', TRUE),
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Farol/Lanterna', FALSE), 
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Rack/Bagageiro', FALSE), 
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Bateria', FALSE), 
-		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Amortecedor', FALSE), 
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Parachoque', FALSE);
 
 --Cores--

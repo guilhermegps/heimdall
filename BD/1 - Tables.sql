@@ -53,7 +53,7 @@ CREATE TABLE veiculo (
   cor_id_cor INTEGER NULL,
   nu_codigo_veiculo INTEGER NOT NULL,
   vc_nome_veiculo VARCHAR(50) NOT NULL,
-  vc_rfid_veiculo VARCHAR(10) NULL,
+  vc_rfid_veiculo VARCHAR(11) NULL,
   vc_placa_veiculo VARCHAR(8) NOT NULL,
   nu_km_veiculo NUMERIC NULL,
   tx_observacao_veiculo TEXT NULL,
@@ -83,10 +83,10 @@ CREATE TABLE componente (
   modelo_id_modelo INTEGER NOT NULL,
   veiculo_id_veiculo INTEGER NOT NULL,
   nu_codigo_componente INTEGER NOT NULL,
-  vc_rfid_componente VARCHAR(10) NOT NULL,
+  vc_rfid_componente VARCHAR(11) NOT NULL,
   vc_nome_componente VARCHAR(50) NOT NULL,
   tx_descricao_componente TEXT NULL,
-  dt_validade_componente DATE NULL,
+  dh_validade_componente TIMESTAMP NULL,
   dh_registro_componente TIMESTAMP NOT NULL,
   PRIMARY KEY(id_componente),
   FOREIGN KEY(veiculo_id_veiculo)
@@ -95,15 +95,17 @@ CREATE TABLE componente (
     REFERENCES modelo(id_modelo)
 );
 
-CREATE TABLE revisao_componente (
-  revisao_id_revisao INTEGER NOT NULL,
+CREATE TABLE componente_revisao (
   componente_id_componente INTEGER NOT NULL,
+  revisao_id_revisao INTEGER NOT NULL,
   bo_identificado BOOLEAN NOT NULL,
-  PRIMARY KEY(revisao_id_revisao, componente_id_componente),
-  FOREIGN KEY(revisao_id_revisao)
-    REFERENCES revisao(id_revisao),
+  dh_identificacao_componente_revisao TIMESTAMP NOT NULL,
+  tx_motivo_nao_identificacao TEXT NULL,
+  PRIMARY KEY(componente_id_componente, revisao_id_revisao),
   FOREIGN KEY(componente_id_componente)
-    REFERENCES componente(id_componente)
+    REFERENCES componente(id_componente),
+  FOREIGN KEY(revisao_id_revisao)
+    REFERENCES revisao(id_revisao)
 );
 
 
