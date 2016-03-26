@@ -399,7 +399,7 @@ public class JComponente extends javax.swing.JDialog {
         jLabel9.setText("Placa:");
 
         tfNomeVeiculo.setEditable(false);
-        tfNomeVeiculo.setText(this.veiculo.getNome());
+        tfNomeVeiculo.setText(this.veiculo.toString());
 
         tfPlacaVeiculo.setEditable(false);
         tfPlacaVeiculo.setText(this.veiculo.getPlaca());

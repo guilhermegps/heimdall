@@ -133,6 +133,6 @@ public class Veiculo {
 
     @Override
     public String toString() {
-        return "Veiculo{" + "id=" + id + ", modelo=" + modelo + ", cor=" + cor + ", nome=" + nome + ", rfid=" + rfid + ", placa=" + placa + ", km=" + km + ", observacao=" + observacao + ", registro=" + registro + '}';
+        return codigo + " - " + nome;
     }
 }

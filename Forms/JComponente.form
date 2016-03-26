@@ -614,7 +614,7 @@
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="this.veiculo.getNome()" type="code"/>
+              <Connection code="this.veiculo.toString()" type="code"/>
             </Property>
           </Properties>
         </Component>

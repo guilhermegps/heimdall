@@ -96,7 +96,7 @@ public class JRevisao extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Número RFID", "Verificação", "Verificado"
+                "Número RFID", "Verificação", "Revisado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -110,7 +110,7 @@ public class JRevisao extends javax.swing.JDialog {
         tRevisaoComponentes.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane1.setViewportView(tRevisaoComponentes);
         if (tRevisaoComponentes.getColumnModel().getColumnCount() > 0) {
-            tRevisaoComponentes.getColumnModel().getColumn(0).setMinWidth(150);
+            tRevisaoComponentes.getColumnModel().getColumn(0).setMinWidth(120);
             tRevisaoComponentes.getColumnModel().getColumn(1).setMinWidth(160);
             tRevisaoComponentes.getColumnModel().getColumn(2).setMinWidth(95);
         }
@@ -248,13 +248,18 @@ public class JRevisao extends javax.swing.JDialog {
                 icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png"));
             
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
-            dtm.addRow(new Object[] {componentes.get(i).getRFID(), sdf.format(componentes.get(i).getIdentificao()), icone});   
+            dtm.addRow(
+                    new Object[] {componentes.get(i).getRFID(), 
+                        (componentes.get(i).getIdentificao()==null) ? "" : sdf.format(componentes.get(i).getIdentificao()), 
+                        icone}
+            );   
         }
         
         TableColumnModel columnModel = tRevisaoComponentes.getColumnModel();
         JTableRenderer renderer = new JTableRenderer();
         columnModel.getColumn(2).setCellRenderer(renderer);
         
+        tfIdVeiculo.setText(veiculo.toString());
         tRevisaoComponentes.setModel(dtm);
         tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
@@ -263,15 +268,31 @@ public class JRevisao extends javax.swing.JDialog {
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Componente> aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
         
-        for(int i=0; i<componentes.size(); i++){
-            if(componentes.get(i).getIdVeiculo().compareTo(this.veiculo.getRfid())==0 ||
-                componentes.get(i).getIdVeiculo().compareTo(this.veiculo.getPlaca())==0){
-                
+        for(int i=0; i<aux.size(); i++){
+            int comp = pesquisaComponenteRfid(aux.get(i).getRfid());
+            if(comp>=0){
+                componentes.get(comp).setIdentificado(true);
             } else{
-                componentes.get(i).setIdentificado(false);
-                componentes.get(i).setMotivoNaoIdentificado("Este componente não pertence a este veículo.");
+                componentes.add(new ComponenteRevisao(
+                        aux.get(i).getRfid(), 
+                        aux.get(i).getVeiculo().getPlaca(), 
+                        false, 
+                        "", 
+                        null )
+                );
             }
         }
+        initTable();
+    }
+    
+    private int pesquisaComponenteRfid(String rfid){
+        for(int i=0; i<componentes.size(); i++){
+            if(rfid.equals(componentes.get(i).getRFID())){
+                return i;
+            }
+        }
+        
+        return -1;
     }
     
     private void abrir(){
@@ -283,9 +304,13 @@ public class JRevisao extends javax.swing.JDialog {
         if(caminhoArquivo.compareTo("")==0)
             return;
         
-        tfBusca.setText(buscarArquivo());
+        tfBusca.setText(caminhoArquivo);
         if(this.f.exists() && this.f.isFile()){
                 bytesArquivo = AES.getBytesFile(this.f);
+                
+                if(bytesArquivo==null || bytesArquivo.length<=0)
+                    return;
+                
                 File temporario = new File(new SenhaAutomatica(16).gerarSenha()+sdf.format(new Date())+".temp"); //Gera arquivo temporário
                 
             try {
@@ -298,12 +323,24 @@ public class JRevisao extends javax.swing.JDialog {
                 ObjectInputStream objLer = new ObjectInputStream(ler);
                 componentes = (ArrayList<ComponenteRevisao>) objLer.readObject();
                 temporario.delete();  
+                
+                if(componentes.size()<=0)
+                    return;
+                
+                //Desabilita a busca
+                bBusca.setEnabled(false);
+                tfBusca.setEnabled(false);
+                
+                for(int i=0; i<componentes.size(); i++){//Marca todos os componentes importados do arquivo como não identificados
+                    componentes.get(i).setIdentificado(false);
+                }
+                
+                revisar();
                 JOptionPane.showMessageDialog(null, "Revisão importada com sucesso.");
                 int resp = JOptionPane.showConfirmDialog(null,"Deseja apagar o arquivo de revisão "+this.f.getName()+"?","Apagar arquivo de revisão?",JOptionPane.YES_NO_OPTION);
                 if(resp==0){
                     this.f.delete();
                 }
-                //revisar();
             } catch (Exception ex) {
                 new JErro(true, ex, true, false, false);
             }          
@@ -315,7 +352,7 @@ public class JRevisao extends javax.swing.JDialog {
     private String buscarArquivo(){
         try{
             JFileChooser fileChooser = new JFileChooser(this.f.getAbsolutePath());  
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivo de Revisão", "*.rev"));
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivo de Revisão (*.rev)", "rev"));
             int option = fileChooser.showOpenDialog(null);
             if (option == JFileChooser.APPROVE_OPTION) {
                 this.f = fileChooser.getSelectedFile();

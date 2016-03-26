@@ -46,7 +46,7 @@
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/heimdall/img/icons 16x16/car.png"/>
+              <Image iconType="3" name="/heimdall/img/icons 16x16/lorry.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Frota"/>
           </Properties>
@@ -71,6 +71,17 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="miComponenteActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="miRevisaoVeiculo">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/heimdall/img/icons 16x16/eye.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Revis&#xe3;o"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="miRevisaoVeiculoActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
