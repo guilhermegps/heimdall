@@ -10,12 +10,16 @@ import heimdall.ExecutaSQL;
 import heimdall.Portatil.JTableRenderer;
 import heimdall.SenhaAutomatica;
 import heimdall.Util.Componente;
+import heimdall.Util.ComponenteRevisado;
 import heimdall.Util.ComponenteRevisao;
+import heimdall.Util.Revisao;
+import heimdall.Util.Usuario;
 import heimdall.Util.Veiculo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,14 +39,16 @@ public class JRevisao extends javax.swing.JDialog {
     private DefaultTableModel dtm;
     private File f;
     private Veiculo veiculo;
-    private ArrayList<ComponenteRevisao> componentes;
+    private Usuario usuario; 
+    private ArrayList<OrigemComponenteRevisado> componentes;
     
     /**
      * Creates new form JRevisao
      */    
-    public JRevisao(Veiculo veiculo) {
+    public JRevisao(Veiculo veiculo, Usuario usuario) {
         this.veiculo = veiculo;
-        componentes = new ArrayList<ComponenteRevisao>();
+        this.usuario = usuario;
+        componentes = new ArrayList<OrigemComponenteRevisado>();
         setModal(true);
         this.f = new File("");
         initComponents();
@@ -69,6 +75,9 @@ public class JRevisao extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         tfIdVeiculo = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taDescricao = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Revisão do Veículo");
@@ -82,6 +91,11 @@ public class JRevisao extends javax.swing.JDialog {
         });
 
         bConcluirRevisao.setText("Concluir");
+        bConcluirRevisao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bConcluirRevisaoActionPerformed(evt);
+            }
+        });
 
         bCancelarRevisao.setText("Cancelar");
         bCancelarRevisao.addActionListener(new java.awt.event.ActionListener() {
@@ -89,6 +103,8 @@ public class JRevisao extends javax.swing.JDialog {
                 bCancelarRevisaoActionPerformed(evt);
             }
         });
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         tRevisaoComponentes.setAutoCreateRowSorter(true);
         tRevisaoComponentes.setModel(new javax.swing.table.DefaultTableModel(
@@ -127,12 +143,13 @@ public class JRevisao extends javax.swing.JDialog {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(tfIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -141,7 +158,7 @@ public class JRevisao extends javax.swing.JDialog {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -152,6 +169,12 @@ public class JRevisao extends javax.swing.JDialog {
                         .addComponent(tfIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
+
+        jLabel2.setText("Descrição da Revisão:");
+
+        taDescricao.setColumns(20);
+        taDescricao.setRows(5);
+        jScrollPane2.setViewportView(taDescricao);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -169,7 +192,11 @@ public class JRevisao extends javax.swing.JDialog {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(bConcluirRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(bCancelarRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(bCancelarRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -180,8 +207,12 @@ public class JRevisao extends javax.swing.JDialog {
                     .addComponent(tfBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bBusca))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bConcluirRevisao)
                     .addComponent(bCancelarRevisao))
@@ -199,6 +230,10 @@ public class JRevisao extends javax.swing.JDialog {
     private void bCancelarRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarRevisaoActionPerformed
         dispose();
     }//GEN-LAST:event_bCancelarRevisaoActionPerformed
+
+    private void bConcluirRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConcluirRevisaoActionPerformed
+        doConcluirRevisao();
+    }//GEN-LAST:event_bConcluirRevisaoActionPerformed
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -227,7 +262,7 @@ public class JRevisao extends javax.swing.JDialog {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JRevisao(new Veiculo()).setVisible(true);
+                new JRevisao(new Veiculo(), new Usuario()).setVisible(true);
             }
         });
     }
@@ -242,15 +277,15 @@ public class JRevisao extends javax.swing.JDialog {
         for(int i=0;i<componentes.size();i++){
             ImageIcon icone = new ImageIcon();
             
-            if(componentes.get(i).isVerificado())
+            if(componentes.get(i).getComponenteRevisado().isIdentificado())
                 icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/accept.png"));
             else
                 icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png"));
             
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
             dtm.addRow(
-                    new Object[] {componentes.get(i).getRFID(), 
-                        (componentes.get(i).getIdentificao()==null) ? "" : sdf.format(componentes.get(i).getIdentificao()), 
+                    new Object[] {componentes.get(i).getComponenteRevisado().getRFID(), 
+                        (componentes.get(i).getComponenteRevisado().getIdentificao()==null) ? "" : sdf.format(componentes.get(i).getComponenteRevisado().getIdentificao()), 
                         icone}
             );   
         }
@@ -264,30 +299,49 @@ public class JRevisao extends javax.swing.JDialog {
         tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
-    private void revisar(){
+    private void revisar(ArrayList<ComponenteRevisado> listaCompArquivo){
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Componente> aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
         
         for(int i=0; i<aux.size(); i++){
-            int comp = pesquisaComponenteRfid(aux.get(i).getRfid());
-            if(comp>=0){
-                componentes.get(comp).setIdentificado(true);
+            int posicaoComp = pesquisaComponenteArquivo(aux.get(i).getRfid(), listaCompArquivo);// Verifica se o registro de componente existe no arquivo importado
+            if(posicaoComp>=0){
+                listaCompArquivo.get(posicaoComp).setIdentificado(true);
+                componentes.add(new OrigemComponenteRevisado(listaCompArquivo.get(posicaoComp), true, true));
             } else{
-                componentes.add(new ComponenteRevisao(
+                listaCompArquivo.add(new ComponenteRevisado(
                         aux.get(i).getRfid(), 
                         aux.get(i).getVeiculo().getPlaca(), 
                         false, 
                         "", 
                         null )
                 );
+                componentes.add(new OrigemComponenteRevisado(listaCompArquivo.get(listaCompArquivo.size()-1), false, true));
             }
         }
+        
+        for(int i=0; i<listaCompArquivo.size(); i++){
+            if(pesquisaComponente(listaCompArquivo.get(i).getRFID())<0){
+                componentes.add(new OrigemComponenteRevisado(listaCompArquivo.get(i), true, false));
+            }
+        }
+        
         initTable();
     }
     
-    private int pesquisaComponenteRfid(String rfid){
+    private int pesquisaComponente(String rfid){
         for(int i=0; i<componentes.size(); i++){
-            if(rfid.equals(componentes.get(i).getRFID())){
+            if(rfid.equals(componentes.get(i).getComponenteRevisado().getRFID())){
+                return i;
+            }
+        }
+        
+        return -1;
+    }
+    
+    private int pesquisaComponenteArquivo(String rfid, ArrayList<ComponenteRevisado> listaCompArquivo){
+        for(int i=0; i<listaCompArquivo.size(); i++){
+            if(rfid.equals(listaCompArquivo.get(i).getRFID())){
                 return i;
             }
         }
@@ -321,21 +375,21 @@ public class JRevisao extends javax.swing.JDialog {
                 
                 FileInputStream ler = new FileInputStream(temporario);
                 ObjectInputStream objLer = new ObjectInputStream(ler);
-                componentes = (ArrayList<ComponenteRevisao>) objLer.readObject();
+                ArrayList<ComponenteRevisado> listaCompArquivo = (ArrayList<ComponenteRevisado>) objLer.readObject();
                 temporario.delete();  
                 
-                if(componentes.size()<=0)
+                if(listaCompArquivo.size()<=0)
                     return;
                 
                 //Desabilita a busca
                 bBusca.setEnabled(false);
                 tfBusca.setEnabled(false);
                 
-                for(int i=0; i<componentes.size(); i++){//Marca todos os componentes importados do arquivo como não identificados
-                    componentes.get(i).setIdentificado(false);
+                for(int i=0; i<listaCompArquivo.size(); i++){//Marca todos os componentes importados do arquivo como não identificados
+                    listaCompArquivo.get(i).setIdentificado(false);
                 }
                 
-                revisar();
+                revisar(listaCompArquivo);
                 JOptionPane.showMessageDialog(null, "Revisão importada com sucesso.");
                 int resp = JOptionPane.showConfirmDialog(null,"Deseja apagar o arquivo de revisão "+this.f.getName()+"?","Apagar arquivo de revisão?",JOptionPane.YES_NO_OPTION);
                 if(resp==0){
@@ -369,19 +423,114 @@ public class JRevisao extends javax.swing.JDialog {
         }
         return "";
     }
+    
+    private void inserirRevisao(){
+        ExecutaSQL sql = new ExecutaSQL();
+        
+        int idRevisao = sql.INSERT_REVISAO(new Revisao(
+                0, 
+                usuario, 
+                veiculo, 
+                new Timestamp(new Date().getTime()), 
+                taDescricao.getText() )
+        );
+        
+        Revisao revisao = sql.SELECT_REVISAO("id_revisao", Integer.toString(idRevisao)).get(0);
+        for(int i=0; i<componentes.size(); i++){
+            Componente componente = sql.SELECT_COMPONENTE("vc_rfid_componente", '\''+componentes.get(i).getComponenteRevisado().getRFID()+'\'').get(0);
+            
+            sql.INSERT_COMPONENTE_REVISAO(new ComponenteRevisao(
+                        componente, 
+                        revisao, 
+                        componentes.get(i).getComponenteRevisado().isIdentificado(), 
+                        componentes.get(i).getComponenteRevisado().getIdentificao(), 
+                        componentes.get(i).getComponenteRevisado().getMotivoNaoIdentificado() 
+                )
+            );
+        }
+    }
+    
+    private void doConcluirRevisao(){
+        if(componentes.size()<=0){
+            JOptionPane.showMessageDialog(null, "Não há componentes para serem revisados.");
+            return;
+        }
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+        for(int i=0; i<componentes.size(); i++){
+            if(componentes.get(i).getComponenteRevisado().isIdentificado())
+                continue;
+            
+            JMotivoNaoRevisado motivoNaoRevisado = new JMotivoNaoRevisado(
+                    componentes.get(i).isExisteArquivo(), 
+                    (componentes.get(i).getComponenteRevisado().getIdentificao()==null) ? "" : sdf.format(componentes.get(i).getComponenteRevisado().getIdentificao()), 
+                    componentes.get(i).getComponenteRevisado().getRFID()
+            );
+            motivoNaoRevisado.setVisible(true);
+            
+            if(motivoNaoRevisado.isCancelado()){
+                dispose();
+                return;
+            }
+            
+            componentes.get(i).getComponenteRevisado().setMotivoNaoIdentificado(motivoNaoRevisado.getMotivo());
+        }
+        
+        inserirRevisao();
+        JOptionPane.showMessageDialog(null, "Revisão concluida com sucesso.");
+        dispose();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bBusca;
     private javax.swing.JButton bCancelarRevisao;
     private javax.swing.JButton bConcluirRevisao;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tRevisaoComponentes;
+    private javax.swing.JTextArea taDescricao;
     private javax.swing.JTextField tfBusca;
     private javax.swing.JTextField tfIdVeiculo;
     private javax.swing.JTextField tfLinhasTabela;
     // End of variables declaration//GEN-END:variables
 
+    private class OrigemComponenteRevisado{
+        private ComponenteRevisado componenteRevisado;
+        private boolean existeArquivo;
+        private boolean existeVeiculo;
+
+        public OrigemComponenteRevisado(ComponenteRevisado componenteRevisado, boolean existeArquivo, boolean existeVeiculo) {
+            this.componenteRevisado = componenteRevisado;
+            this.existeArquivo = existeArquivo;
+            this.existeVeiculo = existeVeiculo;
+        }
+
+        public ComponenteRevisado getComponenteRevisado() {
+            return componenteRevisado;
+        }
+
+        public void setComponenteRevisado(ComponenteRevisado componenteRevisado) {
+            this.componenteRevisado = componenteRevisado;
+        }
+
+        public boolean isExisteArquivo() {
+            return existeArquivo;
+        }
+
+        public void setExisteArquivo(boolean existeArquivo) {
+            this.existeArquivo = existeArquivo;
+        }
+
+        public boolean isExisteVeiculo() {
+            return existeVeiculo;
+        }
+
+        public void setExisteVeiculo(boolean existeVeiculo) {
+            this.existeVeiculo = existeVeiculo;
+        }
+    } 
 }

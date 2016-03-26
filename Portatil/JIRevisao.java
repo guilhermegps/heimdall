@@ -7,7 +7,7 @@ package heimdall.Portatil;
 
 import heimdall.EncriptaDecriptaAES;
 import heimdall.ExecutaSQL;
-import heimdall.Util.ComponenteRevisao;
+import heimdall.Util.ComponenteRevisado;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -35,7 +35,7 @@ import javax.swing.table.TableColumnModel;
  * @author guilherme
  */
 public class JIRevisao extends javax.swing.JInternalFrame {
-    private ArrayList<ComponenteRevisao> componentesRevisao;
+    private ArrayList<ComponenteRevisado> componentesRevisao;
     private boolean killThread = false;
     private JIdentificacaoVeiculoRevisao jveiculo;
     private DataOutputStream esc = new DataOutputStream(out);
@@ -46,7 +46,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
      * Creates new form JIRevisao
      */
     public JIRevisao() {
-        componentesRevisao = new ArrayList<ComponenteRevisao>();
+        componentesRevisao = new ArrayList<ComponenteRevisado>();
         jveiculo = new JIdentificacaoVeiculoRevisao();
         jveiculo.setVisible(true);
         if(!jveiculo.isIdentificado()){
@@ -247,7 +247,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
         for(int i=0;i<componentesRevisao.size();i++){
             ImageIcon icone = new ImageIcon();
             
-            if(componentesRevisao.get(i).isVerificado())
+            if(componentesRevisao.get(i).isIdentificado())
                 icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/accept.png"));
             else
                 icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png"));
@@ -292,7 +292,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
     }
     
     private void sair(){
-        componentesRevisao = new ArrayList<ComponenteRevisao>();
+        componentesRevisao = new ArrayList<ComponenteRevisado>();
         killThread = true;
         try {
             esc.close();
@@ -321,7 +321,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
                 
                 FileInputStream ler = new FileInputStream(f);
                 ObjectInputStream objLer = new ObjectInputStream(ler);
-                ArrayList<ComponenteRevisao> aux = (ArrayList<ComponenteRevisao>) objLer.readObject();
+                ArrayList<ComponenteRevisado> aux = (ArrayList<ComponenteRevisado>) objLer.readObject();
                 f.delete();
                 
                 for(int i=0; i<aux.size(); i++){
@@ -375,7 +375,7 @@ public class JIRevisao extends javax.swing.JInternalFrame {
                         ler.read(b);//Para receber em bytes
                         String rfid = new String(b);
                         if(rfid != null && rfid.compareTo("")!=0 && !existeComponente(rfid) && rfid.compareTo(jveiculo.getIdVeiculo())!=0){
-                            componentesRevisao.add(new ComponenteRevisao(rfid, jveiculo.getIdVeiculo(), true, "", new ExecutaSQL().ConvertStringTimestamp(new Date().toString())));
+                            componentesRevisao.add(new ComponenteRevisado(rfid, jveiculo.getIdVeiculo(), true, "", new ExecutaSQL().ConvertStringTimestamp(new Date().toString())));
                             initTable();
                         }
                     }

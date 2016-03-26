@@ -281,7 +281,7 @@ public class Principal extends javax.swing.JFrame {
         selecionaItem.setVisible(true);
         
         if(selecionaItem.getObjetoSelecionado()!=null)
-            new JRevisao((Veiculo)selecionaItem.getObjetoSelecionado()).setVisible(true);
+            new JRevisao((Veiculo)selecionaItem.getObjetoSelecionado(), usuario).setVisible(true);
     }//GEN-LAST:event_miRevisaoVeiculoActionPerformed
 
     /**

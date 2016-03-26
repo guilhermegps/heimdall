@@ -6,7 +6,7 @@
 package heimdall.Portatil;
 
 import heimdall.ExecutaSQL;
-import heimdall.Util.ComponenteRevisao;
+import heimdall.Util.ComponenteRevisado;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

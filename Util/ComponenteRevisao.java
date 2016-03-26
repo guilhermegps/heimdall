@@ -5,53 +5,44 @@
  */
 package heimdall.Util;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  *
  * @author guilherme
  */
-public class ComponenteRevisao implements Serializable {
-    private String RFID;
-    private String idVeiculo; 
+public class ComponenteRevisao {
+    private Componente componente;
+    private Revisao revisao;
     private boolean identificado;
-    private String motivoNaoIdentificado;
-    private Timestamp identificao;
+    private Timestamp identificacao;
+    private String motivo;
 
-    public ComponenteRevisao() {
-        this.RFID = "";
-        this.idVeiculo = "";
-        this.identificado = false;
-        this.motivoNaoIdentificado = "";
-        this.identificao = null;
-    }
-
-    public ComponenteRevisao(String RFID, String idVeiculo, boolean identificado, String motivoNaoIdentificado, Timestamp identificao) {
-        this.RFID = RFID;
-        this.idVeiculo = idVeiculo;
+    public ComponenteRevisao(Componente componente, Revisao revisao, boolean identificado, Timestamp identificacao, String motivo) {
+        this.componente = componente;
+        this.revisao = revisao;
         this.identificado = identificado;
-        this.motivoNaoIdentificado = motivoNaoIdentificado;
-        this.identificao = identificao;
+        this.identificacao = identificacao;
+        this.motivo = motivo;
     }
 
-    public String getRFID() {
-        return RFID;
+    public Componente getComponente() {
+        return componente;
     }
 
-    public void setRFID(String RFID) {
-        this.RFID = RFID;
+    public void setComponente(Componente componente) {
+        this.componente = componente;
     }
 
-    public String getIdVeiculo() {
-        return idVeiculo;
+    public Revisao getRevisao() {
+        return revisao;
     }
 
-    public void setIdVeiculo(String idVeiculo) {
-        this.idVeiculo = idVeiculo;
+    public void setRevisao(Revisao revisao) {
+        this.revisao = revisao;
     }
 
-    public boolean isVerificado() {
+    public boolean isIdentificado() {
         return identificado;
     }
 
@@ -59,19 +50,19 @@ public class ComponenteRevisao implements Serializable {
         this.identificado = identificado;
     }
 
-    public String getMotivoNaoIdentificado() {
-        return motivoNaoIdentificado;
+    public Timestamp getIdentificacao() {
+        return identificacao;
     }
 
-    public void setMotivoNaoIdentificado(String motivoNaoIdentificado) {
-        this.motivoNaoIdentificado = motivoNaoIdentificado;
+    public void setIdentificacao(Timestamp identificacao) {
+        this.identificacao = identificacao;
     }
 
-    public Timestamp getIdentificao() {
-        return identificao;
+    public String getMotivo() {
+        return motivo;
     }
 
-    public void setIdentificao(Timestamp identificao) {
-        this.identificao = identificao;
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
 }

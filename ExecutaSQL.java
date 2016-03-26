@@ -11,8 +11,10 @@ import heimdall.Util.Classe;
 import heimdall.Util.Usuario;
 import heimdall.Util.Cor;
 import heimdall.Util.Componente;
+import heimdall.Util.ComponenteRevisao;
 import heimdall.Util.Veiculo;
 import heimdall.Util.Modelo;
+import heimdall.Util.Revisao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -552,6 +554,80 @@ public class ExecutaSQL {
         }       
     }   
     
+    // Operações Revisao
+    public ArrayList<Revisao> SELECT_REVISAO(String camp, String val){
+        camp = trata.noSQLInjection(camp);
+        val = trata.noSQLInjection(val);
+        
+        ArrayList<Revisao> revisao = new ArrayList<Revisao>();
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM revisao WHERE "+camp+" = "+val+";");
+            ResultSet rs = comando.executeQuery();
+            
+            while(rs.next()){
+                Usuario usuario = (Usuario) SELECT_USUARIO_ATIVO("id_usuario", ""+rs.getInt("usuario_id_usuario")).get(0);
+                Veiculo veiculo = (Veiculo) SELECT_VEICULO("id_veiculo", ""+rs.getInt("veiculo_id_veiculo")).get(0);
+                
+                Revisao rev = new Revisao(
+                        rs.getInt("id_revisao"), 
+                        usuario, 
+                        veiculo, 
+                        rs.getTimestamp("dh_registro_revisao"), 
+                        rs.getString("tx_descricao_revisao") );
+                
+                revisao.add(rev);
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+        
+        return revisao;
+    }
+    
+    public int INSERT_REVISAO(Revisao revisao){
+        try{
+            comando = conexao.getConexao().prepareStatement("INSERT INTO revisao(\n" +
+                            "            id_revisao, usuario_id_usuario, veiculo_id_veiculo, dh_registro_revisao, \n" +
+                            "            tx_descricao_revisao)\n" +
+                            "    VALUES ("+chavePrimaria+", ?, ?, ?, ?) RETURNING id_revisao;");
+            
+            comando.setInt(1, revisao.getUsuario().getId());
+            comando.setInt(2,revisao.getVeiculo().getId());
+            comando.setTimestamp(3, revisao.getRegistro());
+            comando.setString(4, revisao.getDescricao());
+            
+            ResultSet rs = comando.executeQuery();
+            
+            if(rs.next())
+                return rs.getInt("id_revisao");
+            
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }    
+        
+        return 0;
+    }   
+    
+    // Operações Revisao
+    public boolean INSERT_COMPONENTE_REVISAO(ComponenteRevisao componenteRevisao){
+        try{
+            comando = conexao.getConexao().prepareStatement("INSERT INTO componente_revisao(\n" +
+                            "            componente_id_componente, revisao_id_revisao, bo_identificado, \n" +
+                            "            dh_identificacao_componente_revisao, tx_motivo_nao_identificacao)\n" +
+                            "    VALUES (?, ?, ?, ?, ?);");
+            
+            comando.setInt(1, componenteRevisao.getComponente().getId());
+            comando.setInt(2, componenteRevisao.getRevisao().getId());
+            comando.setBoolean(3, componenteRevisao.isIdentificado());
+            comando.setTimestamp(4,componenteRevisao.getIdentificacao());
+            comando.setString(5, componenteRevisao.getMotivo());
+            
+            return comando.execute();
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+            return false;
+        }       
+    }   
     
     
     /*public void SELECT_USUARIO(){
