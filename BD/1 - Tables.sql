@@ -99,7 +99,7 @@ CREATE TABLE componente_revisao (
   componente_id_componente INTEGER NOT NULL,
   revisao_id_revisao INTEGER NOT NULL,
   bo_identificado BOOLEAN NOT NULL,
-  dh_identificacao_componente_revisao TIMESTAMP NOT NULL,
+  dh_identificacao_componente_revisao TIMESTAMP NULL,
   tx_motivo_nao_identificacao TEXT NULL,
   PRIMARY KEY(componente_id_componente, revisao_id_revisao),
   FOREIGN KEY(componente_id_componente)

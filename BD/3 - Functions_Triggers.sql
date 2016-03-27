@@ -3,7 +3,7 @@
 -- DROP FUNCTION f_veiculo_tbiu();
 
 CREATE OR REPLACE FUNCTION f_veiculo_tbiu()
-  RETURNS trigger AS
+  RETURNS TRIGGER AS
 $BODY$
  BEGIN
 	
@@ -24,6 +24,14 @@ $BODY$
 			RETURN OLD;
 		END IF;
 	END IF;
+
+	IF (EXISTS (SELECT 1 FROM veiculo WHERE vc_rfid_veiculo = NEW.vc_rfid_veiculo)) THEN
+		RAISE EXCEPTION 'Já existe um registro na tabela [veiculo] vinculado a este código RFID.';
+		RETURN NULL;
+	ELSIF (EXISTS (SELECT 1 FROM componente WHERE vc_rfid_componente = NEW.vc_rfid_veiculo)) THEN
+		RAISE EXCEPTION 'Já existe um registro na tabela [componente] vinculado a este código RFID.';
+		RETURN NULL;
+	END IF;
  	
  	RETURN NEW;
  END;
@@ -38,7 +46,7 @@ ALTER FUNCTION f_veiculo_tbiu()
 -- DROP FUNCTION f_modelo_tbiud();
 
 CREATE OR REPLACE FUNCTION f_modelo_tbiud()
-  RETURNS trigger AS
+  RETURNS TRIGGER AS
 $BODY$
  BEGIN
 	
@@ -69,7 +77,7 @@ ALTER FUNCTION f_modelo_tbiud()
 -- DROP FUNCTION f_componente_tbiud();
 
 CREATE OR REPLACE FUNCTION f_componente_tbiud()
-  RETURNS trigger AS
+  RETURNS TRIGGER AS
 $BODY$
  BEGIN
 	
@@ -85,6 +93,16 @@ $BODY$
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
 			RETURN OLD;
 		END IF;
+	END IF;
+ 	
+	NEW.vc_rfid_componente := UPPER(NEW.vc_rfid_componente);
+
+	IF (EXISTS (SELECT 1 FROM veiculo WHERE vc_rfid_veiculo = NEW.vc_rfid_componente)) THEN
+		RAISE EXCEPTION 'Já existe um registro na tabela [veiculo] vinculado a este código RFID.';
+		RETURN NULL;
+	ELSIF (EXISTS (SELECT 1 FROM componente WHERE vc_rfid_componente = NEW.vc_rfid_componente)) THEN
+		RAISE EXCEPTION 'Já existe um registro na tabela [componente] vinculado a este código RFID.';
+		RETURN NULL;
 	END IF;
  	
  	RETURN NEW;

@@ -1,8 +1,12 @@
 --Usuários--
-INSERT INTO usuario VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), '08F9CE6B9E70DADB981D0E8249CB9042', 'Guilherme de Paiva Santos', 1, 'guilherme', '11122233345', TRUE, TRUE);
+INSERT INTO usuario(
+            id_usuario, vc_senha_usuario, vc_nome_usuario, in_nivel_usuario, 
+            vc_login_usuario, vc_cpf_usuario, bo_primeiro_login_usuario, 
+            bo_registro_ativo_usuario) VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), '9839488FD571A6561128C12105154781', 'Guilherme de Paiva Santos', 1, 'admin', '11122233345', TRUE, TRUE);
 
 --Classes de Veículos e Componentes--
-INSERT INTO classe VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Automóvel', TRUE), 
+INSERT INTO classe(
+            id_classe, vc_nome_classe, bo_tipo_classe) VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Automóvel', TRUE), 
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Caminhão', TRUE), 
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Caminhão Trator', TRUE), 
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Caminhonete', TRUE), 
@@ -32,7 +36,8 @@ INSERT INTO classe VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Automóvel', TRUE),
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Parachoque', FALSE);
 
 --Cores--
-INSERT INTO cor VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Branco'), 
+INSERT INTO cor(
+            id_cor, vc_nome_cor) VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Branco'), 
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Preto'), 
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Prata'), 
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Marrom'), 
@@ -46,5 +51,8 @@ INSERT INTO cor VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Branco'),
 		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), 'Rosa');
 
 --Modelos--
-INSERT INTO modelo VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), (SELECT id_classe FROM classe LIMIT 1), NEXTVAL('SEQ_CODIGO_REGISTRO'), 'Gol', 'Volkswagem', '4 portas'), 
-		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), (SELECT id_classe FROM classe WHERE vc_nome_classe = 'Caminhonete'), NEXTVAL('SEQ_CODIGO_REGISTRO'), 'Hilux SRV 11/12','Toyota','Automática 3.0 Diesel 4x4 - 2011');
+INSERT INTO modelo(
+            id_modelo, classe_id_classe, nu_codigo_modelo, vc_descricao_modelo, 
+            vc_marca_modelo, vc_layout_modelo) VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), (SELECT id_classe FROM classe LIMIT 1), NEXTVAL('SEQ_CODIGO_REGISTRO'), 'Gol', 'Volkswagem', '4 portas'), 
+		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), (SELECT id_classe FROM classe WHERE vc_nome_classe = 'Caminhonete'), NEXTVAL('SEQ_CODIGO_REGISTRO'), 'Hilux SRV 11/12','Toyota','Automática 3.0 Diesel 4x4 - 2011'),
+		(NEXTVAL('SEQ_CHAVE_PRIMARIA'), (SELECT id_classe FROM classe WHERE vc_nome_classe = 'Pneu'), NEXTVAL('SEQ_CODIGO_REGISTRO'),'175/65r14 ','Pirelli','82t Formula Spider');
