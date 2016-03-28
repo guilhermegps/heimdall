@@ -233,7 +233,7 @@ public class JNovoUsuario extends javax.swing.JDialog {
 
                 sql = new ExecutaSQL();
 
-                if(!sql.INSERT_USUARIO(user)){
+                if(sql.INSERT_USUARIO(user)){
                     JOptionPane.showMessageDialog(null,"Cadastrado com sucesso\nLogin: "+user.getLogin()+"\nSenha: "+senha.getSenhaSimples());
                     dispose();
                 }else{

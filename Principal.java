@@ -257,12 +257,12 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_miAlterarSenhaActionPerformed
 
     private void miComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miComponenteActionPerformed
-        JSelecionaItem selecionaItem = new JSelecionaItem("Selecione um Veículo", "Código", "Nome do Veículo", true);
+        JSelecionaItem selecionaItem = new JSelecionaItem("Selecione um Veículo", "Código", "Veículo", true);
         
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Veiculo> veiculo = sql.SELECT_ALL_VEICULO();
         for(int i=0; i<veiculo.size(); i++)
-            selecionaItem.add(veiculo.get(i).getCodigo(), veiculo.get(i).getNome(), veiculo.get(i));
+            selecionaItem.add(veiculo.get(i).getCodigo(), veiculo.get(i).toString(), veiculo.get(i));
         
         selecionaItem.setVisible(true);
         
@@ -271,12 +271,12 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_miComponenteActionPerformed
 
     private void miRevisaoVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miRevisaoVeiculoActionPerformed
-        JSelecionaItem selecionaItem = new JSelecionaItem("Selecione um Veículo", "Código", "Nome do Veículo", true);
+        JSelecionaItem selecionaItem = new JSelecionaItem("Selecione um Veículo", "Código", "Veículo", true);
         
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Veiculo> veiculo = sql.SELECT_ALL_VEICULO();
         for(int i=0; i<veiculo.size(); i++)
-            selecionaItem.add(veiculo.get(i).getCodigo(), veiculo.get(i).getNome(), veiculo.get(i));
+            selecionaItem.add(veiculo.get(i).getCodigo(), veiculo.get(i).toString(), veiculo.get(i));
         
         selecionaItem.setVisible(true);
         

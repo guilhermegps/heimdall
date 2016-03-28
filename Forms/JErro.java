@@ -23,21 +23,21 @@ public class JErro extends javax.swing.JDialog {
      * Creates new form JErro
      */
     public JErro(boolean janela, Throwable exception, boolean log, boolean isError, boolean sair) {
-        gerarLog = log;
-        isError = isError;
-        gerarJanela = janela;
-        sairSistema = sair;     
-        mensagemDetalhes = getStack(exception); 
+        this.gerarLog = log;
+        this.isError = isError;
+        this.gerarJanela = janela;
+        this.sairSistema = sair;     
+        this.mensagemDetalhes = getStack(exception); 
         
         initialize();
     }
     
-    public JErro(boolean janela, String mensagem, boolean log, boolean tipo, boolean sair) {
-        mensagemDetalhes = mensagem;
-        gerarLog = log;
-        isError = tipo;
-        gerarJanela = janela;
-        sairSistema = sair;       
+    public JErro(boolean janela, String mensagem, boolean log, boolean isError, boolean sair) {
+        this.mensagemDetalhes = mensagem;
+        this.gerarLog = log;
+        this.isError = isError;
+        this.gerarJanela = janela;
+        this.sairSistema = sair;       
         
         initialize();
     }

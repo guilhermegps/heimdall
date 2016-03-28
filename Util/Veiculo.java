@@ -133,6 +133,6 @@ public class Veiculo {
 
     @Override
     public String toString() {
-        return codigo + " - " + nome;
+        return placa + " - " + nome + " (" + rfid + ")";
     }
 }

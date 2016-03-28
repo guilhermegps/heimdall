@@ -580,7 +580,7 @@ public class JVeiculo extends javax.swing.JDialog {
             veiculo.setRfid(tfTagRfid.getText().trim());
             veiculo.setRegistro(new Timestamp(new Date().getTime()));
             
-            if(!sql.INSERT_VEICULO(veiculo)){
+            if(sql.INSERT_VEICULO(veiculo)){
                 JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
                 liberarCampos(false);
             }else{

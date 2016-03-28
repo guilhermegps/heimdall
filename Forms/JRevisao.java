@@ -126,8 +126,8 @@ public class JRevisao extends javax.swing.JDialog {
         tRevisaoComponentes.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane1.setViewportView(tRevisaoComponentes);
         if (tRevisaoComponentes.getColumnModel().getColumnCount() > 0) {
-            tRevisaoComponentes.getColumnModel().getColumn(0).setMinWidth(120);
-            tRevisaoComponentes.getColumnModel().getColumn(1).setMinWidth(160);
+            tRevisaoComponentes.getColumnModel().getColumn(0).setMinWidth(130);
+            tRevisaoComponentes.getColumnModel().getColumn(1).setMinWidth(180);
             tRevisaoComponentes.getColumnModel().getColumn(2).setMinWidth(95);
         }
 
@@ -277,10 +277,12 @@ public class JRevisao extends javax.swing.JDialog {
         for(int i=0;i<componentes.size();i++){
             ImageIcon icone = new ImageIcon();
             
-            if(componentes.get(i).getComponenteRevisado().isIdentificado())
+            if(componentes.get(i).getComponenteRevisado().isIdentificado() && componentes.get(i).isExisteVeiculo()) //Existe no veículo e foi revisado
                 icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/accept.png"));
-            else
+            else if(!componentes.get(i).getComponenteRevisado().isIdentificado() && componentes.get(i).isExisteVeiculo()) //Existe no veículo e não foi revisado
                 icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png"));
+            else //Não existe no veículo
+               icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/bullet_error.png")); 
             
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
             dtm.addRow(
@@ -391,10 +393,6 @@ public class JRevisao extends javax.swing.JDialog {
                 
                 revisar(listaCompArquivo);
                 JOptionPane.showMessageDialog(null, "Revisão importada com sucesso.");
-                int resp = JOptionPane.showConfirmDialog(null,"Deseja apagar o arquivo de revisão "+this.f.getName()+"?","Apagar arquivo de revisão?",JOptionPane.YES_NO_OPTION);
-                if(resp==0){
-                    this.f.delete();
-                }
             } catch (Exception ex) {
                 new JErro(true, ex, true, false, false);
             }          
@@ -424,30 +422,41 @@ public class JRevisao extends javax.swing.JDialog {
         return "";
     }
     
-    private void inserirRevisao(){
-        ExecutaSQL sql = new ExecutaSQL();
-        
-        int idRevisao = sql.INSERT_REVISAO(new Revisao(
-                0, 
-                usuario, 
-                veiculo, 
-                new Timestamp(new Date().getTime()), 
-                taDescricao.getText() )
-        );
-        
-        Revisao revisao = sql.SELECT_REVISAO("id_revisao", Integer.toString(idRevisao)).get(0);
-        for(int i=0; i<componentes.size(); i++){
-            Componente componente = sql.SELECT_COMPONENTE("vc_rfid_componente", '\''+componentes.get(i).getComponenteRevisado().getRFID()+'\'').get(0);
-            
-            sql.INSERT_COMPONENTE_REVISAO(new ComponenteRevisao(
-                        componente, 
-                        revisao, 
-                        componentes.get(i).getComponenteRevisado().isIdentificado(), 
-                        componentes.get(i).getComponenteRevisado().getIdentificao(), 
-                        componentes.get(i).getComponenteRevisado().getMotivoNaoIdentificado() 
-                )
+    private boolean inserirRevisao(){
+        boolean inseriu = false;
+        try{
+            ExecutaSQL sql = new ExecutaSQL();
+
+            int idRevisao = sql.INSERT_REVISAO(new Revisao(
+                    0, 
+                    usuario, 
+                    veiculo, 
+                    new Timestamp(new Date().getTime()), 
+                    taDescricao.getText() )
             );
+
+            Revisao revisao = sql.SELECT_REVISAO("id_revisao", Integer.toString(idRevisao)).get(0);
+            for(int i=0; i<componentes.size(); i++){
+                ArrayList <Componente> listaComponentes = sql.SELECT_COMPONENTE("vc_rfid_componente", '\''+componentes.get(i).getComponenteRevisado().getRFID()+'\'');
+
+                if(listaComponentes.size()<=0 || !componentes.get(i).isExisteVeiculo())
+                    continue;
+
+                sql.INSERT_COMPONENTE_REVISAO(new ComponenteRevisao(
+                            listaComponentes.get(0), 
+                            revisao, 
+                            componentes.get(i).getComponenteRevisado().isIdentificado(), 
+                            componentes.get(i).getComponenteRevisado().getIdentificao(), 
+                            componentes.get(i).getComponenteRevisado().getMotivoNaoIdentificado() 
+                    )
+                );
+                inseriu = true;
+            }
+        } catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+            inseriu = false;
         }
+        return inseriu;
     }
     
     private void doConcluirRevisao(){
@@ -457,8 +466,13 @@ public class JRevisao extends javax.swing.JDialog {
         }
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+        boolean haComponentesRevisao = false;
         for(int i=0; i<componentes.size(); i++){
-            if(componentes.get(i).getComponenteRevisado().isIdentificado())
+            
+            if(componentes.get(i).isExisteVeiculo())
+                haComponentesRevisao = true;
+            
+            if(componentes.get(i).getComponenteRevisado().isIdentificado() || !componentes.get(i).isExisteVeiculo())
                 continue;
             
             JMotivoNaoRevisado motivoNaoRevisado = new JMotivoNaoRevisado(
@@ -476,8 +490,21 @@ public class JRevisao extends javax.swing.JDialog {
             componentes.get(i).getComponenteRevisado().setMotivoNaoIdentificado(motivoNaoRevisado.getMotivo());
         }
         
-        inserirRevisao();
+        if(!haComponentesRevisao){
+            JOptionPane.showMessageDialog(null, "Não há componentes deste veículo para serem revisados.");
+            return;
+        }
+        
+        if(!inserirRevisao()){
+            JOptionPane.showMessageDialog(null, "Não foi possível concluir a revisão");
+            dispose();
+        }
+        
         JOptionPane.showMessageDialog(null, "Revisão concluida com sucesso.");
+        int resp = JOptionPane.showConfirmDialog(null,"Deseja apagar o arquivo de revisão "+this.f.getName()+"?","Apagar arquivo de revisão?",JOptionPane.YES_NO_OPTION);
+        if(resp==0){
+            this.f.delete();
+        }
         dispose();
     }
 

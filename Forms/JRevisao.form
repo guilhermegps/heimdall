@@ -168,12 +168,12 @@
                 <Property name="autoResizeMode" type="int" value="0"/>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="0">
-                    <Column maxWidth="-1" minWidth="120" prefWidth="-1" resizable="true">
+                    <Column maxWidth="-1" minWidth="130" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="160" prefWidth="-1" resizable="true">
+                    <Column maxWidth="-1" minWidth="180" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>

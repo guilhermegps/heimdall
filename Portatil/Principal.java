@@ -36,7 +36,7 @@ public class Principal extends javax.swing.JFrame {
 
         jToolBar1.setFloatable(false);
 
-        bRevisao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 50x50/TextEdit.png"))); // NOI18N
+        bRevisao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 50x50/sherlock.png"))); // NOI18N
         bRevisao.setFocusable(false);
         bRevisao.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bRevisao.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

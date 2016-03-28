@@ -590,7 +590,7 @@ public class JComponente extends javax.swing.JDialog {
                     new Timestamp(new Date().getTime())
             );
             
-            if(!sql.INSERT_COMPONENTE(componente)){
+            if(sql.INSERT_COMPONENTE(componente)){
                 JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
                 liberarCampos(false);
             }else{

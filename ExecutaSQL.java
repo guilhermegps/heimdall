@@ -132,7 +132,7 @@ public class ExecutaSQL {
             comando.setBoolean(6, user.isPrimeiroLogin());
             comando.setBoolean(7, user.isAtivo());
             
-            return comando.execute();  
+            return !comando.execute();  
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
         }        
@@ -157,7 +157,7 @@ public class ExecutaSQL {
             comando.setBoolean(8, user.isAtivo());
             comando.setInt(9, user.getId());
             
-            return comando.execute();  
+            return !comando.execute();  
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
         }        
@@ -322,7 +322,7 @@ public class ExecutaSQL {
             comando.setString(4,model.getMarca());
             comando.setString(5, model.getLayout());
             
-            return comando.execute();
+            return !comando.execute();
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
         }       
@@ -414,7 +414,7 @@ public class ExecutaSQL {
             comando.setString(8, veiculo.getObservacao());
             comando.setTimestamp(9, veiculo.getRegistro());
             
-            return comando.execute();
+            return !comando.execute();
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
         }       
@@ -547,11 +547,11 @@ public class ExecutaSQL {
             comando.setTimestamp(7, componente.getValidade());
             comando.setTimestamp(8, componente.getRegistro());
             
-            return comando.execute();
+            return !comando.execute();
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
-            return false;
         }       
+            return false;
     }   
     
     // Operações Revisao
@@ -622,7 +622,7 @@ public class ExecutaSQL {
             comando.setTimestamp(4,componenteRevisao.getIdentificacao());
             comando.setString(5, componenteRevisao.getMotivo());
             
-            return comando.execute();
+            return !comando.execute();
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
             return false;
