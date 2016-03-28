@@ -2,7 +2,7 @@
 INSERT INTO usuario(
             id_usuario, vc_senha_usuario, vc_nome_usuario, in_nivel_usuario, 
             vc_login_usuario, vc_cpf_usuario, bo_primeiro_login_usuario, 
-            bo_registro_ativo_usuario) VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), '9839488FD571A6561128C12105154781', 'Guilherme de Paiva Santos', 1, 'admin', '11122233345', TRUE, TRUE);
+            bo_registro_ativo_usuario) VALUES (NEXTVAL('SEQ_CHAVE_PRIMARIA'), '1BADB7678EA292D3E42439D07B6AFEAC', 'Guilherme de Paiva Santos', 1, 'admin', '11122233345', TRUE, TRUE);
 
 --Classes de Veículos e Componentes--
 INSERT INTO classe(
