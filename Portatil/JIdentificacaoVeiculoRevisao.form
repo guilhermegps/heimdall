@@ -71,6 +71,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="tfPlaca">
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tfPlacaKeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="bOk">
       <Properties>

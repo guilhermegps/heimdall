@@ -58,6 +58,12 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
 
         jLabel1.setText("Placa do Veículo:");
 
+        tfPlaca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tfPlacaKeyPressed(evt);
+            }
+        });
+
         bOk.setText("Ok");
         bOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -117,20 +123,14 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
     }//GEN-LAST:event_bCancelarActionPerformed
 
     private void bOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOkActionPerformed
-        if(!tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
-            JOptionPane.showMessageDialog(null, "Esta placa não está em um formato válido");
-            return;
-        }
-        idVeiculo = tfPlaca.getText().toUpperCase();
-        identificado = true;
-        killThread = true;
-            try {
-                socket.close();
-                dispose();
-            } catch (IOException ex) {
-                Logger.getLogger(JIdentificacaoVeiculoRevisao.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        doOk();
     }//GEN-LAST:event_bOkActionPerformed
+
+    private void tfPlacaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfPlacaKeyPressed
+        if(evt.getKeyCode() == evt.VK_ENTER){
+            doOk();
+        }
+    }//GEN-LAST:event_tfPlacaKeyPressed
 
     /**
      * @param args the command line arguments
@@ -175,6 +175,22 @@ public class JIdentificacaoVeiculoRevisao extends javax.swing.JDialog {
         });
     }
 
+    private void doOk(){                                    
+        if(!tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
+            JOptionPane.showMessageDialog(null, "Esta placa não está em um formato válido");
+            return;
+        }
+        idVeiculo = tfPlaca.getText().toUpperCase();
+        identificado = true;
+        killThread = true;
+            try {
+                socket.close();
+                dispose();
+            } catch (IOException ex) {
+                Logger.getLogger(JIdentificacaoVeiculoRevisao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    } 
+    
     public boolean isIdentificado() {
         return identificado;
     }

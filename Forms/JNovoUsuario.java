@@ -218,15 +218,17 @@ public class JNovoUsuario extends javax.swing.JDialog {
             if(resp==0){
                 ExecutaSQL sql = new ExecutaSQL();
                 SenhaAutomatica senha = new SenhaAutomatica(6);
-                Usuario user = new Usuario();
                 
-                user.setLogin(tfLogin.getText());
-                user.setNome(nome);
-                user.setNivel(2);
-                user.setSenha(senha.senhaSemiAutomatica(tfLogin.getText()));
-                user.setCpf(tfCpf.getText());
+                Usuario user = new Usuario(0, 
+                        nome, 
+                        senha.senhaSemiAutomatica(tfLogin.getText()), 
+                        2, 
+                        tfLogin.getText(), 
+                        tfCpf.getText(), 
+                        true, 
+                        true);
 
-                if(sql.SELECT_USUARIO_ATIVO("vc_login_usuario", "'"+user.getLogin()+"'")!=null){
+                if(sql.SELECT_USUARIO_ATIVO("vc_login_usuario", '\''+user.getLogin()+'\'').size()>0){
                     JOptionPane.showMessageDialog(null,"Já existe alguém cadastrado com esse login. Tente outro.");
                     return;
                 }
