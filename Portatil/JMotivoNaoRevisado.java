@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package heimdall.Forms;
+package heimdall.Portatil;
 
 import javax.swing.JOptionPane;
 
@@ -13,8 +13,6 @@ import javax.swing.JOptionPane;
  */
 public class JMotivoNaoRevisado extends javax.swing.JDialog {
     private String motivo;
-    private boolean verificado;
-    private String verificacao;
     private String rfid;
     private boolean cancelado;
 
@@ -22,8 +20,6 @@ public class JMotivoNaoRevisado extends javax.swing.JDialog {
      * Creates new form JMotivoNaoRevisado
      */
     public JMotivoNaoRevisado() {
-        this.verificado = false;
-        this.verificacao = "";
         this.rfid = "";
         this.cancelado = true;
         
@@ -31,9 +27,7 @@ public class JMotivoNaoRevisado extends javax.swing.JDialog {
         initComponents();
     }
     
-    public JMotivoNaoRevisado(boolean verificado, String verificacao, String rfid) {
-        this.verificado = verificado;
-        this.verificacao = verificacao;
+    public JMotivoNaoRevisado(String rfid) {
         this.rfid = rfid;
         this.cancelado = true;
         
@@ -51,9 +45,7 @@ public class JMotivoNaoRevisado extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        cbVerificado = new javax.swing.JCheckBox();
         tfRfid = new javax.swing.JTextField();
-        tfVerificao = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         taMotivo = new javax.swing.JTextArea();
@@ -65,14 +57,8 @@ public class JMotivoNaoRevisado extends javax.swing.JDialog {
 
         jLabel1.setText("RFID:");
 
-        cbVerificado.setSelected(verificado);
-        cbVerificado.setText("Verificado");
-
         tfRfid.setEditable(false);
         tfRfid.setText(rfid);
-
-        tfVerificao.setEditable(false);
-        tfVerificao.setText(verificacao);
 
         jLabel2.setText("Motivo da não revisão do componente:");
 
@@ -108,16 +94,12 @@ public class JMotivoNaoRevisado extends javax.swing.JDialog {
                                 .addComponent(jLabel1)
                                 .addGap(79, 79, 79)
                                 .addComponent(tfRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(cbVerificado)
-                                .addGap(18, 18, 18)
-                                .addComponent(tfVerificao, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel2))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(bOk, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
+                        .addGap(18, 18, 18)
                         .addComponent(bCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -128,18 +110,14 @@ public class JMotivoNaoRevisado extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(tfRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbVerificado)
-                    .addComponent(tfVerificao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bCancelar)
-                    .addComponent(bOk))
+                    .addComponent(bOk)
+                    .addComponent(bCancelar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -231,12 +209,10 @@ public class JMotivoNaoRevisado extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancelar;
     private javax.swing.JButton bOk;
-    private javax.swing.JCheckBox cbVerificado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea taMotivo;
     private javax.swing.JTextField tfRfid;
-    private javax.swing.JTextField tfVerificao;
     // End of variables declaration//GEN-END:variables
 }

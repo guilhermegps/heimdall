@@ -3,30 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package heimdall.Forms;
+package heimdall.Portatil;
 
-import heimdall.EncriptaDecriptaAES;
 import heimdall.ExecutaSQL;
-import heimdall.Portatil.JTableRenderer;
-import heimdall.SenhaAutomatica;
+import heimdall.Forms.JErro;
 import heimdall.Util.Componente;
 import heimdall.Util.ComponenteRevisado;
 import heimdall.Util.ComponenteRevisao;
 import heimdall.Util.Revisao;
 import heimdall.Util.Usuario;
 import heimdall.Util.Veiculo;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
+import java.io.IOException;
+import static java.lang.System.in;
+import static java.lang.System.out;
+import java.net.Socket;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -37,10 +36,13 @@ import javax.swing.table.TableColumnModel;
 public class JRevisao extends javax.swing.JDialog {
 
     private DefaultTableModel dtm;
-    private File f;
     private Veiculo veiculo;
     private Usuario usuario; 
-    private ArrayList<OrigemComponenteRevisado> componentes;
+    private DataOutputStream esc = new DataOutputStream(out);
+    private DataInputStream ler = new DataInputStream(in);
+    private Socket socket;
+    private boolean killThread = false;
+    private ArrayList<LeituraRFID> cacheComponentes;
     
     /**
      * Creates new form JRevisao
@@ -48,9 +50,8 @@ public class JRevisao extends javax.swing.JDialog {
     public JRevisao(Veiculo veiculo, Usuario usuario) {
         this.veiculo = veiculo;
         this.usuario = usuario;
-        componentes = new ArrayList<OrigemComponenteRevisado>();
+        this.cacheComponentes = new ArrayList<LeituraRFID>();
         setModal(true);
-        this.f = new File("");
         initComponents();
         initTable();
     }
@@ -64,8 +65,6 @@ public class JRevisao extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tfBusca = new javax.swing.JTextField();
-        bBusca = new javax.swing.JButton();
         bConcluirRevisao = new javax.swing.JButton();
         bCancelarRevisao = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -82,13 +81,6 @@ public class JRevisao extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Revisão do Veículo");
         setResizable(false);
-
-        bBusca.setText("Buscar");
-        bBusca.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bBuscaActionPerformed(evt);
-            }
-        });
 
         bConcluirRevisao.setText("Concluir");
         bConcluirRevisao.addActionListener(new java.awt.event.ActionListener() {
@@ -143,7 +135,7 @@ public class JRevisao extends javax.swing.JDialog {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
@@ -158,7 +150,7 @@ public class JRevisao extends javax.swing.JDialog {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -180,39 +172,30 @@ public class JRevisao extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(tfBusca)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(bBusca))
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(bConcluirRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(bCancelarRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2))
+                        .addComponent(bCancelarRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bBusca))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bConcluirRevisao)
                     .addComponent(bCancelarRevisao))
@@ -222,10 +205,6 @@ public class JRevisao extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void bBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscaActionPerformed
-        abrir();
-    }//GEN-LAST:event_bBuscaActionPerformed
 
     private void bCancelarRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarRevisaoActionPerformed
         dispose();
@@ -274,20 +253,20 @@ public class JRevisao extends javax.swing.JDialog {
             dtm.removeRow(0);
         }
                 
-        for(int i=0;i<componentes.size();i++){
+        for(int i=0;i<cacheComponentes.size();i++){
             ImageIcon icone = new ImageIcon();
             
-            if(componentes.get(i).getComponenteRevisado().isIdentificado() && componentes.get(i).isExisteVeiculo()) //Existe no veículo e foi revisado
+            if(cacheComponentes.get(i).isLido() && cacheComponentes.get(i).isPertenceVeiculo()) //Existe no veículo e foi revisado
                 icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/accept.png"));
-            else if(!componentes.get(i).getComponenteRevisado().isIdentificado() && componentes.get(i).isExisteVeiculo()) //Existe no veículo e não foi revisado
+            else if(!cacheComponentes.get(i).isLido() && cacheComponentes.get(i).isPertenceVeiculo()) //Existe no veículo e não foi revisado
                 icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png"));
             else //Não existe no veículo
                icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/bullet_error.png")); 
             
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
             dtm.addRow(
-                    new Object[] {componentes.get(i).getComponenteRevisado().getRFID(), 
-                        (componentes.get(i).getComponenteRevisado().getIdentificao()==null) ? "" : sdf.format(componentes.get(i).getComponenteRevisado().getIdentificao()), 
+                    new Object[] {cacheComponentes.get(i).getComponente().getRfid(), 
+                        (cacheComponentes.get(i).isLido()==false) ? "" : sdf.format(cacheComponentes.get(i).getMomentoLeitura()), 
                         icone}
             );   
         }
@@ -301,9 +280,7 @@ public class JRevisao extends javax.swing.JDialog {
         tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
-    private void revisar(ArrayList<ComponenteRevisado> listaCompArquivo){
-        ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Componente> aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+    /*private void revisar(ArrayList<ComponenteRevisado> listaCompArquivo){
         
         for(int i=0; i<aux.size(); i++){
             int posicaoComp = pesquisaComponenteArquivo(aux.get(i).getRfid(), listaCompArquivo);// Verifica se o registro de componente existe no arquivo importado
@@ -329,11 +306,11 @@ public class JRevisao extends javax.swing.JDialog {
         }
         
         initTable();
-    }
+    }*/
     
-    private int pesquisaComponente(String rfid){
-        for(int i=0; i<componentes.size(); i++){
-            if(rfid.equals(componentes.get(i).getComponenteRevisado().getRFID())){
+    private int pesquisaCache(String rfid){
+        for(int i=0; i<cacheComponentes.size(); i++){
+            if(rfid.equals(cacheComponentes.get(i).getComponente().getRfid())){
                 return i;
             }
         }
@@ -341,9 +318,9 @@ public class JRevisao extends javax.swing.JDialog {
         return -1;
     }
     
-    private int pesquisaComponenteArquivo(String rfid, ArrayList<ComponenteRevisado> listaCompArquivo){
-        for(int i=0; i<listaCompArquivo.size(); i++){
-            if(rfid.equals(listaCompArquivo.get(i).getRFID())){
+    private int pesquisaComponente(String rfid, ArrayList<Componente> listaComp){
+        for(int i=0; i<listaComp.size(); i++){
+            if(rfid.equals(listaComp.get(i).getRfid())){
                 return i;
             }
         }
@@ -351,7 +328,7 @@ public class JRevisao extends javax.swing.JDialog {
         return -1;
     }
     
-    private void abrir(){
+    /*private void abrir(){
         EncriptaDecriptaAES AES = new EncriptaDecriptaAES();
         SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss"); 
         byte bytesArquivo[];
@@ -420,7 +397,7 @@ public class JRevisao extends javax.swing.JDialog {
             new JErro(true, ex, true, true, false);
         }
         return "";
-    }
+    }*/
     
     private boolean inserirRevisao(){
         boolean inseriu = false;
@@ -436,19 +413,16 @@ public class JRevisao extends javax.swing.JDialog {
             );
 
             Revisao revisao = sql.SELECT_REVISAO("id_revisao", Integer.toString(idRevisao)).get(0);
-            for(int i=0; i<componentes.size(); i++){
-                ArrayList <Componente> listaComponentes = sql.SELECT_COMPONENTE("vc_rfid_componente", '\''+componentes.get(i).getComponenteRevisado().getRFID()+'\'');
-
-                if(listaComponentes.size()<=0 || !componentes.get(i).isExisteVeiculo())
+            for(int i=0; i<cacheComponentes.size(); i++){
+                if(!cacheComponentes.get(i).isPertenceVeiculo())
                     continue;
 
                 sql.INSERT_COMPONENTE_REVISAO(new ComponenteRevisao(
-                            listaComponentes.get(0), 
-                            revisao, 
-                            componentes.get(i).getComponenteRevisado().isIdentificado(), 
-                            componentes.get(i).getComponenteRevisado().getIdentificao(), 
-                            componentes.get(i).getComponenteRevisado().getMotivoNaoIdentificado() 
-                    )
+                        cacheComponentes.get(i).getComponente(), 
+                        revisao, 
+                        (cacheComponentes.get(i).isLido() && cacheComponentes.get(i).isPertenceVeiculo()) ? true : false, 
+                        cacheComponentes.get(i).getMomentoLeitura(), 
+                        cacheComponentes.get(i).getMotivoNaoIdentificado() )
                 );
                 inseriu = true;
             }
@@ -460,26 +434,22 @@ public class JRevisao extends javax.swing.JDialog {
     }
     
     private void doConcluirRevisao(){
-        if(componentes.size()<=0){
+        if(cacheComponentes.size()<=0){
             JOptionPane.showMessageDialog(null, "Não há componentes para serem revisados.");
             return;
         }
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
         boolean haComponentesRevisao = false;
-        for(int i=0; i<componentes.size(); i++){
+        for(int i=0; i<cacheComponentes.size(); i++){
             
-            if(componentes.get(i).isExisteVeiculo())
+            if(cacheComponentes.get(i).isPertenceVeiculo())
                 haComponentesRevisao = true;
             
-            if(componentes.get(i).getComponenteRevisado().isIdentificado() || !componentes.get(i).isExisteVeiculo())
+            if(cacheComponentes.get(i).isLido())
                 continue;
             
-            JMotivoNaoRevisado motivoNaoRevisado = new JMotivoNaoRevisado(
-                    componentes.get(i).isExisteArquivo(), 
-                    (componentes.get(i).getComponenteRevisado().getIdentificao()==null) ? "" : sdf.format(componentes.get(i).getComponenteRevisado().getIdentificao()), 
-                    componentes.get(i).getComponenteRevisado().getRFID()
-            );
+            JMotivoNaoRevisado motivoNaoRevisado = new JMotivoNaoRevisado(cacheComponentes.get(i).getComponente().getRfid());
             motivoNaoRevisado.setVisible(true);
             
             if(motivoNaoRevisado.isCancelado()){
@@ -487,7 +457,7 @@ public class JRevisao extends javax.swing.JDialog {
                 return;
             }
             
-            componentes.get(i).getComponenteRevisado().setMotivoNaoIdentificado(motivoNaoRevisado.getMotivo());
+            cacheComponentes.get(i).setMotivoNaoIdentificado(motivoNaoRevisado.getMotivo());
         }
         
         if(!haComponentesRevisao){
@@ -501,15 +471,47 @@ public class JRevisao extends javax.swing.JDialog {
         }
         
         JOptionPane.showMessageDialog(null, "Revisão concluida com sucesso.");
-        int resp = JOptionPane.showConfirmDialog(null,"Deseja apagar o arquivo de revisão "+this.f.getName()+"?","Apagar arquivo de revisão?",JOptionPane.YES_NO_OPTION);
-        if(resp==0){
-            this.f.delete();
-        }
         dispose();
+    }
+    
+    private void addCache(String rfid, Timestamp leitura){
+        ExecutaSQL sql = new ExecutaSQL();
+        ArrayList<Componente> componentesVeiculo = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+        
+        int posicao = pesquisaComponente(rfid, componentesVeiculo);
+        
+        if(posicao<0){
+            Componente componente = new Componente(0, null, null, 0, rfid, "", "", null, null);
+            cacheComponentes.add(new LeituraRFID(
+                    componente, 
+                    true, 
+                    false,
+                    leitura,
+                    "") );
+        } else{
+            cacheComponentes.add(new LeituraRFID(
+                    componentesVeiculo.get(posicao), 
+                    true, 
+                    true,
+                    leitura,
+                    "") );
+        }
+        
+        for(int i=0; i<componentesVeiculo.size(); i++){
+            if(pesquisaCache(componentesVeiculo.get(i).getRfid())<0){
+                cacheComponentes.add(new LeituraRFID(
+                        componentesVeiculo.get(i), 
+                        false, 
+                        true,
+                        leitura,
+                        "") );
+            }
+        }
+        
+        initTable();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bBusca;
     private javax.swing.JButton bCancelarRevisao;
     private javax.swing.JButton bConcluirRevisao;
     private javax.swing.JLabel jLabel1;
@@ -520,44 +522,95 @@ public class JRevisao extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tRevisaoComponentes;
     private javax.swing.JTextArea taDescricao;
-    private javax.swing.JTextField tfBusca;
     private javax.swing.JTextField tfIdVeiculo;
     private javax.swing.JTextField tfLinhasTabela;
     // End of variables declaration//GEN-END:variables
 
-    private class OrigemComponenteRevisado{
-        private ComponenteRevisado componenteRevisado;
-        private boolean existeArquivo;
-        private boolean existeVeiculo;
+    private class LeituraRFID{
+        private Componente componente;
+        private boolean lido;
+        private boolean pertenceVeiculo;
+        private Timestamp momentoLeitura;
+        private String motivoNaoIdentificado;
 
-        public OrigemComponenteRevisado(ComponenteRevisado componenteRevisado, boolean existeArquivo, boolean existeVeiculo) {
-            this.componenteRevisado = componenteRevisado;
-            this.existeArquivo = existeArquivo;
-            this.existeVeiculo = existeVeiculo;
+        public LeituraRFID(Componente componente, boolean lido, boolean pertenceVeiculo, Timestamp momentoLeitura, String motivoNaoIdentificado) {
+            this.componente = componente;
+            this.lido = lido;
+            this.pertenceVeiculo = pertenceVeiculo;
+            this.momentoLeitura = momentoLeitura;
+            this.motivoNaoIdentificado = motivoNaoIdentificado;
         }
 
-        public ComponenteRevisado getComponenteRevisado() {
-            return componenteRevisado;
+        public Componente getComponente() {
+            return componente;
         }
 
-        public void setComponenteRevisado(ComponenteRevisado componenteRevisado) {
-            this.componenteRevisado = componenteRevisado;
+        public void setComponente(Componente componente) {
+            this.componente = componente;
         }
 
-        public boolean isExisteArquivo() {
-            return existeArquivo;
+        public boolean isLido() {
+            return lido;
         }
 
-        public void setExisteArquivo(boolean existeArquivo) {
-            this.existeArquivo = existeArquivo;
+        public void setLido(boolean lido) {
+            this.lido = lido;
         }
 
-        public boolean isExisteVeiculo() {
-            return existeVeiculo;
+        public boolean isPertenceVeiculo() {
+            return pertenceVeiculo;
         }
 
-        public void setExisteVeiculo(boolean existeVeiculo) {
-            this.existeVeiculo = existeVeiculo;
+        public void setPertenceVeiculo(boolean pertenceVeiculo) {
+            this.pertenceVeiculo = pertenceVeiculo;
         }
-    } 
+
+        public Timestamp getMomentoLeitura() {
+            return momentoLeitura;
+        }
+
+        public void setMomentoLeitura(Timestamp momentoLeitura) {
+            this.momentoLeitura = momentoLeitura;
+        }
+
+        public String getMotivoNaoIdentificado() {
+            return motivoNaoIdentificado;
+        }
+
+        public void setMotivoNaoIdentificado(String motivoNaoIdentificado) {
+            this.motivoNaoIdentificado = motivoNaoIdentificado;
+        }
+    }
+    
+    private class ComunicacaoRFID extends Thread{
+        public ComunicacaoRFID(){
+            try {
+                socket = new Socket("192.168.100.8", 2020);
+            } catch (IOException ex) {
+                
+            }
+        }
+        
+        public void run(){            
+            while(!killThread){
+                try {
+                    if(socket!=null && !socket.isClosed()){
+                        esc = new DataOutputStream(socket.getOutputStream());
+                        ler = new DataInputStream(socket.getInputStream());
+
+                        esc.writeBytes("ping");
+                        byte b[] = new byte[11];
+                        ler.read(b);//Para receber em bytes
+                        String rfid = new String(b);
+                        if(rfid != null && !rfid.equals("") && pesquisaCache(rfid)<0){
+                            addCache(rfid, new Timestamp(new Date().getTime()));
+                        }
+                    }
+                }
+                catch(Exception ex){
+                    System.out.println(ex.getMessage());
+                }
+            }
+        }
+    }
 }

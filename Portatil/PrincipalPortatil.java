@@ -5,17 +5,27 @@
  */
 package heimdall.Portatil;
 
+import heimdall.ExecutaSQL;
+import heimdall.Forms.JLogin;
+import heimdall.Forms.JSelecionaItem;
+import heimdall.Util.Usuario;
+import heimdall.Util.Veiculo;
+import java.util.ArrayList;
+
 /**
  *
  * @author guilherme
  */
-public class Principal extends javax.swing.JFrame {
+public class PrincipalPortatil extends javax.swing.JFrame {
+    private Usuario usuario;
+    private Boolean logado = false;
 
     /**
      * Creates new form Principal
      */
-    public Principal() {
+    public PrincipalPortatil() {
         initComponents();
+        logando();
     }
 
     /**
@@ -67,9 +77,19 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRevisaoActionPerformed
-        JIRevisao revisao = new JIRevisao();
-        dpPrincipal.add(revisao);
-        revisao.setVisible(true);
+        JSelecionaItem selecionaItem = new JSelecionaItem("Selecione um Veículo", "Código", "Veículo", true);
+        
+        ExecutaSQL sql = new ExecutaSQL();
+        ArrayList<Veiculo> veiculo = sql.SELECT_ALL_VEICULO();
+        for(int i=0; i<veiculo.size(); i++)
+            selecionaItem.add(veiculo.get(i).getCodigo(), veiculo.get(i).toString(), veiculo.get(i));
+        
+        selecionaItem.setVisible(true);
+        
+        if(selecionaItem.getObjetoSelecionado()==null)
+            return;
+            
+        new JRevisao((Veiculo)selecionaItem.getObjetoSelecionado(), usuario).setVisible(true);
     }//GEN-LAST:event_bRevisaoActionPerformed
 
     /**
@@ -89,22 +109,32 @@ public class Principal extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalPortatil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalPortatil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalPortatil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalPortatil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Principal().setVisible(true);
+                new PrincipalPortatil().setVisible(true);
             }
         });
+    }
+    
+    private void logando(){
+        JLogin login = new JLogin();
+        login.setVisible(true);
+        
+        usuario = login.getUsuario();
+        logado = login.getLogado();
+        setVisible(logado);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

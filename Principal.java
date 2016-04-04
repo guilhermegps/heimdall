@@ -58,7 +58,6 @@ public class Principal extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         miVeiculo = new javax.swing.JMenuItem();
         miComponente = new javax.swing.JMenuItem();
-        miRevisaoVeiculo = new javax.swing.JMenuItem();
         menuUsuarios = new javax.swing.JMenu();
         miNovoUsuario = new javax.swing.JMenuItem();
         miAlterarSenha = new javax.swing.JMenuItem();
@@ -173,15 +172,6 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu1.add(miComponente);
 
-        miRevisaoVeiculo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/eye.png"))); // NOI18N
-        miRevisaoVeiculo.setText("Revisão");
-        miRevisaoVeiculo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miRevisaoVeiculoActionPerformed(evt);
-            }
-        });
-        jMenu1.add(miRevisaoVeiculo);
-
         jMenuBar1.add(jMenu1);
 
         menuUsuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/group.png"))); // NOI18N
@@ -270,20 +260,6 @@ public class Principal extends javax.swing.JFrame {
             new JComponente((Veiculo)selecionaItem.getObjetoSelecionado()).setVisible(true);
     }//GEN-LAST:event_miComponenteActionPerformed
 
-    private void miRevisaoVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miRevisaoVeiculoActionPerformed
-        JSelecionaItem selecionaItem = new JSelecionaItem("Selecione um Veículo", "Código", "Veículo", true);
-        
-        ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Veiculo> veiculo = sql.SELECT_ALL_VEICULO();
-        for(int i=0; i<veiculo.size(); i++)
-            selecionaItem.add(veiculo.get(i).getCodigo(), veiculo.get(i).toString(), veiculo.get(i));
-        
-        selecionaItem.setVisible(true);
-        
-        if(selecionaItem.getObjetoSelecionado()!=null)
-            new JRevisao((Veiculo)selecionaItem.getObjetoSelecionado(), usuario).setVisible(true);
-    }//GEN-LAST:event_miRevisaoVeiculoActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -320,12 +296,11 @@ public class Principal extends javax.swing.JFrame {
     }
     
     private void logando(){
-        login = new JLogin(new javax.swing.JFrame(), true);
+        login = new JLogin();
         login.setVisible(true);
-        while(!logado){
-            logado = login.getLogado();
-        }
+        
         usuario = login.getUsuario();
+        logado = login.getLogado();
         setVisible(logado);
     }
 
@@ -346,7 +321,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu miLofout;
     private javax.swing.JMenuItem miLogout;
     private javax.swing.JMenuItem miNovoUsuario;
-    private javax.swing.JMenuItem miRevisaoVeiculo;
     private javax.swing.JMenuItem miSair;
     private javax.swing.JMenuItem miVeiculo;
     private javax.swing.JTable tPrincipal;

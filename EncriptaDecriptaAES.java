@@ -5,7 +5,6 @@
  */
 package heimdall;
 import heimdall.Forms.JErro;
-import heimdall.Portatil.JIRevisao;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -91,11 +90,9 @@ public class EncriptaDecriptaAES {
            inFile = new FileInputStream(file);           
            inFile.read(sendBuf, 0, len);    
 
-        } catch (FileNotFoundException fnfex) {  
-            Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, fnfex);
-        } catch (IOException ioex) {  
-            Logger.getLogger(JIRevisao.class.getName()).log(Level.SEVERE, null, ioex);
-        }  
+        } catch (Exception ex) {  
+            new JErro(true, ex, true, true, true);
+        } 
         return sendBuf; 
     }
 }

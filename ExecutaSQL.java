@@ -530,6 +530,36 @@ public class ExecutaSQL {
         return componente;
     }
     
+    public Componente SELECT_COMPONENTE_VEICULO_RFID(String rfidComponente, int idVeiculo){
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM componente WHERE vc_rfid_componente = ?, veiculo_id_veiculo = ?;");
+            
+            comando.setString(1,rfidComponente);
+            comando.setInt(2, idVeiculo);
+            
+            ResultSet rs = comando.executeQuery();
+            while(rs.next()){
+                Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", ""+rs.getInt("modelo_id_modelo")).get(0);
+                Veiculo veiculo = (Veiculo) SELECT_VEICULO("id_veiculo", Integer.toString(idVeiculo)).get(0);
+                
+                return new Componente(
+                        rs.getInt("id_componente"), 
+                        modelo, 
+                        veiculo, 
+                        rs.getInt("nu_codigo_componente"), 
+                        rs.getString("vc_rfid_componente"),
+                        rs.getString("vc_nome_componente"), 
+                        rs.getString("tx_descricao_componente"), 
+                        rs.getTimestamp("dh_validade_componente"), 
+                        rs.getTimestamp("dh_registro_componente") );
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+        
+        return null;
+    }
+    
     public boolean INSERT_COMPONENTE(Componente componente){
         try{
             comando = conexao.getConexao().prepareStatement("INSERT INTO componente(\n" +
