@@ -126,10 +126,7 @@ public class JMotivoNaoRevisado extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarActionPerformed
-        int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cancelar esta revisão?","Tem certeza?",JOptionPane.YES_NO_OPTION);
-        if(resp==0){
-            dispose();
-        }
+        dispose();
     }//GEN-LAST:event_bCancelarActionPerformed
 
     private void bOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOkActionPerformed

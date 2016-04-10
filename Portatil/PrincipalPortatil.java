@@ -24,8 +24,9 @@ public class PrincipalPortatil extends javax.swing.JFrame {
      * Creates new form Principal
      */
     public PrincipalPortatil() {
-        initComponents();
         logando();
+        initComponents();
+        setVisible(logado);
     }
 
     /**
@@ -129,12 +130,13 @@ public class PrincipalPortatil extends javax.swing.JFrame {
     }
     
     private void logando(){
-        JLogin login = new JLogin();
-        login.setVisible(true);
-        
-        usuario = login.getUsuario();
-        logado = login.getLogado();
-        setVisible(logado);
+        while(!logado){
+            JLogin login = new JLogin();
+            login.setVisible(true);
+
+            usuario = login.getUsuario();
+            logado = login.getLogado();
+        }            
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

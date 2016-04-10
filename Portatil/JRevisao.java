@@ -8,14 +8,12 @@ package heimdall.Portatil;
 import heimdall.ExecutaSQL;
 import heimdall.Forms.JErro;
 import heimdall.Util.Componente;
-import heimdall.Util.ComponenteRevisado;
 import heimdall.Util.ComponenteRevisao;
 import heimdall.Util.Revisao;
 import heimdall.Util.Usuario;
 import heimdall.Util.Veiculo;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import static java.lang.System.in;
 import static java.lang.System.out;
@@ -24,6 +22,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -47,13 +47,14 @@ public class JRevisao extends javax.swing.JDialog {
     /**
      * Creates new form JRevisao
      */    
-    public JRevisao(Veiculo veiculo, Usuario usuario) {
+    public JRevisao(Veiculo veiculo, Usuario usuario){
+        setModal(true);
         this.veiculo = veiculo;
         this.usuario = usuario;
         this.cacheComponentes = new ArrayList<LeituraRFID>();
-        setModal(true);
         initComponents();
         initTable();
+        new ComunicacaoRFID().start();
     }
 
     /**
@@ -207,7 +208,11 @@ public class JRevisao extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCancelarRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarRevisaoActionPerformed
-        dispose();
+        int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cancelar esta revisão?","Tem certeza?",JOptionPane.YES_NO_OPTION);
+        if(resp==0){
+            closeConexao();
+            dispose();
+        }
     }//GEN-LAST:event_bCancelarRevisaoActionPerformed
 
     private void bConcluirRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConcluirRevisaoActionPerformed
@@ -247,6 +252,19 @@ public class JRevisao extends javax.swing.JDialog {
     }
     
     private void initTable(){
+        if(cacheComponentes.size()==0){
+            ExecutaSQL sql = new ExecutaSQL();
+            ArrayList<Componente> componentesVeiculo = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+            for(int i=0; i<componentesVeiculo.size(); i++){
+                cacheComponentes.add(new LeituraRFID(
+                        componentesVeiculo.get(i), 
+                        false, 
+                        true,
+                        null,
+                        "") );
+            }
+        }
+        
         DefaultTableModel dtm = (DefaultTableModel) tRevisaoComponentes.getModel();
         
         while(dtm.getRowCount()>0){
@@ -280,34 +298,6 @@ public class JRevisao extends javax.swing.JDialog {
         tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
-    /*private void revisar(ArrayList<ComponenteRevisado> listaCompArquivo){
-        
-        for(int i=0; i<aux.size(); i++){
-            int posicaoComp = pesquisaComponenteArquivo(aux.get(i).getRfid(), listaCompArquivo);// Verifica se o registro de componente existe no arquivo importado
-            if(posicaoComp>=0){
-                listaCompArquivo.get(posicaoComp).setIdentificado(true);
-                componentes.add(new OrigemComponenteRevisado(listaCompArquivo.get(posicaoComp), true, true));
-            } else{
-                listaCompArquivo.add(new ComponenteRevisado(
-                        aux.get(i).getRfid(), 
-                        aux.get(i).getVeiculo().getPlaca(), 
-                        false, 
-                        "", 
-                        null )
-                );
-                componentes.add(new OrigemComponenteRevisado(listaCompArquivo.get(listaCompArquivo.size()-1), false, true));
-            }
-        }
-        
-        for(int i=0; i<listaCompArquivo.size(); i++){
-            if(pesquisaComponente(listaCompArquivo.get(i).getRFID())<0){
-                componentes.add(new OrigemComponenteRevisado(listaCompArquivo.get(i), true, false));
-            }
-        }
-        
-        initTable();
-    }*/
-    
     private int pesquisaCache(String rfid){
         for(int i=0; i<cacheComponentes.size(); i++){
             if(rfid.equals(cacheComponentes.get(i).getComponente().getRfid())){
@@ -317,87 +307,6 @@ public class JRevisao extends javax.swing.JDialog {
         
         return -1;
     }
-    
-    private int pesquisaComponente(String rfid, ArrayList<Componente> listaComp){
-        for(int i=0; i<listaComp.size(); i++){
-            if(rfid.equals(listaComp.get(i).getRfid())){
-                return i;
-            }
-        }
-        
-        return -1;
-    }
-    
-    /*private void abrir(){
-        EncriptaDecriptaAES AES = new EncriptaDecriptaAES();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss"); 
-        byte bytesArquivo[];
-        String caminhoArquivo = buscarArquivo();
-        
-        if(caminhoArquivo.compareTo("")==0)
-            return;
-        
-        tfBusca.setText(caminhoArquivo);
-        if(this.f.exists() && this.f.isFile()){
-                bytesArquivo = AES.getBytesFile(this.f);
-                
-                if(bytesArquivo==null || bytesArquivo.length<=0)
-                    return;
-                
-                File temporario = new File(new SenhaAutomatica(16).gerarSenha()+sdf.format(new Date())+".temp"); //Gera arquivo temporário
-                
-            try {
-                FileOutputStream esc;
-                esc = new FileOutputStream(temporario);
-                esc.write(AES.decriptaAES(bytesArquivo));
-                esc.close();
-                
-                FileInputStream ler = new FileInputStream(temporario);
-                ObjectInputStream objLer = new ObjectInputStream(ler);
-                ArrayList<ComponenteRevisado> listaCompArquivo = (ArrayList<ComponenteRevisado>) objLer.readObject();
-                temporario.delete();  
-                
-                if(listaCompArquivo.size()<=0)
-                    return;
-                
-                //Desabilita a busca
-                bBusca.setEnabled(false);
-                tfBusca.setEnabled(false);
-                
-                for(int i=0; i<listaCompArquivo.size(); i++){//Marca todos os componentes importados do arquivo como não identificados
-                    listaCompArquivo.get(i).setIdentificado(false);
-                }
-                
-                revisar(listaCompArquivo);
-                JOptionPane.showMessageDialog(null, "Revisão importada com sucesso.");
-            } catch (Exception ex) {
-                new JErro(true, ex, true, false, false);
-            }          
-        } else{
-            JOptionPane.showMessageDialog(null, "O arquivo não pode ser encontrado.");
-        }
-    }
-    
-    private String buscarArquivo(){
-        try{
-            JFileChooser fileChooser = new JFileChooser(this.f.getAbsolutePath());  
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivo de Revisão (*.rev)", "rev"));
-            int option = fileChooser.showOpenDialog(null);
-            if (option == JFileChooser.APPROVE_OPTION) {
-                this.f = fileChooser.getSelectedFile();
-                String enderecoArquivo = fileChooser.getSelectedFile().toString();
-                if(enderecoArquivo.substring(enderecoArquivo.lastIndexOf("."), enderecoArquivo.length()).toUpperCase().compareTo(".REV")==0)
-                    return enderecoArquivo;
-                else
-                    JOptionPane.showMessageDialog(null, "O arquivo selecionado não tem extensão '.rev'.");
-            } else{
-                new JErro(true, "Este endereço de arquivo é inválido", false, false, false);
-            }              
-        }catch(Exception ex){
-            new JErro(true, ex, true, true, false);
-        }
-        return "";
-    }*/
     
     private boolean inserirRevisao(){
         boolean inseriu = false;
@@ -453,7 +362,6 @@ public class JRevisao extends javax.swing.JDialog {
             motivoNaoRevisado.setVisible(true);
             
             if(motivoNaoRevisado.isCancelado()){
-                dispose();
                 return;
             }
             
@@ -470,17 +378,25 @@ public class JRevisao extends javax.swing.JDialog {
             dispose();
         }
         
+        closeConexao();
         JOptionPane.showMessageDialog(null, "Revisão concluida com sucesso.");
         dispose();
     }
     
-    private void addCache(String rfid, Timestamp leitura){
-        ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Componente> componentesVeiculo = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+    private void addCache(String rfid, Timestamp leitura){  
+        if(rfid.equals(""))
+            return;
         
-        int posicao = pesquisaComponente(rfid, componentesVeiculo);
+        int posicao = pesquisaCache(rfid);
         
-        if(posicao<0){
+        if(posicao>=0){
+            if(cacheComponentes.get(posicao).isLido()==false){
+                cacheComponentes.get(posicao).setLido(true);
+                cacheComponentes.get(posicao).setMomentoLeitura(leitura);
+        
+                initTable();
+            }
+        } else{
             Componente componente = new Componente(0, null, null, 0, rfid, "", "", null, null);
             cacheComponentes.add(new LeituraRFID(
                     componente, 
@@ -488,27 +404,19 @@ public class JRevisao extends javax.swing.JDialog {
                     false,
                     leitura,
                     "") );
-        } else{
-            cacheComponentes.add(new LeituraRFID(
-                    componentesVeiculo.get(posicao), 
-                    true, 
-                    true,
-                    leitura,
-                    "") );
-        }
         
-        for(int i=0; i<componentesVeiculo.size(); i++){
-            if(pesquisaCache(componentesVeiculo.get(i).getRfid())<0){
-                cacheComponentes.add(new LeituraRFID(
-                        componentesVeiculo.get(i), 
-                        false, 
-                        true,
-                        leitura,
-                        "") );
-            }
+            initTable();
         }
-        
-        initTable();
+    }
+    
+    private void closeConexao(){
+        try {
+            esc.close();
+            ler.close();
+            socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(JRevisao.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -602,7 +510,7 @@ public class JRevisao extends javax.swing.JDialog {
                         byte b[] = new byte[11];
                         ler.read(b);//Para receber em bytes
                         String rfid = new String(b);
-                        if(rfid != null && !rfid.equals("") && pesquisaCache(rfid)<0){
+                        if(rfid != null && !rfid.equals("")){
                             addCache(rfid, new Timestamp(new Date().getTime()));
                         }
                     }
@@ -611,6 +519,7 @@ public class JRevisao extends javax.swing.JDialog {
                     System.out.println(ex.getMessage());
                 }
             }
+            closeConexao();
         }
     }
 }
