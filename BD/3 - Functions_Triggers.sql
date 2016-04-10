@@ -16,21 +16,17 @@ $BODY$
 			NEW.nu_codigo_veiculo = NEXTVAL('SEQ_CODIGO_REGISTRO');
 		ELSIF (NEW.nu_codigo_veiculo < 0) THEN
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
-			RETURN NULL;
 		END IF;
 	ELSE
  		IF (NEW.nu_codigo_veiculo <= 0) THEN
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
-			RETURN OLD;
 		END IF;
 	END IF;
 
 	IF (EXISTS (SELECT 1 FROM veiculo WHERE vc_rfid_veiculo = NEW.vc_rfid_veiculo)) THEN
 		RAISE EXCEPTION 'Já existe um registro na tabela [veiculo] vinculado a este código RFID.';
-		RETURN NULL;
 	ELSIF (EXISTS (SELECT 1 FROM componente WHERE vc_rfid_componente = NEW.vc_rfid_veiculo)) THEN
 		RAISE EXCEPTION 'Já existe um registro na tabela [componente] vinculado a este código RFID.';
-		RETURN NULL;
 	END IF;
  	
  	RETURN NEW;
@@ -55,12 +51,10 @@ $BODY$
 			NEW.nu_codigo_modelo = NEXTVAL('SEQ_CODIGO_REGISTRO');
 		ELSIF (NEW.nu_codigo_modelo < 0) THEN
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
-			RETURN NULL;
 		END IF;
 	ELSE
  		IF (NEW.nu_codigo_modelo <= 0) THEN
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
-			RETURN OLD;
 		END IF;
 	END IF;
  	
@@ -86,12 +80,10 @@ $BODY$
 			NEW.nu_codigo_componente = NEXTVAL('SEQ_CODIGO_REGISTRO');
 		ELSIF (NEW.nu_codigo_componente < 0) THEN
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
-			RETURN NULL;
 		END IF;
 	ELSE
  		IF (NEW.nu_codigo_componente <= 0) THEN
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
-			RETURN OLD;
 		END IF;
 	END IF;
  	
@@ -99,10 +91,8 @@ $BODY$
 
 	IF (EXISTS (SELECT 1 FROM veiculo WHERE vc_rfid_veiculo = NEW.vc_rfid_componente)) THEN
 		RAISE EXCEPTION 'Já existe um registro na tabela [veiculo] vinculado a este código RFID.';
-		RETURN NULL;
 	ELSIF (EXISTS (SELECT 1 FROM componente WHERE vc_rfid_componente = NEW.vc_rfid_componente)) THEN
 		RAISE EXCEPTION 'Já existe um registro na tabela [componente] vinculado a este código RFID.';
-		RETURN NULL;
 	END IF;
  	
  	RETURN NEW;
@@ -111,6 +101,31 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION f_componente_tbiud()
+  OWNER TO postgres;
+
+-- Function: f_usuario_tbiud()
+
+-- DROP FUNCTION f_usuario_tbiud();
+
+CREATE OR REPLACE FUNCTION f_usuario_tbiud()
+  RETURNS TRIGGER AS
+$BODY$
+ BEGIN
+ 
+ 	IF (TG_OP = 'INSERT') THEN
+ 		IF(EXISTS(SELECT 1 FROM usuario WHERE vc_login_usuario = NEW.vc_login_usuario)) THEN
+			RAISE EXCEPTION 'Já existe um registro de usuário com este mesmo login [%]', NEW.vc_login_usuario;
+		ELSIF (EXISTS(SELECT 1 FROM usuario WHERE vc_cpf_usuario = NEW.vc_cpf_usuario)) THEN
+			RAISE EXCEPTION 'Já existe um registro de usuário com este mesmo CPF [%]', NEW.vc_cpf_usuario;
+		END IF;
+	END IF;
+ 	
+ 	RETURN NEW;
+ END;
+ $BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION f_usuario_tbiud()
   OWNER TO postgres;
 
 /*-- Function: f_usuario_tbiud()
