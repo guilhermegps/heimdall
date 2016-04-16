@@ -56,6 +56,64 @@ public class ExecutaSQL {
     }
     
     // Operações usuario
+    public ArrayList<Usuario> SELECT_USUARIO(String camp, String val){
+        if(camp.compareTo("")==0 || val.compareTo("")==0 || camp==null || val==null)
+            return new ArrayList<Usuario>();
+        
+        camp = trata.noSQLInjection(camp);
+        val = trata.noSQLInjection(val);
+        
+        ArrayList<Usuario> usuario = new ArrayList<Usuario>();
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM usuario WHERE "+camp+" = "+val+" ORDER BY vc_nome_usuario;");
+            ResultSet rs = comando.executeQuery();
+            
+            while(rs.next()){
+                Usuario user = new Usuario( 
+                rs.getInt("id_usuario"),
+                rs.getString("vc_nome_usuario"),
+                rs.getString("vc_senha_usuario"),
+                rs.getInt("in_nivel_usuario"),
+                rs.getString("vc_login_usuario"),
+                rs.getString("vc_cpf_usuario"),
+                rs.getBoolean("bo_primeiro_login_usuario"),
+                rs.getBoolean("bo_registro_ativo_usuario") );
+                
+                usuario.add(user);
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+        
+        return usuario;
+    }
+    
+    public ArrayList<Usuario> SELECT_ALL_USUARIO(){        
+        ArrayList<Usuario> usuario = new ArrayList<Usuario>();
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM usuario ORDER BY vc_nome_usuario;");
+            ResultSet rs = comando.executeQuery();
+            
+            while(rs.next()){
+                Usuario user = new Usuario( 
+                rs.getInt("id_usuario"),
+                rs.getString("vc_nome_usuario"),
+                rs.getString("vc_senha_usuario"),
+                rs.getInt("in_nivel_usuario"),
+                rs.getString("vc_login_usuario"),
+                rs.getString("vc_cpf_usuario"),
+                rs.getBoolean("bo_primeiro_login_usuario"),
+                rs.getBoolean("bo_registro_ativo_usuario") );
+                
+                usuario.add(user);
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+        
+        return usuario;
+    }
+    
     public ArrayList<Usuario> SELECT_USUARIO_ATIVO(String camp, String val){
         if(camp.compareTo("")==0 || val.compareTo("")==0 || camp==null || val==null)
             return new ArrayList<Usuario>();
@@ -164,13 +222,17 @@ public class ExecutaSQL {
         return false;
     }
     
-    public void DELETE_USUARIO(String cnd){
+    public boolean DELETE_USUARIO(int id){
         try{
-             
+            comando = conexao.getConexao().prepareStatement("DELETE FROM usuario WHERE id_usuario=?;");
+            
+            comando.setInt(1, id);
+            
+            return !comando.execute(); 
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
         }
-        
+        return false;
     }
     
     // Operações da classe
