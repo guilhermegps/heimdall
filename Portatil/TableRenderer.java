@@ -12,9 +12,9 @@ import javax.swing.table.DefaultTableCellRenderer;
  *
  * @author guilherme
  */
-public class JTableRenderer extends DefaultTableCellRenderer {
+public class TableRenderer extends DefaultTableCellRenderer {
     
-    public JTableRenderer(){
+    public TableRenderer(){
         this.setHorizontalAlignment(CENTER);
     }
  

@@ -676,6 +676,55 @@ public class ExecutaSQL {
         return revisao;
     }
     
+    public boolean SELECT_VERIFICA_REVISAO_COMPLETA(int idRevisao){ 
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT NOT EXISTS(SELECT 1 FROM componente_revisao "
+                                + "WHERE revisao_id_revisao = ? AND bo_identificado = false) AS completa;");
+            comando.setInt(1, idRevisao);
+            
+            ResultSet rs = comando.executeQuery();
+            
+            while(rs.next()){
+                return rs.getBoolean("completa");
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+        
+        return false;
+    }
+    
+    public ArrayList<Revisao> SELECT_REVISAO_CONSULTA(int idVeiculo, Timestamp dataInicial, Timestamp dataFinal){        
+        ArrayList<Revisao> revisao = new ArrayList<Revisao>();
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM revisao "
+                            + "WHERE veiculo_id_veiculo = ? "
+                            + "AND dh_registro_revisao BETWEEN ? AND ?;");
+            comando.setInt(1, idVeiculo);
+            comando.setTimestamp(2, dataInicial);
+            comando.setTimestamp(3, dataFinal);
+            
+            ResultSet rs = comando.executeQuery();            
+            while(rs.next()){
+                Usuario usuario = (Usuario) SELECT_USUARIO_ATIVO("id_usuario", ""+rs.getInt("usuario_id_usuario")).get(0);
+                Veiculo veiculo = (Veiculo) SELECT_VEICULO("id_veiculo", ""+rs.getInt("veiculo_id_veiculo")).get(0);
+                
+                Revisao rev = new Revisao(
+                        rs.getInt("id_revisao"), 
+                        usuario, 
+                        veiculo, 
+                        rs.getTimestamp("dh_registro_revisao"), 
+                        rs.getString("tx_descricao_revisao") );
+                
+                revisao.add(rev);
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+        
+        return revisao;
+    }
+    
     public int INSERT_REVISAO(Revisao revisao){
         try{
             comando = conexao.getConexao().prepareStatement("INSERT INTO revisao(\n" +

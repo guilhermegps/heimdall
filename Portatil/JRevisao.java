@@ -290,7 +290,7 @@ public class JRevisao extends javax.swing.JDialog {
         }
         
         TableColumnModel columnModel = tRevisaoComponentes.getColumnModel();
-        JTableRenderer renderer = new JTableRenderer();
+        TableRenderer renderer = new TableRenderer();
         columnModel.getColumn(2).setCellRenderer(renderer);
         
         tfIdVeiculo.setText(veiculo.toString());

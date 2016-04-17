@@ -111,7 +111,7 @@ public class JComponente extends javax.swing.JDialog {
         cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
         cbModelo.setToolTipText("Escolha o modelo do veículo");
 
-        bCustomModelo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 32x32/Customize.png"))); // NOI18N
+        bCustomModelo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 32x32/customize.png"))); // NOI18N
         bCustomModelo.setToolTipText("Customizar Modelos");
         bCustomModelo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
