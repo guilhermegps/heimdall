@@ -34,7 +34,6 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
         setModal(true);
         cacheRevisao = new ArrayList<Revisao>();
         initComponents();
-        setVisible(true);
     }
 
     /**
@@ -196,6 +195,11 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
             ex.printStackTrace();
         }
         ftfDataFinal.setToolTipText("Ex: 10/02/2015");
+        ftfDataFinal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ftfDataFinalKeyPressed(evt);
+            }
+        });
 
         jLabel3.setText("Data Final*:");
 
@@ -303,6 +307,12 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
              pesquisarRevisoes();
         }
     }//GEN-LAST:event_ftfDataInicialKeyPressed
+
+    private void ftfDataFinalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ftfDataFinalKeyPressed
+        if(evt.getKeyCode() == evt.VK_ENTER){
+             pesquisarRevisoes();
+        }
+    }//GEN-LAST:event_ftfDataFinalKeyPressed
 
     /**
      * @param args the command line arguments
