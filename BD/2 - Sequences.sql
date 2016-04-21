@@ -25,3 +25,18 @@ CREATE SEQUENCE seq_codigo_registro
   CACHE 1;
 ALTER TABLE seq_codigo_registro
   OWNER TO postgres;
+
+------------------------------------------------------------------------
+
+-- Sequence: seq_numero_revisao
+
+-- DROP SEQUENCE seq_numero_revisao;
+
+CREATE SEQUENCE seq_numero_revisao
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE seq_numero_revisao
+  OWNER TO postgres;

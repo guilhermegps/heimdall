@@ -103,7 +103,7 @@ $BODY$
 ALTER FUNCTION f_componente_tbiud()
   OWNER TO postgres;
 
--- Function: f_usuario_tbiud()
+/*-- Function: f_usuario_tbiud()
 
 -- DROP FUNCTION f_usuario_tbiud();
 
@@ -128,7 +128,7 @@ $BODY$
 ALTER FUNCTION f_usuario_tbiud()
   OWNER TO postgres;
 
-/*-- Function: f_usuario_tbiud()
+-- Function: f_usuario_tbiud()
 
 -- DROP FUNCTION f_usuario_tbiud();
 

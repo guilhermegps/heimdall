@@ -28,7 +28,7 @@ CREATE TRIGGER componente_tbiud
   FOR EACH ROW
   EXECUTE PROCEDURE f_componente_tbiud();
 
--- Trigger: usuario_tbiud on usuario
+/*-- Trigger: usuario_tbiud on usuario
 
 -- DROP TRIGGER usuario_tbiud ON usuario;
 
@@ -36,7 +36,7 @@ CREATE TRIGGER usuario_tbiud
   BEFORE INSERT OR UPDATE
   ON usuario
   FOR EACH ROW
-  EXECUTE PROCEDURE f_usuario_tbiud();
+  EXECUTE PROCEDURE f_usuario_tbiud();*/
 
 
 
