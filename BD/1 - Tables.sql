@@ -13,7 +13,9 @@ CREATE TABLE usuario (
   vc_cpf_usuario VARCHAR(11) NOT NULL,
   bo_primeiro_login_usuario BOOLEAN NOT NULL,
   bo_registro_ativo_usuario BOOLEAN NOT NULL,
-  PRIMARY KEY(id_usuario)
+  PRIMARY KEY(id_usuario),
+  UNIQUE(vc_login_usuario),
+  UNIQUE(vc_cpf_usuario)
 );
 
 CREATE TABLE classe (
@@ -32,7 +34,8 @@ CREATE TABLE modelo (
   vc_layout_modelo VARCHAR(80) NULL,
   PRIMARY KEY(id_modelo),
   FOREIGN KEY(classe_id_classe)
-    REFERENCES classe(id_classe)
+    REFERENCES classe(id_classe),
+  UNIQUE(nu_codigo_modelo)
 );
 
 CREATE TABLE log_usuario (
@@ -58,24 +61,29 @@ CREATE TABLE veiculo (
   nu_km_veiculo NUMERIC NULL,
   tx_observacao_veiculo TEXT NULL,
   dh_registro_veiculo TIMESTAMP NOT NULL,
+  bo_registro_ativo_veiculo BOOLEAN NOT NULL,
   PRIMARY KEY(id_veiculo),
   FOREIGN KEY(cor_id_cor)
     REFERENCES cor(id_cor),
   FOREIGN KEY(modelo_id_modelo)
-    REFERENCES modelo(id_modelo)
+    REFERENCES modelo(id_modelo),
+  UNIQUE(nu_codigo_veiculo),
+  UNIQUE(vc_rfid_veiculo)
 );
 
 CREATE TABLE revisao (
   id_revisao INTEGER NOT NULL,
   usuario_id_usuario INTEGER NOT NULL,
   veiculo_id_veiculo INTEGER NOT NULL,
+  nu_numero_revisao INTEGER NOT NULL,
   dh_registro_revisao TIMESTAMP NOT NULL,
   tx_descricao_revisao TEXT NULL,
   PRIMARY KEY(id_revisao),
   FOREIGN KEY(veiculo_id_veiculo)
     REFERENCES veiculo(id_veiculo),
   FOREIGN KEY(usuario_id_usuario)
-    REFERENCES usuario(id_usuario)
+    REFERENCES usuario(id_usuario),
+  UNIQUE(nu_numero_revisao)
 );
 
 CREATE TABLE componente (
@@ -88,11 +96,14 @@ CREATE TABLE componente (
   tx_descricao_componente TEXT NULL,
   dh_validade_componente TIMESTAMP NULL,
   dh_registro_componente TIMESTAMP NOT NULL,
+  bo_registro_ativo_componente BOOLEAN NOT NULL,
   PRIMARY KEY(id_componente),
   FOREIGN KEY(veiculo_id_veiculo)
     REFERENCES veiculo(id_veiculo),
   FOREIGN KEY(modelo_id_modelo)
-    REFERENCES modelo(id_modelo)
+    REFERENCES modelo(id_modelo),
+  UNIQUE(nu_codigo_componente),
+  UNIQUE(vc_rfid_componente)
 );
 
 CREATE TABLE componente_revisao (
