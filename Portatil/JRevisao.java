@@ -317,6 +317,7 @@ public class JRevisao extends javax.swing.JDialog {
                     0, 
                     usuario, 
                     veiculo, 
+                    0,
                     new Timestamp(new Date().getTime()), 
                     taDescricao.getText() )
             );
@@ -375,7 +376,9 @@ public class JRevisao extends javax.swing.JDialog {
         
         if(!inserirRevisao()){
             JOptionPane.showMessageDialog(null, "Não foi possível concluir a revisão");
+            closeConexao();
             dispose();
+            return;
         }
         
         closeConexao();
@@ -397,7 +400,7 @@ public class JRevisao extends javax.swing.JDialog {
                 initTable();
             }
         } else{
-            Componente componente = new Componente(0, null, null, 0, rfid, "", "", null, null);
+            Componente componente = new Componente(0, null, null, 0, rfid, "", "", null, null, false);
             cacheComponentes.add(new LeituraRFID(
                     componente, 
                     true, 

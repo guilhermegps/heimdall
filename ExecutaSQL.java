@@ -399,20 +399,22 @@ public class ExecutaSQL {
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Veiculo veiculo = new Veiculo();
                 Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", Integer.toString(rs.getInt("modelo_id_modelo"))).get(0);
                 Cor cor = (SELECT_COR("id_cor", Integer.toString(rs.getInt("cor_id_cor"))).size()>0) ? (Cor) SELECT_COR("id_cor", Integer.toString(rs.getInt("cor_id_cor"))).get(0) : null;
                 
-                veiculo.setModelo(modelo);
-                veiculo.setCor(cor);
-                veiculo.setId(rs.getInt("id_veiculo"));
-                veiculo.setCodigo(rs.getInt("nu_codigo_veiculo"));
-                veiculo.setNome(rs.getString("vc_nome_veiculo"));
-                veiculo.setRfid(rs.getString("vc_rfid_veiculo"));
-                veiculo.setPlaca(rs.getString("vc_placa_veiculo"));
-                veiculo.setKm(rs.getFloat("nu_km_veiculo"));
-                veiculo.setObservacao(rs.getString("tx_observacao_veiculo"));
-                veiculo.setRegistro(rs.getTimestamp("dh_registro_veiculo"));
+                Veiculo veiculo = new Veiculo(
+                    rs.getInt("id_veiculo"),
+                    modelo,
+                    cor,
+                    rs.getInt("nu_codigo_veiculo"),
+                    rs.getString("vc_nome_veiculo"),
+                    rs.getString("vc_rfid_veiculo"),
+                    rs.getString("vc_placa_veiculo"),
+                    rs.getFloat("nu_km_veiculo"),
+                    rs.getString("tx_observacao_veiculo"),
+                    rs.getTimestamp("dh_registro_veiculo"),
+                    rs.getBoolean("bo_registro_ativo_veiculo")
+                );
                 
                 v.add(veiculo);
             }
@@ -432,20 +434,22 @@ public class ExecutaSQL {
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Veiculo veiculo = new Veiculo();
                 Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", Integer.toString(rs.getInt("modelo_id_modelo"))).get(0);
                 Cor cor = (SELECT_COR("id_cor", Integer.toString(rs.getInt("cor_id_cor"))).size()>0) ? (Cor) SELECT_COR("id_cor", Integer.toString(rs.getInt("cor_id_cor"))).get(0) : null;
                 
-                veiculo.setModelo(modelo);
-                veiculo.setCor(cor);
-                veiculo.setId(rs.getInt("id_veiculo"));
-                veiculo.setCodigo(rs.getInt("nu_codigo_veiculo"));
-                veiculo.setNome(rs.getString("vc_nome_veiculo"));
-                veiculo.setRfid(rs.getString("vc_rfid_veiculo"));
-                veiculo.setPlaca(rs.getString("vc_placa_veiculo"));
-                veiculo.setKm(rs.getFloat("nu_km_veiculo"));
-                veiculo.setObservacao(rs.getString("tx_observacao_veiculo"));
-                veiculo.setRegistro(rs.getTimestamp("dh_registro_veiculo"));
+                Veiculo veiculo = new Veiculo(
+                    rs.getInt("id_veiculo"),
+                    modelo,
+                    cor,
+                    rs.getInt("nu_codigo_veiculo"),
+                    rs.getString("vc_nome_veiculo"),
+                    rs.getString("vc_rfid_veiculo"),
+                    rs.getString("vc_placa_veiculo"),
+                    rs.getFloat("nu_km_veiculo"),
+                    rs.getString("tx_observacao_veiculo"),
+                    rs.getTimestamp("dh_registro_veiculo"),
+                    rs.getBoolean("bo_registro_ativo_veiculo")
+                );
                 
                 v.add(veiculo);
             }
@@ -460,8 +464,8 @@ public class ExecutaSQL {
             comando = conexao.getConexao().prepareStatement("INSERT INTO veiculo(\n" +
                     "            id_veiculo, modelo_id_modelo, cor_id_cor, nu_codigo_veiculo, \n" +
                     "            vc_nome_veiculo, vc_rfid_veiculo, vc_placa_veiculo, nu_km_veiculo, \n" +
-                    "            tx_observacao_veiculo, dh_registro_veiculo)\n" +
-                    "    VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+                    "            tx_observacao_veiculo, dh_registro_veiculo, bo_registro_ativo_veiculo)\n" +
+                    "    VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
             
             comando.setInt(1, veiculo.getModelo().getId());
             if(veiculo.getCor() != null)
@@ -475,6 +479,7 @@ public class ExecutaSQL {
             comando.setFloat(7, veiculo.getKm());
             comando.setString(8, veiculo.getObservacao());
             comando.setTimestamp(9, veiculo.getRegistro());
+            comando.setBoolean(10, veiculo.isAtivo());
             
             return !comando.execute();
         }catch(Exception ex){
@@ -538,17 +543,19 @@ public class ExecutaSQL {
             while(rs.next()){
                 Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", ""+rs.getInt("modelo_id_modelo")).get(0);
                 Veiculo veiculo = (Veiculo) SELECT_VEICULO("id_veiculo", ""+rs.getInt("veiculo_id_veiculo")).get(0);
-                Componente comp = new Componente();
-                                
-                comp.setId(rs.getInt("id_componente"));
-                comp.setModelo(modelo);
-                comp.setVeiculo(veiculo);
-                comp.setCodigo(rs.getInt("nu_codigo_componente"));
-                comp.setNome(rs.getString("vc_nome_componente"));
-                comp.setRfid(rs.getString("vc_rfid_componente"));
-                comp.setDescricao(rs.getString("tx_descricao_componente"));
-                comp.setValidade(rs.getTimestamp("dh_validade_componente"));
-                comp.setRegistro(rs.getTimestamp("dh_registro_componente"));
+                
+                Componente comp = new Componente(                                
+                    rs.getInt("id_componente"),
+                    modelo,
+                    veiculo,
+                    rs.getInt("nu_codigo_componente"),
+                    rs.getString("vc_rfid_componente"),
+                    rs.getString("vc_nome_componente"),
+                    rs.getString("tx_descricao_componente"),
+                    rs.getTimestamp("dh_validade_componente"),
+                    rs.getTimestamp("dh_registro_componente"),
+                    rs.getBoolean("bo_registro_ativo_componente")
+                );
                 
                 componente.add(comp);
             }       
@@ -571,17 +578,19 @@ public class ExecutaSQL {
             while(rs.next()){
                 Modelo modelo = (Modelo) SELECT_MODELO("id_modelo", ""+rs.getInt("modelo_id_modelo")).get(0);
                 Veiculo veiculo = (Veiculo) SELECT_VEICULO("id_veiculo", ""+rs.getInt("veiculo_id_veiculo")).get(0);
-                Componente comp = new Componente();
-                                
-                comp.setId(rs.getInt("id_componente"));
-                comp.setModelo(modelo);
-                comp.setVeiculo(veiculo);
-                comp.setCodigo(rs.getInt("nu_codigo_componente"));
-                comp.setNome(rs.getString("vc_nome_componente"));
-                comp.setRfid(rs.getString("vc_rfid_componente"));
-                comp.setDescricao(rs.getString("tx_descricao_componente"));
-                comp.setValidade(rs.getTimestamp("dh_validade_componente"));
-                comp.setRegistro(rs.getTimestamp("dh_registro_componente"));
+                
+                Componente comp = new Componente(                                
+                    rs.getInt("id_componente"),
+                    modelo,
+                    veiculo,
+                    rs.getInt("nu_codigo_componente"),
+                    rs.getString("vc_rfid_componente"),
+                    rs.getString("vc_nome_componente"),
+                    rs.getString("tx_descricao_componente"),
+                    rs.getTimestamp("dh_validade_componente"),
+                    rs.getTimestamp("dh_registro_componente"),
+                    rs.getBoolean("bo_registro_ativo_componente")
+                );
                 
                 componente.add(comp);
             }       
@@ -613,7 +622,9 @@ public class ExecutaSQL {
                         rs.getString("vc_nome_componente"), 
                         rs.getString("tx_descricao_componente"), 
                         rs.getTimestamp("dh_validade_componente"), 
-                        rs.getTimestamp("dh_registro_componente") );
+                        rs.getTimestamp("dh_registro_componente"), 
+                        rs.getBoolean("bo_registro_ativo_componente")
+                );
             }       
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
@@ -627,8 +638,8 @@ public class ExecutaSQL {
             comando = conexao.getConexao().prepareStatement("INSERT INTO componente(\n" +
                             "            id_componente, modelo_id_modelo, veiculo_id_veiculo, nu_codigo_componente, \n" +
                             "            vc_rfid_componente, vc_nome_componente, tx_descricao_componente, \n" +
-                            "            dh_validade_componente, dh_registro_componente)\n" +
-                            "    VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?, ?);");
+                            "            dh_validade_componente, dh_registro_componente, bo_registro_ativo_componente)\n" +
+                            "    VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?, ?, ?, ?, ?);");
             
             comando.setInt(1, componente.getModelo().getId());
             comando.setInt(2, componente.getVeiculo().getId());
@@ -638,6 +649,7 @@ public class ExecutaSQL {
             comando.setString(6, componente.getDescricao());
             comando.setTimestamp(7, componente.getValidade());
             comando.setTimestamp(8, componente.getRegistro());
+            comando.setBoolean(9, componente.isAtivo());
             
             return !comando.execute();
         }catch(Exception ex){
@@ -664,6 +676,7 @@ public class ExecutaSQL {
                         rs.getInt("id_revisao"), 
                         usuario, 
                         veiculo, 
+                        rs.getInt("nu_numero_revisao"),
                         rs.getTimestamp("dh_registro_revisao"), 
                         rs.getString("tx_descricao_revisao") );
                 
@@ -713,8 +726,10 @@ public class ExecutaSQL {
                         rs.getInt("id_revisao"), 
                         usuario, 
                         veiculo, 
+                        rs.getInt("nu_numero_revisao"),
                         rs.getTimestamp("dh_registro_revisao"), 
-                        rs.getString("tx_descricao_revisao") );
+                        rs.getString("tx_descricao_revisao")
+                );
                 
                 revisao.add(rev);
             }       
@@ -728,9 +743,9 @@ public class ExecutaSQL {
     public int INSERT_REVISAO(Revisao revisao){
         try{
             comando = conexao.getConexao().prepareStatement("INSERT INTO revisao(\n" +
-                            "            id_revisao, usuario_id_usuario, veiculo_id_veiculo, dh_registro_revisao, \n" +
+                            "            id_revisao, usuario_id_usuario, veiculo_id_veiculo, nu_numero_revisao, dh_registro_revisao, \n" +
                             "            tx_descricao_revisao)\n" +
-                            "    VALUES ("+chavePrimaria+", ?, ?, ?, ?) RETURNING id_revisao;");
+                            "    VALUES ("+chavePrimaria+", ?, ?, NEXTVAL('SEQ_NUMERO_REVISAO'), ?, ?) RETURNING id_revisao;");
             
             comando.setInt(1, revisao.getUsuario().getId());
             comando.setInt(2,revisao.getVeiculo().getId());

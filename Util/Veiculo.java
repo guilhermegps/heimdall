@@ -24,6 +24,7 @@ public class Veiculo {
     private float km;
     private String observacao;
     private Timestamp registro;
+    private boolean ativo;
 
     public Veiculo() {
         this.id = 0;
@@ -38,7 +39,7 @@ public class Veiculo {
         this.registro = new Timestamp(0);
     }
 
-    public Veiculo(int id, Modelo modelo, Cor cor, int codigo, String nome, String rfid, String placa, float km, String observacao, Timestamp registro) {
+    public Veiculo(int id, Modelo modelo, Cor cor, int codigo, String nome, String rfid, String placa, float km, String observacao, Timestamp registro, boolean ativo) {
         this.id = id;
         this.modelo = modelo;
         this.cor = cor;
@@ -49,6 +50,7 @@ public class Veiculo {
         this.km = km;
         this.observacao = observacao;
         this.registro = registro;
+        this.ativo = ativo;
     }
 
     public int getId() {
@@ -129,6 +131,14 @@ public class Veiculo {
 
     public void setRegistro(Timestamp registro) {
         this.registro = registro;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 
     @Override

@@ -15,19 +15,17 @@ public class Revisao {
     private int id;
     private Usuario usuario;
     private Veiculo veiculo;
+    private int numero;
     private Timestamp registro;
     private String descricao;
 
-    public Revisao(int id, Usuario usuario, Veiculo veiculo, Timestamp registro, String descricao) {
+    public Revisao(int id, Usuario usuario, Veiculo veiculo, int numero, Timestamp registro, String descricao) {
         this.id = id;
         this.usuario = usuario;
         this.veiculo = veiculo;
+        this.numero = numero;
         this.registro = registro;
         this.descricao = descricao;
-    }
-
-    public Revisao(int aInt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public int getId() {
@@ -52,6 +50,14 @@ public class Revisao {
 
     public void setVeiculo(Veiculo veiculo) {
         this.veiculo = veiculo;
+    }
+
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
 
     public Timestamp getRegistro() {

@@ -10,6 +10,12 @@ import heimdall.Util.Componente;
 import heimdall.Util.Cor;
 import heimdall.Util.Modelo;
 import heimdall.Util.Veiculo;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import static java.lang.System.in;
+import static java.lang.System.out;
+import java.net.Socket;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +34,9 @@ public class JComponente extends javax.swing.JDialog {
     private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private Veiculo veiculo;
     private boolean killThread = false;
+    private DataOutputStream esc = new DataOutputStream(out);
+    private DataInputStream ler = new DataInputStream(in);
+    private Socket socket;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
     /**
@@ -39,6 +48,7 @@ public class JComponente extends javax.swing.JDialog {
         initComponents();
         initTable();
         new Campos().start();
+        new ComunicacaoRFID().start();
         liberarCampos(false); 
     }
 
@@ -504,8 +514,8 @@ public class JComponente extends javax.swing.JDialog {
     private void bSaveCdtComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveCdtComponenteActionPerformed
         switch (operacao) {
             case 1:
-            cadastrarNovo();
-            break;
+                cadastrarNovo();
+                break;
             case 2:
 
             break;
@@ -563,6 +573,7 @@ public class JComponente extends javax.swing.JDialog {
     
     private void sair(){
         killThread = true;
+        closeConexao();
         dispose();
     }
     
@@ -587,7 +598,8 @@ public class JComponente extends javax.swing.JDialog {
                     tfComponente.getText().trim(),
                     tpDescComponente.getText(),
                     new Timestamp(new Date().getTime()),
-                    new Timestamp(new Date().getTime())
+                    new Timestamp(new Date().getTime()),
+                    true
             );
             
             if(sql.INSERT_COMPONENTE(componente)){
@@ -649,6 +661,16 @@ public class JComponente extends javax.swing.JDialog {
         cbModelo.setEnabled(b);
     }
     
+    private void closeConexao(){
+        try {
+            esc.close();
+            ler.close();
+            socket.close();
+        } catch (IOException ex) {
+            new JErro(true, ex, true, true, false);
+        }
+    }
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancelCdtComponente;
@@ -690,19 +712,19 @@ public class JComponente extends javax.swing.JDialog {
     private javax.swing.JTextPane tpDescComponente;
     // End of variables declaration//GEN-END:variables
 
-    public class Campos extends Thread{
+    public class Campos extends Thread{        
         public void run(){
             while(!killThread){
-                verificarCampos();
                 try{
+                    verificarCampos();
                     tfDataCdt.setText(sdf.format(new Date()));                    
                 }catch(Exception ex){
-                    new JErro(true, ex.getMessage(), true, true, false);
+                    new JErro(true, ex, true, true, false);
                 }
             }
         }
         
-        public void verificarCampos(){
+        private void verificarCampos(){
             Modelo modelo = (Modelo) cbModelo.getSelectedItem();
             
             int aux = tfNomeVeiculo.getText().compareTo("");
@@ -713,6 +735,40 @@ public class JComponente extends javax.swing.JDialog {
             }else{
                 bSaveCdtComponente.setEnabled(true);
             }
+        }
+    }
+    
+    private class ComunicacaoRFID extends Thread{
+        public ComunicacaoRFID(){
+            try {
+                socket = new Socket("192.168.100.8", 2020);
+            } catch (IOException ex) {
+                new JErro(true, ex, true, true, false);
+            }
+        }
+        
+        public void run(){            
+            while(!killThread){
+                try {
+                    if(socket!=null && !socket.isClosed()){
+                        esc = new DataOutputStream(socket.getOutputStream());
+                        ler = new DataInputStream(socket.getInputStream());
+
+                        esc.writeBytes("ping");
+                        byte b[] = new byte[11];
+                        ler.read(b);//Para receber em bytes
+                        String rfid = new String(b);
+                        if(rfid != null && !rfid.equals("") && tfTagRfid.isEnabled() && !rfid.equals(tfTagRfid.getText())){
+                            tfTagRfid.setText(rfid);
+                        }
+                    }
+                }
+                catch(Exception ex){
+                    if(!socket.isClosed())
+                        new JErro(true, ex, true, true, false);
+                }
+            }
+            closeConexao();
         }
     }
 }

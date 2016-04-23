@@ -22,6 +22,7 @@ public class Componente {
     private String descricao;
     private Timestamp validade;
     private Timestamp registro;
+    private boolean ativo;
 
     public Componente() {
         this.id = 0;
@@ -35,7 +36,7 @@ public class Componente {
         this.registro = new Timestamp(0);
     }
 
-    public Componente(int id, Modelo modelo, Veiculo veiculo, int codigo, String rfid, String nome, String descricao, Timestamp validade, Timestamp registro) {
+    public Componente(int id, Modelo modelo, Veiculo veiculo, int codigo, String rfid, String nome, String descricao, Timestamp validade, Timestamp registro, boolean ativo) {
         this.id = id;
         this.modelo = modelo;
         this.veiculo = veiculo;
@@ -45,6 +46,7 @@ public class Componente {
         this.descricao = descricao;
         this.validade = validade;
         this.registro = registro;
+        this.ativo = ativo;
     }
 
     public int getId() {
@@ -117,6 +119,14 @@ public class Componente {
 
     public void setRegistro(Timestamp registro) {
         this.registro = registro;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
     
 }
