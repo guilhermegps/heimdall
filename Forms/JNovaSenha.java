@@ -204,7 +204,7 @@ public class JNovaSenha extends javax.swing.JDialog {
 
                 int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja alterar a senha?","Tem certeza?",JOptionPane.YES_NO_OPTION);
                 if(resp==0){
-                    if(!sql.UPDATE_USUARIO(aux)){
+                    if(sql.UPDATE_USUARIO(aux)){
                         JOptionPane.showMessageDialog(null,"Senha alterada com sucesso");
                         usuario = aux;
                         dispose();

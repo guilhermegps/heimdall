@@ -350,27 +350,31 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
         });
     }
     
-    private void initTable(){        
-        DefaultTableModel dtm = (DefaultTableModel) tComponenteRevisao.getModel();
-        
-        while(dtm.getRowCount()>0){
-            dtm.removeRow(0);
+    private void initTable(){      
+        try{
+            DefaultTableModel dtm = (DefaultTableModel) tComponenteRevisao.getModel();
+
+            while(dtm.getRowCount()>0){
+                dtm.removeRow(0);
+            }
+
+            for(int i=0;i<cacheComponenteRevisao.size();i++){
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+                dtm.addRow(
+                        new Object[] {
+                            cacheComponenteRevisao.get(i).getComponente().getCodigo(),
+                            (cacheComponenteRevisao.get(i).getIdentificacao()==null) ? "" : sdf.format(cacheComponenteRevisao.get(i).getIdentificacao()),
+                            cacheComponenteRevisao.get(i).isIdentificado(),
+                            cacheComponenteRevisao.get(i).getMotivo()
+                        }
+                );   
+            }
+
+            tComponenteRevisao.setModel(dtm);
+            tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
         }
-                
-        for(int i=0;i<cacheComponenteRevisao.size();i++){
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
-            dtm.addRow(
-                    new Object[] {
-                        cacheComponenteRevisao.get(i).getComponente().getCodigo(),
-                        sdf.format(cacheComponenteRevisao.get(i).getIdentificacao()),
-                        cacheComponenteRevisao.get(i).isIdentificado(),
-                        cacheComponenteRevisao.get(i).getMotivo()
-                    }
-            );   
-        }
-        
-        tComponenteRevisao.setModel(dtm);
-        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

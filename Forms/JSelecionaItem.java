@@ -255,20 +255,24 @@ public class JSelecionaItem extends javax.swing.JDialog {
     }
     
     private void initTable(){
-        DefaultTableModel dtm = (DefaultTableModel) tItem.getModel();
-        
-        while(dtm.getRowCount()>0){
-            dtm.removeRow(0);
+        try{
+            DefaultTableModel dtm = (DefaultTableModel) tItem.getModel();
+
+            while(dtm.getRowCount()>0){
+                dtm.removeRow(0);
+            }
+
+            for(int i=0; i<itens.size(); i++){            
+                dtm.addRow(new Object[] {
+                    itens.get(i).getId(),
+                    itens.get(i).getDenominacao()}
+                );
+            }     
+            tItem.setModel(dtm);
+            tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
         }
-        
-        for(int i=0; i<itens.size(); i++){            
-            dtm.addRow(new Object[] {
-                itens.get(i).getId(),
-                itens.get(i).getDenominacao()}
-            );
-        }     
-        tItem.setModel(dtm);
-        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
 
     public String getTituloJanela() {

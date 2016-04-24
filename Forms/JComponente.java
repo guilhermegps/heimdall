@@ -7,7 +7,6 @@ package heimdall.Forms;
 
 import heimdall.ExecutaSQL;
 import heimdall.Util.Componente;
-import heimdall.Util.Cor;
 import heimdall.Util.Modelo;
 import heimdall.Util.Veiculo;
 import java.io.DataInputStream;
@@ -617,32 +616,36 @@ public class JComponente extends javax.swing.JDialog {
     }
     
     private void initTable(){
-        ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Componente> aux = new ArrayList<Componente>();
-        DefaultTableModel dtm = (DefaultTableModel) tComponente.getModel();
-        
-        while(dtm.getRowCount()>0){
-            dtm.removeRow(0);
+        try{
+            ExecutaSQL sql = new ExecutaSQL();
+            ArrayList<Componente> aux = new ArrayList<Componente>();
+            DefaultTableModel dtm = (DefaultTableModel) tComponente.getModel();
+
+            while(dtm.getRowCount()>0){
+                dtm.removeRow(0);
+            }
+
+            aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+            for(int i=0; i<aux.size(); i++){
+                String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
+                String validade = new SimpleDateFormat("dd/MM/yyyy").format(aux.get(i).getValidade());
+                String modelo = (aux.get(i).getModelo() != null) ? aux.get(i).getModelo().getModelo() : null;
+
+                dtm.addRow(new Object[] {
+                    aux.get(i).getCodigo(),
+                    aux.get(i).getNome(),
+                    modelo,
+                    aux.get(i).getRfid(),                    
+                    aux.get(i).getDescricao(),
+                    validade,
+                    registro}
+                );
+            }     
+            tComponente.setModel(dtm);
+            tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
         }
-        
-        aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
-        for(int i=0; i<aux.size(); i++){
-            String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
-            String validade = new SimpleDateFormat("dd/MM/yyyy").format(aux.get(i).getValidade());
-            String modelo = (aux.get(i).getModelo() != null) ? aux.get(i).getModelo().getModelo() : null;
-            
-            dtm.addRow(new Object[] {
-                aux.get(i).getCodigo(),
-                aux.get(i).getNome(),
-                modelo,
-                aux.get(i).getRfid(),                    
-                aux.get(i).getDescricao(),
-                validade,
-                registro}
-            );
-        }     
-        tComponente.setModel(dtm);
-        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
     private void liberarCampos(boolean b){
@@ -730,7 +733,7 @@ public class JComponente extends javax.swing.JDialog {
             int aux = tfNomeVeiculo.getText().compareTo("");
             aux *= tfTagRfid.getText().compareTo("");
             aux *= tfCodigo.getText().compareTo("");
-            if(aux==0 || modelo==null){
+            if(aux==0 || modelo==null || tfTagRfid.getText().length()!=11){
                 bSaveCdtComponente.setEnabled(false);
             }else{
                 bSaveCdtComponente.setEnabled(true);
@@ -741,7 +744,7 @@ public class JComponente extends javax.swing.JDialog {
     private class ComunicacaoRFID extends Thread{
         public ComunicacaoRFID(){
             try {
-                socket = new Socket("192.168.100.8", 2020);
+                socket = new Socket("192.168.100.8", 2020); //Quando não encontra a conexão, ele trava aqui e a janela nem abre
             } catch (IOException ex) {
                 new JErro(true, ex, true, true, false);
             }

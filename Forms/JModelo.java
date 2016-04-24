@@ -345,29 +345,33 @@ public class JModelo extends javax.swing.JDialog {
     }
     
     private void initTable(){
-        ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Modelo> aux = new ArrayList<Modelo>();
-        DefaultTableModel dtm = (DefaultTableModel) tModelo.getModel();
-        
-        while(dtm.getRowCount()>0){
-            dtm.removeRow(0);
+        try{
+            ExecutaSQL sql = new ExecutaSQL();
+            ArrayList<Modelo> aux = new ArrayList<Modelo>();
+            DefaultTableModel dtm = (DefaultTableModel) tModelo.getModel();
+
+            while(dtm.getRowCount()>0){
+                dtm.removeRow(0);
+            }
+
+            aux = sql.SELECT_MODELO_TIPO_CLASSE(classe);
+            Object valores[] = new Object[aux.size()];
+            for(int i=0; i<aux.size(); i++){
+                String classe = (aux.get(i).getClasse() != null) ? aux.get(i).getClasse().getNome() : null;
+
+                dtm.addRow(new Object[] {
+                    aux.get(i).getCodigo(),
+                    aux.get(i).getModelo(),
+                    aux.get(i).getLayout(),
+                    aux.get(i).getMarca(),
+                    classe}
+                );
+            }     
+            tModelo.setModel(dtm);
+            tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
         }
-                
-        aux = sql.SELECT_MODELO_TIPO_CLASSE(classe);
-        Object valores[] = new Object[aux.size()];
-        for(int i=0; i<aux.size(); i++){
-            String classe = (aux.get(i).getClasse() != null) ? aux.get(i).getClasse().getNome() : null;
-            
-            dtm.addRow(new Object[] {
-                aux.get(i).getCodigo(),
-                aux.get(i).getModelo(),
-                aux.get(i).getLayout(),
-                aux.get(i).getMarca(),
-                classe}
-            );
-        }     
-        tModelo.setModel(dtm);
-        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
     private void cadastrarNovo(){

@@ -595,33 +595,37 @@ public class JVeiculo extends javax.swing.JDialog {
     }
     
     private void initTable(){
-        ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Veiculo> aux = new ArrayList<Veiculo>();
-        DefaultTableModel dtm = (DefaultTableModel) tVeiculo.getModel();
-        
-        while(dtm.getRowCount()>0){
-            dtm.removeRow(0);
+        try{
+            ExecutaSQL sql = new ExecutaSQL();
+            ArrayList<Veiculo> aux = new ArrayList<Veiculo>();
+            DefaultTableModel dtm = (DefaultTableModel) tVeiculo.getModel();
+
+            while(dtm.getRowCount()>0){
+                dtm.removeRow(0);
+            }
+
+            aux = sql.SELECT_ALL_VEICULO();
+            for(int i=0; i<aux.size(); i++){
+                String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
+                String cor = (aux.get(i).getCor() != null) ? aux.get(i).getCor().getCor() : null;
+                String modelo = (aux.get(i).getModelo() != null) ? aux.get(i).getModelo().getModelo() : null;
+
+                dtm.addRow(new Object[] {
+                    aux.get(i).getCodigo(),
+                    aux.get(i).getNome(),
+                    modelo,
+                    aux.get(i).getPlaca(),
+                    cor,
+                    aux.get(i).getRfid(),                    
+                    aux.get(i).getKm(),
+                    registro}
+                );
+            }     
+            tVeiculo.setModel(dtm);
+            tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
         }
-        
-        aux = sql.SELECT_ALL_VEICULO();
-        for(int i=0; i<aux.size(); i++){
-            String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
-            String cor = (aux.get(i).getCor() != null) ? aux.get(i).getCor().getCor() : null;
-            String modelo = (aux.get(i).getModelo() != null) ? aux.get(i).getModelo().getModelo() : null;
-            
-            dtm.addRow(new Object[] {
-                aux.get(i).getCodigo(),
-                aux.get(i).getNome(),
-                modelo,
-                aux.get(i).getPlaca(),
-                cor,
-                aux.get(i).getRfid(),                    
-                aux.get(i).getKm(),
-                registro}
-            );
-        }     
-        tVeiculo.setModel(dtm);
-        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
     private void liberarCampos(boolean b){
