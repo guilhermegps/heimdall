@@ -119,7 +119,8 @@
                   <Properties>
                     <Property name="autoCreateRowSorter" type="boolean" value="true"/>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="0">
+                      <Table columnCount="5" rowCount="0">
+                        <Column editable="false" title="N&#xfa;mero" type="java.lang.Object"/>
                         <Column editable="false" title="Data da Revis&#xe3;o" type="java.lang.Object"/>
                         <Column editable="false" title="Revisor" type="java.lang.Object"/>
                         <Column editable="false" title="Descri&#xe7;&#xe3;o" type="java.lang.Object"/>
@@ -130,6 +131,11 @@
                     <Property name="autoscrolls" type="boolean" value="false"/>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="100" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="150" resizable="true">
                           <Title/>
                           <Editor/>
@@ -334,14 +340,16 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="bDetalha" alignment="0" pref="110" max="32767" attributes="0"/>
+              <Component id="bDetalha" pref="110" max="32767" attributes="0"/>
+              <Component id="bSair" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="bDetalha" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="283" max="32767" attributes="0"/>
+                  <EmptySpace pref="254" max="32767" attributes="0"/>
+                  <Component id="bSair" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -351,6 +359,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Detalhar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bDetalhaActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="bSair">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sair"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bSairActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -765,6 +765,37 @@ public class ExecutaSQL {
     }   
     
     // Operações Revisao
+    public ArrayList<ComponenteRevisao> SELECT_COMPONENTE_REVISAO(String camp, String val){
+        camp = trata.noSQLInjection(camp);
+        val = trata.noSQLInjection(val);
+        
+        ArrayList<ComponenteRevisao> componenteRevisao = new ArrayList<ComponenteRevisao>();
+        try{
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM componente_revisao "
+                            + "WHERE "+camp+" = "+val+" ORDER BY dh_identificacao_componente_revisao;");
+            ResultSet rs = comando.executeQuery();
+            
+            while(rs.next()){
+                Componente componente = (Componente) SELECT_COMPONENTE("id_componente", Integer.toString(rs.getInt("componente_id_componente"))).get(0);
+                Revisao revisao = (Revisao) SELECT_REVISAO("id_revisao", Integer.toString(rs.getInt("revisao_id_revisao"))).get(0);
+                
+                ComponenteRevisao rev = new ComponenteRevisao(
+                        componente,
+                        revisao,
+                        rs.getBoolean("bo_identificado"),
+                        rs.getTimestamp("dh_identificacao_componente_revisao"),
+                        rs.getString("tx_motivo_nao_identificacao")
+                );
+                
+                componenteRevisao.add(rev);
+            }       
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+        
+        return componenteRevisao;
+    }
+    
     public boolean INSERT_COMPONENTE_REVISAO(ComponenteRevisao componenteRevisao){
         try{
             comando = conexao.getConexao().prepareStatement("INSERT INTO componente_revisao(\n" +

@@ -5,7 +5,12 @@
  */
 package heimdall.Forms;
 
+import heimdall.ExecutaSQL;
+import heimdall.Util.ComponenteRevisao;
 import heimdall.Util.Revisao;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -14,6 +19,9 @@ import heimdall.Util.Revisao;
 public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
 
     private Revisao revisao;
+    private ArrayList<ComponenteRevisao> cacheComponenteRevisao;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+    private ExecutaSQL sql;
     
     /**
      * Creates new form JDetalhaRevisaoVeiculo
@@ -21,7 +29,10 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
     public JDetalhaRevisaoVeiculo(Revisao revisao) {
         setModal(true);
         this.revisao = revisao;
+        sql = new ExecutaSQL();
+        cacheComponenteRevisao = sql.SELECT_COMPONENTE_REVISAO("revisao_id_revisao", Integer.toString(this.revisao.getId()));
         initComponents();
+        initTable();
     }
 
     private JDetalhaRevisaoVeiculo() {
@@ -59,7 +70,7 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
         tfLinhasTabela = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
-        tRevisao = new javax.swing.JTable();
+        tComponenteRevisao = new javax.swing.JTable();
         bFechar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -70,8 +81,10 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
         jPanel18.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         tfDescricaoVeiculo.setEditable(false);
+        tfDescricaoVeiculo.setText(this.revisao.getVeiculo().toString());
 
         tfCodigoVeiculo.setEditable(false);
+        tfCodigoVeiculo.setText(Integer.toString(this.revisao.getVeiculo().getCodigo()));
 
         jLabel16.setText("Veículo:");
 
@@ -100,8 +113,10 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
         jPanel20.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         tfIdentificaoUsuario.setEditable(false);
+        tfIdentificaoUsuario.setText(this.revisao.getUsuario().toString());
 
         tfCpfUsuario.setEditable(false);
+        tfCpfUsuario.setText(this.revisao.getUsuario().getCpf());
 
         jLabel21.setText("Usuário:");
 
@@ -130,17 +145,20 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
         jLabel22.setText("Data e Hora da Revisão:");
 
         tfDataHoraRevisao.setEditable(false);
+        tfDataHoraRevisao.setText(sdf.format(this.revisao.getRegistro()));
 
         jLabel23.setText("Descrição da Revisão:");
 
         taDescricaoRevisao.setEditable(false);
         taDescricaoRevisao.setColumns(20);
         taDescricaoRevisao.setRows(5);
+        taDescricaoRevisao.setText(this.revisao.getDescricao());
         jScrollPane1.setViewportView(taDescricaoRevisao);
 
         jLabel25.setText("Número da revisão:");
 
         tfNumeroRevisao.setEditable(false);
+        tfNumeroRevisao.setText(Integer.toString(this.revisao.getNumero()));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -155,7 +173,7 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel25)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfNumeroRevisao)
+                        .addComponent(tfNumeroRevisao, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel22)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -189,8 +207,8 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
 
         jLabel24.setText("Nº");
 
-        tRevisao.setAutoCreateRowSorter(true);
-        tRevisao.setModel(new javax.swing.table.DefaultTableModel(
+        tComponenteRevisao.setAutoCreateRowSorter(true);
+        tComponenteRevisao.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -213,15 +231,15 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        tRevisao.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tRevisao.setAutoscrolls(false);
-        tRevisao.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane7.setViewportView(tRevisao);
-        if (tRevisao.getColumnModel().getColumnCount() > 0) {
-            tRevisao.getColumnModel().getColumn(0).setPreferredWidth(200);
-            tRevisao.getColumnModel().getColumn(1).setPreferredWidth(210);
-            tRevisao.getColumnModel().getColumn(2).setPreferredWidth(110);
-            tRevisao.getColumnModel().getColumn(3).setPreferredWidth(220);
+        tComponenteRevisao.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tComponenteRevisao.setAutoscrolls(false);
+        tComponenteRevisao.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane7.setViewportView(tComponenteRevisao);
+        if (tComponenteRevisao.getColumnModel().getColumnCount() > 0) {
+            tComponenteRevisao.getColumnModel().getColumn(0).setPreferredWidth(200);
+            tComponenteRevisao.getColumnModel().getColumn(1).setPreferredWidth(210);
+            tComponenteRevisao.getColumnModel().getColumn(2).setPreferredWidth(110);
+            tComponenteRevisao.getColumnModel().getColumn(3).setPreferredWidth(220);
         }
 
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
@@ -331,6 +349,29 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
             }
         });
     }
+    
+    private void initTable(){        
+        DefaultTableModel dtm = (DefaultTableModel) tComponenteRevisao.getModel();
+        
+        while(dtm.getRowCount()>0){
+            dtm.removeRow(0);
+        }
+                
+        for(int i=0;i<cacheComponenteRevisao.size();i++){
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+            dtm.addRow(
+                    new Object[] {
+                        cacheComponenteRevisao.get(i).getComponente().getCodigo(),
+                        sdf.format(cacheComponenteRevisao.get(i).getIdentificacao()),
+                        cacheComponenteRevisao.get(i).isIdentificado(),
+                        cacheComponenteRevisao.get(i).getMotivo()
+                    }
+            );   
+        }
+        
+        tComponenteRevisao.setModel(dtm);
+        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bFechar;
@@ -346,7 +387,7 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel21;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTable tRevisao;
+    private javax.swing.JTable tComponenteRevisao;
     private javax.swing.JTextArea taDescricaoRevisao;
     private javax.swing.JTextField tfCodigoVeiculo;
     private javax.swing.JTextField tfCpfUsuario;

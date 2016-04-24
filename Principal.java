@@ -58,6 +58,7 @@ public class Principal extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         miVeiculo = new javax.swing.JMenuItem();
         miComponente = new javax.swing.JMenuItem();
+        miConsutaRevisoes = new javax.swing.JMenuItem();
         menuUsuarios = new javax.swing.JMenu();
         miNovoUsuario = new javax.swing.JMenuItem();
         miAlterarSenha = new javax.swing.JMenuItem();
@@ -172,6 +173,15 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu1.add(miComponente);
 
+        miConsutaRevisoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/folder_explore.png"))); // NOI18N
+        miConsutaRevisoes.setText("Consultar Revisões");
+        miConsutaRevisoes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miConsutaRevisoesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miConsutaRevisoes);
+
         jMenuBar1.add(jMenu1);
 
         menuUsuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/group.png"))); // NOI18N
@@ -260,6 +270,10 @@ public class Principal extends javax.swing.JFrame {
             new JComponente((Veiculo)selecionaItem.getObjetoSelecionado()).setVisible(true);
     }//GEN-LAST:event_miComponenteActionPerformed
 
+    private void miConsutaRevisoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miConsutaRevisoesActionPerformed
+        new JConsultaRevisaoVeiculo().setVisible(true);
+    }//GEN-LAST:event_miConsutaRevisoesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -318,6 +332,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu menuUsuarios;
     private javax.swing.JMenuItem miAlterarSenha;
     private javax.swing.JMenuItem miComponente;
+    private javax.swing.JMenuItem miConsutaRevisoes;
     private javax.swing.JMenu miLofout;
     private javax.swing.JMenuItem miLogout;
     private javax.swing.JMenuItem miNovoUsuario;

@@ -6,7 +6,6 @@
 package heimdall.Forms;
 
 import heimdall.ExecutaSQL;
-import heimdall.Portatil.TableRenderer;
 import heimdall.Util.Revisao;
 import heimdall.Util.Veiculo;
 import java.sql.Timestamp;
@@ -15,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -64,6 +62,7 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
         bPesquisa = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         bDetalha = new javax.swing.JButton();
+        bSair = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -77,14 +76,14 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Data da Revisão", "Revisor", "Descrição", "Completa"
+                "Número", "Data da Revisão", "Revisor", "Descrição", "Completa"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -100,10 +99,11 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
         tRevisao.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane7.setViewportView(tRevisao);
         if (tRevisao.getColumnModel().getColumnCount() > 0) {
-            tRevisao.getColumnModel().getColumn(0).setPreferredWidth(150);
-            tRevisao.getColumnModel().getColumn(1).setPreferredWidth(300);
-            tRevisao.getColumnModel().getColumn(2).setPreferredWidth(200);
-            tRevisao.getColumnModel().getColumn(3).setPreferredWidth(80);
+            tRevisao.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tRevisao.getColumnModel().getColumn(1).setPreferredWidth(150);
+            tRevisao.getColumnModel().getColumn(2).setPreferredWidth(300);
+            tRevisao.getColumnModel().getColumn(3).setPreferredWidth(200);
+            tRevisao.getColumnModel().getColumn(4).setPreferredWidth(80);
         }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -247,18 +247,32 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
         );
 
         bDetalha.setText("Detalhar");
+        bDetalha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bDetalhaActionPerformed(evt);
+            }
+        });
+
+        bSair.setText("Sair");
+        bSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bSairActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(bDetalha, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+            .addComponent(bSair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(bDetalha)
-                .addGap(0, 283, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
+                .addComponent(bSair))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -313,6 +327,21 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
              pesquisarRevisoes();
         }
     }//GEN-LAST:event_ftfDataFinalKeyPressed
+
+    private void bSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSairActionPerformed
+        dispose();
+    }//GEN-LAST:event_bSairActionPerformed
+
+    private void bDetalhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDetalhaActionPerformed
+        Revisao revisao = selectedLine();
+        
+        if(revisao==null){
+            JOptionPane.showMessageDialog(null, "É necessário selecionar uma das revisões da tabela.");
+            return;
+        } else{
+            new JDetalhaRevisaoVeiculo(revisao).setVisible(true);
+        }
+    }//GEN-LAST:event_bDetalhaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -421,15 +450,30 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
             boolean completa = sql.SELECT_VERIFICA_REVISAO_COMPLETA(cacheRevisao.get(i).getId());
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
             dtm.addRow(
-                    new Object[] {sdf.format(cacheRevisao.get(i).getRegistro()), 
+                    new Object[] {
+                        cacheRevisao.get(i).getNumero(),
+                        sdf.format(cacheRevisao.get(i).getRegistro()), 
                         cacheRevisao.get(i).getUsuario().toString(), 
                         cacheRevisao.get(i).getDescricao(),
-                        completa}
+                        completa
+                    }
             );   
         }
         
         tRevisao.setModel(dtm);
         tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+    }
+    
+    public Revisao selectedLine(){
+        if(tRevisao.getSelectedRow()<0)
+            return null;
+        
+        for(int i=0; i<cacheRevisao.size(); i++){
+            if(cacheRevisao.get(i).getNumero() == (int)tRevisao.getValueAt(tRevisao.getSelectedRow(), 0)) 
+                return cacheRevisao.get(i);
+        }
+        
+        return null;
     }
     
     /*private int pesquisaCache(String rfid){
@@ -446,6 +490,7 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
     private javax.swing.JButton bBuscaVeiculo;
     private javax.swing.JButton bDetalha;
     private javax.swing.JButton bPesquisa;
+    private javax.swing.JButton bSair;
     private javax.swing.JFormattedTextField ftfDataFinal;
     private javax.swing.JFormattedTextField ftfDataInicial;
     private javax.swing.JLabel jLabel1;
