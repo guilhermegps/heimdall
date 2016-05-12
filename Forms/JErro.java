@@ -16,8 +16,8 @@ import java.util.logging.Logger;
  */
 public class JErro extends javax.swing.JDialog {
     
-    private String icone = "", mensagemDetalhes, tituloJanela, mensagemJanela; 
-    private boolean gerarLog, isError /*true = erro, false = Alerta*/, gerarJanela, sairSistema /*Sai do sistema após encerrar a janela*/;
+    private String icone = "", mensagem, detalhesMensagem, tituloJanela, informacaoJanela; 
+    private boolean gerarLog, isError /*true = erro, false = Alerta*/, gerarJanela, sairSistema /*Sai do sistema após encerrar a janela*/, detalharErro = false;
 
     /**
      * Creates new form JErro
@@ -27,17 +27,18 @@ public class JErro extends javax.swing.JDialog {
         this.isError = isError;
         this.gerarJanela = janela;
         this.sairSistema = sair;     
-        this.mensagemDetalhes = getStack(exception); 
+        this.mensagem = exception.getMessage();
+        this.detalhesMensagem = getStack(exception); 
         
         initialize();
     }
     
     public JErro(boolean janela, String mensagem, boolean log, boolean isError, boolean sair) {
-        this.mensagemDetalhes = mensagem;
         this.gerarLog = log;
         this.isError = isError;
         this.gerarJanela = janela;
-        this.sairSistema = sair;       
+        this.sairSistema = sair; 
+        this.mensagem = mensagem;
         
         initialize();
     }
@@ -57,6 +58,10 @@ public class JErro extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        bDetalhes = new javax.swing.JButton();
+        pTeste = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taDetalhes = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle(this.tituloJanela);
@@ -65,7 +70,7 @@ public class JErro extends javax.swing.JDialog {
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setText(mensagemDetalhes);
+        jTextArea1.setText(mensagem);
         jScrollPane1.setViewportView(jTextArea1);
 
         bFecharErro.setText("Fechar");
@@ -81,28 +86,59 @@ public class JErro extends javax.swing.JDialog {
         jLabel1.setMinimumSize(new java.awt.Dimension(80, 80));
         jLabel1.setPreferredSize(new java.awt.Dimension(80, 80));
 
-        jLabel2.setText(mensagemJanela);
+        jLabel2.setText(informacaoJanela);
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabel2.setFocusable(false);
 
         jLabel3.setText("<html> <b><font color=\"red\" align=\"justify\">O sistema será encerrado</font></b>");
 
+        bDetalhes.setText("+ Detalhes");
+        bDetalhes.setPreferredSize(new java.awt.Dimension(75, 30));
+        bDetalhes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bDetalhesActionPerformed(evt);
+            }
+        });
+
+        taDetalhes.setEditable(false);
+        taDetalhes.setColumns(20);
+        taDetalhes.setRows(5);
+        taDetalhes.setText(detalhesMensagem);
+        jScrollPane2.setViewportView(taDetalhes);
+
+        javax.swing.GroupLayout pTesteLayout = new javax.swing.GroupLayout(pTeste);
+        pTeste.setLayout(pTesteLayout);
+        pTesteLayout.setHorizontalGroup(
+            pTesteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+        pTesteLayout.setVerticalGroup(
+            pTesteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pTesteLayout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 11, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bFecharErro, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pTeste, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(bDetalhes, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bFecharErro, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -113,13 +149,19 @@ public class JErro extends javax.swing.JDialog {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                .addGap(8, 8, 8)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bDetalhes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pTeste, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bFecharErro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
+
+        mostrarDetalhes();
 
         pack();
         setLocationRelativeTo(null);
@@ -132,21 +174,40 @@ public class JErro extends javax.swing.JDialog {
         
         dispose();
     }//GEN-LAST:event_bFecharErroActionPerformed
+
+    private void bDetalhesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDetalhesActionPerformed
+        mostrarDetalhes();
+    }//GEN-LAST:event_bDetalhesActionPerformed
+    
+    public static void main(String args []){
+        new JErro(true, "Mensagem de Teste", false, true, true);
+    }
+    
+    private void mostrarDetalhes(){
+        pTeste.setVisible(detalharErro);
+        if(detalharErro)
+            bDetalhes.setText("- Detalhes");
+        else
+            bDetalhes.setText("+ Detalhes");
+        
+        pack();
+        detalharErro = !detalharErro;
+    }
     
     private void initialize(){        
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         
-        if(mensagemDetalhes == null){
-            mensagemDetalhes = "Um erro foi identificado, mas não possui detalhes especificados.";
+        if(mensagem == null){
+            mensagem = "Um erro foi identificado, mas não possui mensagem.";
         }
         
         if(isError){
             tituloJanela = "ERRO";
-            mensagemJanela = "<html> <b><font color=\"red\" align=\"justify\">Houve um erro no sistema ao tentar realizar uma operação.<br/> Favor, entrar em contato com o suporte. <br/> Detalhes do erro a seguir: </font></b>";
+            informacaoJanela = "<html> <b><font color=\"red\" align=\"justify\">Houve um erro no sistema ao tentar realizar uma operação.<br/> Favor, entrar em contato com o suporte. <br/> Detalhes do erro a seguir: </font></b>";
             icone = "/heimdall/img/icons 80x80/error.png";
         } else {
             tituloJanela = "ALERTA";
-            mensagemJanela = "<html> <b><font color=\"red\" align=\"justify\"> <font size=\"6\">Atenção!</font> <br/> Este é um alerta do sistema. <br/> Detalhes do alerta a seguir: </font></b>";
+            informacaoJanela = "<html> <b><font color=\"red\" align=\"justify\"> <font size=\"6\">Atenção!</font> <br/> Este é um alerta do sistema. <br/> Detalhes do alerta a seguir: </font></b>";
             icone = "/heimdall/img/icons 80x80/warning.png";
         }
         
@@ -167,11 +228,15 @@ public class JErro extends javax.swing.JDialog {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bDetalhes;
     private javax.swing.JButton bFecharErro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JPanel pTeste;
+    private javax.swing.JTextArea taDetalhes;
     // End of variables declaration//GEN-END:variables
 }
