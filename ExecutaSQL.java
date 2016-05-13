@@ -34,7 +34,37 @@ public class ExecutaSQL {
     public ExecutaSQL() {
         conexao = new ConexaoDB();
         trata = new TratarEntrada();
-    }    
+    }   
+    
+    public void BEGIN(){
+        try{
+            comando = conexao.getConexao().prepareStatement("BEGIN;");      
+            
+            comando.execute();
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+    }
+    
+    public void COMMIT(){
+        try{
+            comando = conexao.getConexao().prepareStatement("COMMIT;");      
+            
+            comando.execute();
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+    }
+    
+    public void ROLLBACK(){
+        try{
+            comando = conexao.getConexao().prepareStatement("ROLLBACK;");      
+            
+            comando.execute();
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+        }
+    }
     
     // Funções
     public Timestamp ConvertStringTimestamp(String dataHora){
