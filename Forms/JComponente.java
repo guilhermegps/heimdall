@@ -92,8 +92,8 @@ public class JComponente extends javax.swing.JDialog {
         lpCondVeiculo = new javax.swing.JLayeredPane();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        tfTagRfid = new javax.swing.JTextField();
         tfDataCdt = new javax.swing.JTextField();
+        ftfTagRfid = new javax.swing.JFormattedTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -369,10 +369,18 @@ public class JComponente extends javax.swing.JDialog {
             }
         });
 
+        try {
+            ftfTagRfid.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AA AA AA AA")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        ftfTagRfid.setText("");
+        ftfTagRfid.setToolTipText("Ex: 1A 56 BF 4D");
+
         lpCondVeiculo.setLayer(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpCondVeiculo.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpCondVeiculo.setLayer(tfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpCondVeiculo.setLayer(tfDataCdt, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(ftfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpCondVeiculoLayout = new javax.swing.GroupLayout(lpCondVeiculo);
         lpCondVeiculo.setLayout(lpCondVeiculoLayout);
@@ -385,8 +393,8 @@ public class JComponente extends javax.swing.JDialog {
                     .addComponent(jLabel8))
                 .addGap(24, 24, 24)
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfTagRfid)
-                    .addComponent(tfDataCdt, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
+                    .addComponent(tfDataCdt, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                    .addComponent(ftfTagRfid))
                 .addContainerGap())
         );
         lpCondVeiculoLayout.setVerticalGroup(
@@ -395,7 +403,7 @@ public class JComponente extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(tfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -596,7 +604,7 @@ public class JComponente extends javax.swing.JDialog {
                         modelo,
                         this.veiculo,
                         Integer.parseInt(tfCodigo.getText()),
-                        tfTagRfid.getText().trim(),
+                        ftfTagRfid.getText().trim(),
                         tfComponente.getText().trim(),
                         tpDescComponente.getText(),
                         new Timestamp(new Date().getTime()),
@@ -660,14 +668,14 @@ public class JComponente extends javax.swing.JDialog {
     private void liberarCampos(boolean b){
         tfCodigo.setText("");
         tfComponente.setText("");
-        tfTagRfid.setText("");
+        ftfTagRfid.setText("");
         tfDataValComponente.setText("");
         tpDescComponente.setText("");
         cbModelo.setSelectedItem(null);
         
         tfCodigo.setEnabled(b);
         tfComponente.setEnabled(b);
-        tfTagRfid.setEnabled(b);
+        ftfTagRfid.setEnabled(b);
         tfDataValComponente.setEnabled(b);
         tpDescComponente.setEnabled(b);
         cbModelo.setEnabled(b);
@@ -693,6 +701,7 @@ public class JComponente extends javax.swing.JDialog {
     private javax.swing.JButton bRefreshCdtComponente;
     private javax.swing.JButton bSaveCdtComponente;
     private javax.swing.JComboBox cbModelo;
+    private javax.swing.JFormattedTextField ftfTagRfid;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -719,7 +728,6 @@ public class JComponente extends javax.swing.JDialog {
     private javax.swing.JTextField tfLinhasTabela;
     private javax.swing.JTextField tfNomeVeiculo;
     private javax.swing.JTextField tfPlacaVeiculo;
-    private javax.swing.JTextField tfTagRfid;
     private javax.swing.JTabbedPane tpComponente;
     private javax.swing.JTextPane tpDescComponente;
     // End of variables declaration//GEN-END:variables
@@ -740,13 +748,20 @@ public class JComponente extends javax.swing.JDialog {
             Modelo modelo = (Modelo) cbModelo.getSelectedItem();
             
             int aux = tfNomeVeiculo.getText().compareTo("");
-            aux *= tfTagRfid.getText().compareTo("");
+            aux *= ftfTagRfid.getText().compareTo("");
             aux *= tfCodigo.getText().compareTo("");
-            if(aux==0 || modelo==null || tfTagRfid.getText().length()!=11){
+            if(aux==0 || modelo==null || !rfidValido()){
                 bSaveCdtComponente.setEnabled(false);
             }else{
                 bSaveCdtComponente.setEnabled(true);
             }
+        }
+        
+        private boolean rfidValido(){
+            if(ftfTagRfid.getText().length()==11 && ftfTagRfid.getText().trim().matches("[0-9a-zA-Z]{2}\\s[0-9a-zA-Z]{2}\\s[0-9a-zA-Z]{2}\\s[0-9a-zA-Z]{2}")){
+                return true;
+            }
+            return false;
         }
     }
     
@@ -778,8 +793,8 @@ public class JComponente extends javax.swing.JDialog {
                         byte b[] = new byte[11]; //Vetor que limita o tamanho do recebimento da informação
                         ler.read(b); //Recebe em bytes
                         String rfid = new String(b);
-                        if(rfid != null && !rfid.equals("") && tfTagRfid.isEnabled() && !rfid.equals(tfTagRfid.getText())){
-                            tfTagRfid.setText(rfid);
+                        if(rfid != null && !rfid.equals("") && ftfTagRfid.isEnabled() && !rfid.equals(ftfTagRfid.getText())){
+                            ftfTagRfid.setText(rfid);
                         }
                     }
                 }

@@ -281,8 +281,8 @@
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="tfTagRfid" max="32767" attributes="0"/>
                       <Component id="tfDataCdt" pref="167" max="32767" attributes="0"/>
+                      <Component id="ftfTagRfid" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -294,7 +294,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="tfTagRfid" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftfTagRfid" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -317,8 +317,6 @@
             <Property name="text" type="java.lang.String" value="Data Cdt.:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="tfTagRfid">
-        </Component>
         <Component class="javax.swing.JTextField" name="tfDataCdt">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
@@ -327,6 +325,15 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfDataCdtActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="ftfTagRfid">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
+              <Format format="AA AA AA AA" subtype="-1" type="5"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value=""/>
+            <Property name="toolTipText" type="java.lang.String" value="Ex: 1A 56 BF 4D"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

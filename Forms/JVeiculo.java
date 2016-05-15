@@ -68,8 +68,8 @@ public class JVeiculo extends javax.swing.JDialog {
         lpCondVeiculo = new javax.swing.JLayeredPane();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        tfTagRfid = new javax.swing.JTextField();
         tfDataCdt = new javax.swing.JTextField();
+        ftfTagRfid = new javax.swing.JFormattedTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
         tbVeiculo = new javax.swing.JToolBar();
@@ -231,10 +231,18 @@ public class JVeiculo extends javax.swing.JDialog {
             }
         });
 
+        try {
+            ftfTagRfid.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AA AA AA AA")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        ftfTagRfid.setText("");
+        ftfTagRfid.setToolTipText("Ex: 1A 56 BF 4D");
+
         lpCondVeiculo.setLayer(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpCondVeiculo.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpCondVeiculo.setLayer(tfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpCondVeiculo.setLayer(tfDataCdt, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(ftfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpCondVeiculoLayout = new javax.swing.GroupLayout(lpCondVeiculo);
         lpCondVeiculo.setLayout(lpCondVeiculoLayout);
@@ -247,8 +255,8 @@ public class JVeiculo extends javax.swing.JDialog {
                     .addComponent(jLabel7))
                 .addGap(18, 18, 18)
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfTagRfid)
-                    .addComponent(tfDataCdt, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
+                    .addComponent(tfDataCdt, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                    .addComponent(ftfTagRfid))
                 .addContainerGap())
         );
         lpCondVeiculoLayout.setVerticalGroup(
@@ -257,7 +265,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(tfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -563,6 +571,10 @@ public class JVeiculo extends javax.swing.JDialog {
     }
     
     private void cadastrarNovo(){
+        if(!ftfTagRfid.getText().trim().equals("") && !rfidValido()){
+            JOptionPane.showMessageDialog(null,"Código RFID inválido. O código deve ser formado por quatro pares de valores alfanumericos separados por espaços.");
+        }
+        
         ExecutaSQL sql = new ExecutaSQL();
         try{
             Veiculo veiculo = new Veiculo();
@@ -578,7 +590,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 //if(km != null)
                     //veiculo.setKm(km);
                 veiculo.setObservacao(tpObs.getText());
-                veiculo.setRfid(tfTagRfid.getText().trim());
+                veiculo.setRfid(ftfTagRfid.getText().trim());
                 veiculo.setRegistro(new Timestamp(new Date().getTime()));
 
                 sql.BEGIN();
@@ -639,7 +651,7 @@ public class JVeiculo extends javax.swing.JDialog {
         tfCodigo.setText("");
         tfVeiculo.setText("");
         tfPlaca.setText("");
-        tfTagRfid.setText("");
+        ftfTagRfid.setText("");
         //tfKm.setText("");
         tpObs.setText("");
         cbModelo.setSelectedItem(null);
@@ -648,11 +660,18 @@ public class JVeiculo extends javax.swing.JDialog {
         tfCodigo.setEnabled(b);
         tfVeiculo.setEnabled(b);
         tfPlaca.setEnabled(b);
-        tfTagRfid.setEnabled(b);
+        ftfTagRfid.setEnabled(b);
         //tfKm.setEnabled(b);
         tpObs.setEnabled(b);
         cbModelo.setEnabled(b);
         cbCor.setEnabled(b);
+    }
+        
+    private boolean rfidValido(){
+        if(ftfTagRfid.getText().length()==11 && ftfTagRfid.getText().trim().matches("[0-9a-zA-Z]{2}\\s[0-9a-zA-Z]{2}\\s[0-9a-zA-Z]{2}\\s[0-9a-zA-Z]{2}")){
+            return true;
+        }
+        return false;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -665,6 +684,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JButton bSaveCdtVeiculo;
     private javax.swing.JComboBox cbCor;
     private javax.swing.JComboBox cbModelo;
+    private javax.swing.JFormattedTextField ftfTagRfid;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -688,7 +708,6 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JTextField tfDataCdt;
     private javax.swing.JTextField tfLinhasTabela;
     private javax.swing.JTextField tfPlaca;
-    private javax.swing.JTextField tfTagRfid;
     private javax.swing.JTextField tfVeiculo;
     private javax.swing.JTextPane tpObs;
     private javax.swing.JTabbedPane tpVeiculo;
@@ -712,7 +731,7 @@ public class JVeiculo extends javax.swing.JDialog {
             int aux = tfVeiculo.getText().compareTo("");
             aux *= tfPlaca.getText().compareTo("");
             aux *= tfCodigo.getText().compareTo("");
-            if(aux==0 || modelo==null || !tfPlaca.getText().matches("[a-zA-Z]{3,3}-\\d{4,4}")){
+            if(aux==0 || modelo==null){
                 bSaveCdtVeiculo.setEnabled(false);
             }else{
                 bSaveCdtVeiculo.setEnabled(true);
