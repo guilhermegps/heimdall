@@ -6,7 +6,6 @@ CREATE OR REPLACE FUNCTION f_veiculo_tbiu()
   RETURNS TRIGGER AS
 $BODY$
  BEGIN
-	
  	NEW.vc_placa_veiculo := UPPER(NEW.vc_placa_veiculo);
  	
  	NEW.vc_rfid_veiculo := UPPER(NEW.vc_rfid_veiculo);
@@ -14,6 +13,9 @@ $BODY$
 	IF (TG_OP = 'INSERT') THEN
  		IF (NEW.nu_codigo_veiculo = 0) THEN
 			NEW.nu_codigo_veiculo = NEXTVAL('SEQ_CODIGO_REGISTRO');
+			WHILE(EXISTS(SELECT 1 FROM veiculo WHERE nu_codigo_veiculo = NEW.nu_codigo_veiculo)) LOOP
+				NEW.nu_codigo_veiculo = NEXTVAL('SEQ_CODIGO_REGISTRO');
+			END LOOP;
 		ELSIF (NEW.nu_codigo_veiculo < 0) THEN
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
 		END IF;
@@ -45,10 +47,12 @@ CREATE OR REPLACE FUNCTION f_modelo_tbiud()
   RETURNS TRIGGER AS
 $BODY$
  BEGIN
-	
 	IF (TG_OP = 'INSERT') THEN
  		IF (NEW.nu_codigo_modelo = 0) THEN
 			NEW.nu_codigo_modelo = NEXTVAL('SEQ_CODIGO_REGISTRO');
+			WHILE(EXISTS(SELECT 1 FROM modelo WHERE nu_codigo_modelo = NEW.nu_codigo_modelo)) LOOP
+				NEW.nu_codigo_modelo = NEXTVAL('SEQ_CODIGO_REGISTRO');
+			END LOOP;
 		ELSIF (NEW.nu_codigo_modelo < 0) THEN
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
 		END IF;
@@ -74,10 +78,12 @@ CREATE OR REPLACE FUNCTION f_componente_tbiud()
   RETURNS TRIGGER AS
 $BODY$
  BEGIN
-	
 	IF (TG_OP = 'INSERT') THEN
  		IF (NEW.nu_codigo_componente = 0) THEN
 			NEW.nu_codigo_componente = NEXTVAL('SEQ_CODIGO_REGISTRO');
+			WHILE(EXISTS(SELECT 1 FROM componente WHERE nu_codigo_componente = NEW.nu_codigo_componente)) LOOP
+				NEW.nu_codigo_componente = NEXTVAL('SEQ_CODIGO_REGISTRO');
+			END LOOP;
 		ELSIF (NEW.nu_codigo_componente < 0) THEN
 			RAISE EXCEPTION 'Valor inválido para o campo do código.';
 		END IF;
