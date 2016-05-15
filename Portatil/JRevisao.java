@@ -17,7 +17,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import static java.lang.System.in;
 import static java.lang.System.out;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -494,16 +496,24 @@ public class JRevisao extends javax.swing.JDialog {
     }
     
     private class ComunicacaoRFID extends Thread{
+        boolean erroConexao = false;
+        
         public ComunicacaoRFID(){
             try {
-                socket = new Socket("192.168.100.8", 2020);
-            } catch (IOException ex) {
-                
+                socket = new Socket(); 
+                socket.connect(new InetSocketAddress("192.168.100.8", 2020), 500); //Timeout de conexão. Retorna uma exception caso não consiga conexao dentro do tempo determinado
+            } catch (SocketTimeoutException ex) {
+                ex = new SocketTimeoutException("Houve um problema na conexão com a leitora RFID: "+ex.getMessage());
+                new JErro(true, ex, true, true, true);
+                erroConexao = true;
+            } catch (Exception ex) {
+                new JErro(true, ex, true, true, true);
+                erroConexao = true;
             }
         }
         
         public void run(){            
-            while(!killThread){
+            while(!killThread && !erroConexao){
                 try {
                     if(socket!=null && !socket.isClosed()){
                         esc = new DataOutputStream(socket.getOutputStream());
@@ -519,10 +529,12 @@ public class JRevisao extends javax.swing.JDialog {
                     }
                 }
                 catch(Exception ex){
-                    System.out.println(ex.getMessage());
+                    if(!killThread)
+                        new JErro(true, ex, true, true, true);
                 }
             }
             closeConexao();
+            dispose();
         }
     }
 }

@@ -482,7 +482,7 @@ public class JVeiculo extends javax.swing.JDialog {
     }//GEN-LAST:event_bSaveCdtVeiculoActionPerformed
 
     private void bEditCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCdtVeiculoActionPerformed
-        new JErro(true, "Mensagem de teste da janela de erro", false, true, false);
+        new JErro(true, new Exception("Mensagem de teste da janela de erro"), false, true, false);
     }//GEN-LAST:event_bEditCdtVeiculoActionPerformed
 
     private void bCustomModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCustomModeloActionPerformed
@@ -564,34 +564,41 @@ public class JVeiculo extends javax.swing.JDialog {
     
     private void cadastrarNovo(){
         ExecutaSQL sql = new ExecutaSQL();
-        Veiculo veiculo = new Veiculo();
-        Modelo modelo = (Modelo) cbModelo.getSelectedItem();
-        Cor cor = (Cor) cbCor.getSelectedItem();
-        //Float km = (tfKm.getText().compareTo("")==0) ? null : Float.parseFloat(tfKm.getText());
-        
-        if(modelo != null){
-            veiculo.setModelo(modelo);
-            veiculo.setCor(cor);
-            veiculo.setNome(tfVeiculo.getText().trim());
-            veiculo.setPlaca(tfPlaca.getText());
-            //if(km != null)
-                //veiculo.setKm(km);
-            veiculo.setObservacao(tpObs.getText());
-            veiculo.setRfid(tfTagRfid.getText().trim());
-            veiculo.setRegistro(new Timestamp(new Date().getTime()));
-            
-            if(sql.INSERT_VEICULO(veiculo)){
-                JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
-                liberarCampos(false);
+        try{
+            Veiculo veiculo = new Veiculo();
+            Modelo modelo = (Modelo) cbModelo.getSelectedItem();
+            Cor cor = (Cor) cbCor.getSelectedItem();
+            //Float km = (tfKm.getText().compareTo("")==0) ? null : Float.parseFloat(tfKm.getText());
+
+            if(modelo != null){
+                veiculo.setModelo(modelo);
+                veiculo.setCor(cor);
+                veiculo.setNome(tfVeiculo.getText().trim());
+                veiculo.setPlaca(tfPlaca.getText());
+                //if(km != null)
+                    //veiculo.setKm(km);
+                veiculo.setObservacao(tpObs.getText());
+                veiculo.setRfid(tfTagRfid.getText().trim());
+                veiculo.setRegistro(new Timestamp(new Date().getTime()));
+
+                sql.BEGIN();
+                if(sql.INSERT_VEICULO(veiculo)){
+                    sql.COMMIT();
+                    JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
+                    liberarCampos(false);
+                }else{
+                    throw new Exception("Falha no cadastrado.");
+                }
             }else{
-                JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
+                JOptionPane.showMessageDialog(null,"Escolha o modelo do seu veículo");
+                return;
             }
-        }else{
-            JOptionPane.showMessageDialog(null,"Escolha o modelo do seu veículo");
-            return;
+
+            initTable();
+        }catch(Exception ex){
+            sql.ROLLBACK();
+            new JErro(true, ex, true, true, false);
         }
-        
-        initTable();
     }
     
     private void initTable(){
@@ -694,7 +701,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 try{
                     tfDataCdt.setText(sdf.format(new Date()));                    
                 }catch(Exception ex){
-                    new JErro(true, ex.getMessage(), true, true, false);
+                    new JErro(true, ex, true, true, false);
                 }
             }
         }

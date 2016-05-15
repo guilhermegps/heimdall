@@ -14,7 +14,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import static java.lang.System.in;
 import static java.lang.System.out;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -581,38 +583,45 @@ public class JComponente extends javax.swing.JDialog {
         ExecutaSQL sql = new ExecutaSQL();
         Modelo modelo = (Modelo) cbModelo.getSelectedItem();
         
-        if(this.veiculo == null){
-            new JErro(true, "Este componente não pode ser cadastrado pois não existe um veículo vinculado a ele.", true, false, false);
-            sair();
-            return;
-        }
-        
-        if(modelo != null){
-            Componente componente = new Componente(
-                    0,
-                    modelo,
-                    this.veiculo,
-                    Integer.parseInt(tfCodigo.getText()),
-                    tfTagRfid.getText().trim(),
-                    tfComponente.getText().trim(),
-                    tpDescComponente.getText(),
-                    new Timestamp(new Date().getTime()),
-                    new Timestamp(new Date().getTime()),
-                    true
-            );
-            
-            if(sql.INSERT_COMPONENTE(componente)){
-                JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
-                liberarCampos(false);
-            }else{
-                JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
+        try{
+            if(this.veiculo == null){
+                new JErro(true, new Exception("Este componente não pode ser cadastrado pois não existe um veículo vinculado a ele."), true, false, false);
+                sair();
+                return;
             }
-        }else{
-            JOptionPane.showMessageDialog(null,"Escolha o modelo do seu componente");
-            return;
+
+            if(modelo != null){
+                Componente componente = new Componente(
+                        0,
+                        modelo,
+                        this.veiculo,
+                        Integer.parseInt(tfCodigo.getText()),
+                        tfTagRfid.getText().trim(),
+                        tfComponente.getText().trim(),
+                        tpDescComponente.getText(),
+                        new Timestamp(new Date().getTime()),
+                        new Timestamp(new Date().getTime()),
+                        true
+                );
+
+                sql.BEGIN();
+                if(sql.INSERT_COMPONENTE(componente)){
+                    sql.COMMIT();
+                    JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
+                    liberarCampos(false);
+                }else{
+                    throw new Exception("Falha no cadastrado.");
+                }
+            }else{
+                JOptionPane.showMessageDialog(null,"Escolha o modelo do seu componente");
+                return;
+            }
+
+            initTable();
+        } catch(Exception ex){
+            sql.ROLLBACK();
+            new JErro(true, ex, true, true, false);
         }
-        
-        initTable();
     }
     
     private void initTable(){
@@ -742,24 +751,32 @@ public class JComponente extends javax.swing.JDialog {
     }
     
     private class ComunicacaoRFID extends Thread{
+        boolean erroConexao = false;
+        
         public ComunicacaoRFID(){
             try {
-                socket = new Socket("192.168.100.8", 2020); //Quando não encontra a conexão, ele trava aqui e a janela nem abre
-            } catch (IOException ex) {
-                new JErro(true, ex, true, true, false);
+                socket = new Socket(); 
+                socket.connect(new InetSocketAddress("192.168.100.8", 2020), 500); //Timeout de conexão. Retorna uma exception caso não consiga conexao dentro do tempo determinado
+            } catch (SocketTimeoutException ex) {
+                ex = new SocketTimeoutException("Houve um problema na conexão com a leitora RFID: "+ex.getMessage());
+                new JErro(true, ex, true, false, false);
+                erroConexao = true;
+            } catch (Exception ex) {
+                new JErro(false, ex, true, true, false);
+                erroConexao = true;
             }
         }
         
         public void run(){            
-            while(!killThread){
+            while(!killThread && !erroConexao){
                 try {
                     if(socket!=null && !socket.isClosed()){
                         esc = new DataOutputStream(socket.getOutputStream());
                         ler = new DataInputStream(socket.getInputStream());
 
                         esc.writeBytes("ping");
-                        byte b[] = new byte[11];
-                        ler.read(b);//Para receber em bytes
+                        byte b[] = new byte[11]; //Vetor que limita o tamanho do recebimento da informação
+                        ler.read(b); //Recebe em bytes
                         String rfid = new String(b);
                         if(rfid != null && !rfid.equals("") && tfTagRfid.isEnabled() && !rfid.equals(tfTagRfid.getText())){
                             tfTagRfid.setText(rfid);

@@ -33,7 +33,7 @@ public class JErro extends javax.swing.JDialog {
         initialize();
     }
     
-    public JErro(boolean janela, String mensagem, boolean log, boolean isError, boolean sair) {
+    /*public JErro(boolean janela, String mensagem, boolean log, boolean isError, boolean sair) {
         this.gerarLog = log;
         this.isError = isError;
         this.gerarJanela = janela;
@@ -41,7 +41,7 @@ public class JErro extends javax.swing.JDialog {
         this.mensagem = mensagem;
         
         initialize();
-    }
+    }*/
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -180,7 +180,7 @@ public class JErro extends javax.swing.JDialog {
     }//GEN-LAST:event_bDetalhesActionPerformed
     
     public static void main(String args []){
-        new JErro(true, "Mensagem de Teste", false, true, true);
+        new JErro(true, new Exception("Mensagem de Teste"), false, true, true);
     }
     
     private void mostrarDetalhes(){
@@ -191,6 +191,7 @@ public class JErro extends javax.swing.JDialog {
             bDetalhes.setText("+ Detalhes");
         
         pack();
+        setLocationRelativeTo(null);
         detalharErro = !detalharErro;
     }
     

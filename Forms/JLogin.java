@@ -264,8 +264,8 @@ public class JLogin extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null,"Login incorreto");
                 return;
             } else{
-                new JErro(true, "Houve um problema ao tentar encontrar este usuário.\n"
-                        + "Favor, verificar o banco de dados.", true, false, false);
+                new JErro(true, new Exception("Houve um problema ao tentar encontrar este usuário.\n"
+                        + "Favor, verificar o banco de dados."), true, false, false);
                 return;
             }
         }

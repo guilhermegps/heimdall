@@ -211,7 +211,7 @@ public class JConfigurarUsuario extends javax.swing.JDialog {
         ArrayList<Usuario> usuario = sql.SELECT_USUARIO("vc_cpf_usuario", '\''+cpf+'\'');
         
         if(usuario.size()!=1){
-            new JErro(true, "Há um conflito de registros relacionado a este usuário.", true, false, false);
+            new JErro(true, new Exception("Há um conflito de registros relacionado a este usuário."), true, false, false);
             return;
         }
         
@@ -252,7 +252,7 @@ public class JConfigurarUsuario extends javax.swing.JDialog {
         ArrayList<Usuario> usuario = sql.SELECT_USUARIO("vc_cpf_usuario", '\''+cpf+'\'');
         
         if(usuario.size()!=1){
-            new JErro(true, "Há um conflito de registros relacionado a este usuário.", true, false, false);
+            new JErro(true, new Exception("Há um conflito de registros relacionado a este usuário."), true, false, false);
             return;
         }
         

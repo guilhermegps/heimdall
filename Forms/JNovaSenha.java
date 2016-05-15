@@ -177,49 +177,56 @@ public class JNovaSenha extends javax.swing.JDialog {
     
     private void alterarSenha(){
         ExecutaSQL sql = new ExecutaSQL();
-        SenhaAutomatica encript = new SenhaAutomatica(WIDTH);
-        TratarEntrada trata = new TratarEntrada();
-        String senhaAtual = new String(pfSenhaAtual.getPassword());
-        String novaSenha = new String(pfNovaSenha.getPassword());
-        String repeteSenha = new String(pfRepeteSenha.getPassword());
+        
+        try{
+            SenhaAutomatica encript = new SenhaAutomatica(WIDTH);
+            TratarEntrada trata = new TratarEntrada();
+            String senhaAtual = new String(pfSenhaAtual.getPassword());
+            String novaSenha = new String(pfNovaSenha.getPassword());
+            String repeteSenha = new String(pfRepeteSenha.getPassword());
 
-        if(!trata.whiteList(senhaAtual) || !trata.whiteList(novaSenha) || !trata.whiteList(repeteSenha)){
-            JOptionPane.showMessageDialog(null, "A senha contem caracteres inválidos ou está vazia. Por favor, digite novamente.");
-            return;
-        }
-
-        ArrayList<Usuario> user = sql.SELECT_USUARIO_ATIVO("id_usuario", Integer.toString(usuario.getId()));
-        if(user.size()==1){
-            usuario = user.get(0);
-            senhaAtual = encript.encripta(usuario.getLogin()+senhaAtual);
-
-            if(senhaAtual.compareTo(usuario.getSenha())!=0){
-                JOptionPane.showMessageDialog(null, "A senha atual está incorreta.");
+            if(!trata.whiteList(senhaAtual) || !trata.whiteList(novaSenha) || !trata.whiteList(repeteSenha)){
+                JOptionPane.showMessageDialog(null, "A senha contem caracteres inválidos ou está vazia. Por favor, digite novamente.");
                 return;
             }
 
-            if(novaSenha.compareTo(repeteSenha)==0){    
-                Usuario aux = usuario;
-                aux.setSenha(encript.encripta(usuario.getLogin()+novaSenha));
+            ArrayList<Usuario> user = sql.SELECT_USUARIO_ATIVO("id_usuario", Integer.toString(usuario.getId()));
+            if(user.size()==1){
+                usuario = user.get(0);
+                senhaAtual = encript.encripta(usuario.getLogin()+senhaAtual);
 
-                int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja alterar a senha?","Tem certeza?",JOptionPane.YES_NO_OPTION);
-                if(resp==0){
-                    if(sql.UPDATE_USUARIO(aux)){
-                        JOptionPane.showMessageDialog(null,"Senha alterada com sucesso");
-                        usuario = aux;
-                        dispose();
-                    }else{
-                        JOptionPane.showMessageDialog(null,"Falha na alteração da senha.");
+                if(senhaAtual.compareTo(usuario.getSenha())!=0){
+                    JOptionPane.showMessageDialog(null, "A senha atual está incorreta.");
+                    return;
+                }
+
+                if(novaSenha.compareTo(repeteSenha)==0){    
+                    Usuario aux = usuario;
+                    aux.setSenha(encript.encripta(usuario.getLogin()+novaSenha));
+
+                    int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja alterar a senha?","Tem certeza?",JOptionPane.YES_NO_OPTION);
+                    if(resp==0){
+                        sql.BEGIN();
+                        if(sql.UPDATE_USUARIO(aux)){
+                            sql.COMMIT();
+                            JOptionPane.showMessageDialog(null,"Senha alterada com sucesso");
+                            usuario = aux;
+                            dispose();
+                        }else{
+                            throw new Exception("Falha na alteração da senha.");
+                        }
                     }
+                } else{
+                    JOptionPane.showMessageDialog(null, "A nova senha e a confirmação da senha não são iguais. Favor, tentar novamente.");
                 }
             } else{
-                JOptionPane.showMessageDialog(null, "A nova senha e a confirmação da senha não são iguais. Favor, tentar novamente.");
-            }
-        } else{
-            new JErro(true, "Houve um problema ao tentar encontrar este usuário.\n"
-                    + "Favor, verificar o banco de dados.", true, false, true);
-            return;            
-        }   
+                new JErro(true, new Exception("Houve um problema ao tentar encontrar este usuário.\n"
+                        + "Favor, verificar o banco de dados."), true, false, true);
+            }   
+        } catch(Exception ex){
+            sql.ROLLBACK();
+            new JErro(true, ex, true, true, false);
+        }
     }
 
     public Usuario getUsuario() {

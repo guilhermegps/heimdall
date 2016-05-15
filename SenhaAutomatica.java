@@ -54,7 +54,7 @@ public class SenhaAutomatica {
             BigInteger hash = hash = new BigInteger(1, md.digest(senha.getBytes("UTF-8")));//Cria hash MD5 da senha criptografada 
             senha = String.format("%32x", hash).replace(' ', '0').toUpperCase();
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            new JErro(true, ex.getMessage(), true, false, false);
+            new JErro(true, ex, true, true, true);
         }        
         return senha;         
     }  
@@ -72,7 +72,7 @@ public class SenhaAutomatica {
             result = b64.decodeBuffer(senha);
             return result;
         } catch (Exception ex) {
-            new JErro(true, ex.getMessage(), true, false, false);
+            new JErro(true, ex, true, true, true);
         }
         return null;         
     }  

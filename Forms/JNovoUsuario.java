@@ -193,55 +193,60 @@ public class JNovoUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_tfNomeActionPerformed
     
     public void cadastrar(){
+        ExecutaSQL sql = new ExecutaSQL();
         String array[] = tfNome.getText().trim().split(" ");
         String nome = "";
         
-        for(int i=0; i<array.length; i++){
-            if(array[i].compareTo("")!=0 && array[i]!=null){
-                array[i] = array[i].replace('_', ' ');
-                if(!trata.whiteList(array[i])){
-                    JOptionPane.showMessageDialog(null,"Nome completo inválido.");
-                    return;
-                }
-                nome += (nome.compareTo("")==0) ? array[i] : ' '+array[i];
-            }
-        }
-        
-        if(!trata.whiteList(tfLogin.getText())){
-            JOptionPane.showMessageDialog(null,"O login contem caracteres inválidos ou está vazio. Por favor, digite novamente.");
-            return;
-        } else if(!trata.isValidCPF(tfCpf.getText())){
-            JOptionPane.showMessageDialog(null,"CPF inválido ou está vazio. Por favor, digite novamente.");
-            return;
-        } else{
-            int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cadastrar esse usuário?\nNome: "+nome+"\nLogin: "+tfLogin.getText()+"\nCPF: "+tfCpf.getText(),"Tem certeza?",JOptionPane.YES_NO_OPTION);
-            if(resp==0){
-                ExecutaSQL sql = new ExecutaSQL();
-                SenhaAutomatica senha = new SenhaAutomatica(6);
-                
-                Usuario user = new Usuario(0, 
-                        nome, 
-                        senha.senhaSemiAutomatica(tfLogin.getText()), 
-                        2, 
-                        tfLogin.getText(), 
-                        tfCpf.getText(), 
-                        true, 
-                        true);
-
-                if(sql.SELECT_USUARIO_ATIVO("vc_login_usuario", '\''+user.getLogin()+'\'').size()>0){
-                    JOptionPane.showMessageDialog(null,"Já existe alguém cadastrado com esse login. Tente outro.");
-                    return;
-                }
-
-                sql = new ExecutaSQL();
-
-                if(sql.INSERT_USUARIO(user)){
-                    JOptionPane.showMessageDialog(null,"Cadastrado com sucesso\nLogin: "+user.getLogin()+"\nSenha: "+senha.getSenhaSimples());
-                    dispose();
-                }else{
-                    JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
+        try{
+            for(int i=0; i<array.length; i++){
+                if(array[i].compareTo("")!=0 && array[i]!=null){
+                    array[i] = array[i].replace('_', ' ');
+                    if(!trata.whiteList(array[i])){
+                        JOptionPane.showMessageDialog(null,"Nome completo inválido.");
+                        return;
+                    }
+                    nome += (nome.compareTo("")==0) ? array[i] : ' '+array[i];
                 }
             }
+
+            if(!trata.whiteList(tfLogin.getText())){
+                JOptionPane.showMessageDialog(null,"O login contem caracteres inválidos ou está vazio. Por favor, digite novamente.");
+                return;
+            } else if(!trata.isValidCPF(tfCpf.getText())){
+                JOptionPane.showMessageDialog(null,"CPF inválido ou está vazio. Por favor, digite novamente.");
+                return;
+            } else{
+                int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cadastrar esse usuário?\nNome: "+nome+"\nLogin: "+tfLogin.getText()+"\nCPF: "+tfCpf.getText(),"Tem certeza?",JOptionPane.YES_NO_OPTION);
+                if(resp==0){
+                    SenhaAutomatica senha = new SenhaAutomatica(6);
+
+                    Usuario user = new Usuario(0, 
+                            nome, 
+                            senha.senhaSemiAutomatica(tfLogin.getText()), 
+                            2, 
+                            tfLogin.getText(), 
+                            tfCpf.getText(), 
+                            true, 
+                            true);
+
+                    if(sql.SELECT_USUARIO_ATIVO("vc_login_usuario", '\''+user.getLogin()+'\'').size()>0){
+                        JOptionPane.showMessageDialog(null,"Já existe alguém cadastrado com esse login. Tente outro.");
+                        return;
+                    }
+
+                    sql.BEGIN();
+                    if(sql.INSERT_USUARIO(user)){
+                        sql.COMMIT();
+                        JOptionPane.showMessageDialog(null,"Cadastrado com sucesso\nLogin: "+user.getLogin()+"\nSenha: "+senha.getSenhaSimples());
+                        dispose();
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
+                    }
+                }
+            }
+        } catch(Exception ex){
+            sql.ROLLBACK();
+            new JErro(true, ex, true, true, false);
         }
     }
 

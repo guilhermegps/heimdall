@@ -216,7 +216,7 @@ public class JSelecionaItem extends javax.swing.JDialog {
     
     public void add(int id, String denominacao, Object objeto){
         if(existsId(id)){
-            new JErro(true, "Já existe um item com este id na lista de seleção.", false, true, false);
+            new JErro(true, new Exception("Já existe um item com este id na lista de seleção."), false, true, false);
             return;
         }
             
