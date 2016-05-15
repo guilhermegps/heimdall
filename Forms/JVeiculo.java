@@ -59,12 +59,12 @@ public class JVeiculo extends javax.swing.JDialog {
         tpObs = new javax.swing.JTextPane();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        tfPlaca = new javax.swing.JTextField();
         cbCor = new javax.swing.JComboBox();
         bCustomModelo = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         tfCodigo = new javax.swing.JTextField();
         cbModelo = new javax.swing.JComboBox();
+        ftfPlaca = new javax.swing.JFormattedTextField();
         lpCondVeiculo = new javax.swing.JLayeredPane();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -111,10 +111,6 @@ public class JVeiculo extends javax.swing.JDialog {
 
         jLabel6.setText("Cor:");
 
-        tfPlaca.setColumns(5);
-        tfPlaca.setToolTipText("Número da placa. EX: ABC-1234");
-        tfPlaca.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
         cbCor.setModel(new javax.swing.DefaultComboBoxModel(carregarCores()));
         cbCor.setToolTipText("Escolha a cor do veículo");
         cbCor.addActionListener(new java.awt.event.ActionListener() {
@@ -136,6 +132,12 @@ public class JVeiculo extends javax.swing.JDialog {
         cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
         cbModelo.setToolTipText("Escolha o modelo do veículo");
 
+        try {
+            ftfPlaca.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AAA-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
         lpIdtVeiculo.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(tfVeiculo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -143,12 +145,12 @@ public class JVeiculo extends javax.swing.JDialog {
         lpIdtVeiculo.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtVeiculo.setLayer(tfPlaca, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(cbCor, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(jLabel10, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(tfCodigo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtVeiculo.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpIdtVeiculo.setLayer(ftfPlaca, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpIdtVeiculoLayout = new javax.swing.GroupLayout(lpIdtVeiculo);
         lpIdtVeiculo.setLayout(lpIdtVeiculoLayout);
@@ -165,12 +167,9 @@ public class JVeiculo extends javax.swing.JDialog {
                         .addGap(6, 6, 6)
                         .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
-                                .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
-                                        .addComponent(jLabel10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
@@ -184,9 +183,12 @@ public class JVeiculo extends javax.swing.JDialog {
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel1))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
+                                        .addComponent(cbModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(ftfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
         );
         lpIdtVeiculoLayout.setVerticalGroup(
             lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,8 +210,8 @@ public class JVeiculo extends javax.swing.JDialog {
                     .addComponent(jLabel6)
                     .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
-                        .addComponent(tfPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cbCor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cbCor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ftfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(11, 11, 11)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -234,7 +236,7 @@ public class JVeiculo extends javax.swing.JDialog {
         try {
             ftfTagRfid.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AA AA AA AA")));
         } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
+            new JErro(true, ex, true, true, false);
         }
         ftfTagRfid.setText("");
         ftfTagRfid.setToolTipText("Ex: 1A 56 BF 4D");
@@ -586,7 +588,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 veiculo.setModelo(modelo);
                 veiculo.setCor(cor);
                 veiculo.setNome(tfVeiculo.getText().trim());
-                veiculo.setPlaca(tfPlaca.getText());
+                veiculo.setPlaca(ftfPlaca.getText());
                 //if(km != null)
                     //veiculo.setKm(km);
                 veiculo.setObservacao(tpObs.getText());
@@ -650,7 +652,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private void liberarCampos(boolean b){
         tfCodigo.setText("");
         tfVeiculo.setText("");
-        tfPlaca.setText("");
+        ftfPlaca.setText("");
         ftfTagRfid.setText("");
         //tfKm.setText("");
         tpObs.setText("");
@@ -659,7 +661,7 @@ public class JVeiculo extends javax.swing.JDialog {
         
         tfCodigo.setEnabled(b);
         tfVeiculo.setEnabled(b);
-        tfPlaca.setEnabled(b);
+        ftfPlaca.setEnabled(b);
         ftfTagRfid.setEnabled(b);
         //tfKm.setEnabled(b);
         tpObs.setEnabled(b);
@@ -684,6 +686,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JButton bSaveCdtVeiculo;
     private javax.swing.JComboBox cbCor;
     private javax.swing.JComboBox cbModelo;
+    private javax.swing.JFormattedTextField ftfPlaca;
     private javax.swing.JFormattedTextField ftfTagRfid;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -707,7 +710,6 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JTextField tfCodigo;
     private javax.swing.JTextField tfDataCdt;
     private javax.swing.JTextField tfLinhasTabela;
-    private javax.swing.JTextField tfPlaca;
     private javax.swing.JTextField tfVeiculo;
     private javax.swing.JTextPane tpObs;
     private javax.swing.JTabbedPane tpVeiculo;
@@ -729,9 +731,9 @@ public class JVeiculo extends javax.swing.JDialog {
             Modelo modelo = (Modelo) cbModelo.getSelectedItem();
             Cor cor = (Cor) cbCor.getSelectedItem();
             int aux = tfVeiculo.getText().compareTo("");
-            aux *= tfPlaca.getText().compareTo("");
+            aux *= ftfPlaca.getText().compareTo("");
             aux *= tfCodigo.getText().compareTo("");
-            if(aux==0 || modelo==null){
+            if(aux==0 || modelo==null || !ftfPlaca.getText().matches("[a-zA-Z]{3}-[0-9]{4}")){
                 bSaveCdtVeiculo.setEnabled(false);
             }else{
                 bSaveCdtVeiculo.setEnabled(true);
