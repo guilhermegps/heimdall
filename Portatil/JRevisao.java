@@ -416,11 +416,12 @@ public class JRevisao extends javax.swing.JDialog {
     
     private void closeConexao(){
         try {
+            killThread = true;
             esc.close();
             ler.close();
             socket.close();
         } catch (IOException ex) {
-            Logger.getLogger(JRevisao.class.getName()).log(Level.SEVERE, null, ex);
+            new JErro(true, ex, true, true, false);
         }
     }
 

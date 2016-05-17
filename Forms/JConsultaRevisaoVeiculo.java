@@ -65,6 +65,7 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
         bSair = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Consulta de Revisões por Veículo");
 
         tfLinhasTabela.setEditable(false);
 
