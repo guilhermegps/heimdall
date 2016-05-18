@@ -129,11 +129,17 @@ public class JVeiculo extends javax.swing.JDialog {
 
         jLabel10.setText("Código*:");
 
+        tfCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfCodigoKeyTyped(evt);
+            }
+        });
+
         cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
         cbModelo.setToolTipText("Escolha o modelo do veículo");
 
         try {
-            ftfPlaca.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AAA-####")));
+            ftfPlaca.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("UUU-####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -157,7 +163,7 @@ public class JVeiculo extends javax.swing.JDialog {
         lpIdtVeiculoLayout.setHorizontalGroup(
             lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lpIdtVeiculoLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(44, Short.MAX_VALUE)
                 .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
                         .addComponent(jScrollPane1)
@@ -215,7 +221,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addGap(11, 11, 11)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -236,7 +242,7 @@ public class JVeiculo extends javax.swing.JDialog {
         try {
             ftfTagRfid.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AA AA AA AA")));
         } catch (java.text.ParseException ex) {
-            new JErro(true, ex, true, true, false);
+            ex.printStackTrace();
         }
         ftfTagRfid.setText("");
         ftfTagRfid.setToolTipText("Ex: 1A 56 BF 4D");
@@ -452,7 +458,7 @@ public class JVeiculo extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tpVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                .addComponent(tpVeiculo)
                 .addContainerGap())
         );
 
@@ -503,6 +509,14 @@ public class JVeiculo extends javax.swing.JDialog {
     private void cbCorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCorActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbCorActionPerformed
+
+    private void tfCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfCodigoKeyTyped
+        String numeros="0987654321";
+
+        if(!numeros.contains(evt.getKeyChar()+"")){// se o caractere digitado for um contido na String caracteres
+            evt.consume(); // o caractere é removido através do método consume
+        }
+    }//GEN-LAST:event_tfCodigoKeyTyped
 
     /**
      * @param args the command line arguments

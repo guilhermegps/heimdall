@@ -136,6 +136,11 @@ public class JComponente extends javax.swing.JDialog {
         tfDataValComponente.setEnabled(false);
 
         tfCodigo.setToolTipText("Escreva o nome do veiculo. EX: Onibus 05");
+        tfCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfCodigoKeyTyped(evt);
+            }
+        });
 
         jLabel5.setText("Código*:");
 
@@ -167,7 +172,7 @@ public class JComponente extends javax.swing.JDialog {
                         .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                                 .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tfComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -205,7 +210,7 @@ public class JComponente extends javax.swing.JDialog {
                 .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(tfDataValComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -530,6 +535,14 @@ public class JComponente extends javax.swing.JDialog {
             break;
         }
     }//GEN-LAST:event_bSaveCdtComponenteActionPerformed
+
+    private void tfCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfCodigoKeyTyped
+        String numeros="0987654321";
+
+        if(!numeros.contains(evt.getKeyChar()+"")){// se o caractere digitado for um contido na String caracteres
+            evt.consume(); // o caractere é removido através do método consume
+        }
+    }//GEN-LAST:event_tfCodigoKeyTyped
 
     /**
      * @param args the command line arguments
