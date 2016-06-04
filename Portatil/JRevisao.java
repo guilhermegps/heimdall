@@ -5,6 +5,7 @@
  */
 package heimdall.Portatil;
 
+import heimdall.ConexaoLeitoraRFID;
 import heimdall.ExecutaSQL;
 import heimdall.Forms.JErro;
 import heimdall.Util.Componente;
@@ -12,20 +13,10 @@ import heimdall.Util.ComponenteRevisao;
 import heimdall.Util.Revisao;
 import heimdall.Util.Usuario;
 import heimdall.Util.Veiculo;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import static java.lang.System.in;
-import static java.lang.System.out;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -40,9 +31,7 @@ public class JRevisao extends javax.swing.JDialog {
     private DefaultTableModel dtm;
     private Veiculo veiculo;
     private Usuario usuario; 
-    private DataOutputStream esc = new DataOutputStream(out);
-    private DataInputStream ler = new DataInputStream(in);
-    private Socket socket;
+    private ConexaoLeitoraRFID conexaoLeitoraRFID;
     private boolean killThread = false;
     private ArrayList<LeituraRFID> cacheComponentes;
     
@@ -56,7 +45,7 @@ public class JRevisao extends javax.swing.JDialog {
         this.cacheComponentes = new ArrayList<LeituraRFID>();
         initComponents();
         initTable();
-        new ComunicacaoRFID().start();
+        new CapturaRFID().start();
     }
 
     /**
@@ -212,7 +201,7 @@ public class JRevisao extends javax.swing.JDialog {
     private void bCancelarRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarRevisaoActionPerformed
         int resp = JOptionPane.showConfirmDialog(null,"Você tem certeza que deseja cancelar esta revisão?","Tem certeza?",JOptionPane.YES_NO_OPTION);
         if(resp==0){
-            closeConexao();
+            killThread = true;
             dispose();
         }
     }//GEN-LAST:event_bCancelarRevisaoActionPerformed
@@ -254,50 +243,54 @@ public class JRevisao extends javax.swing.JDialog {
     }
     
     private void initTable(){
-        if(cacheComponentes.size()==0){
-            ExecutaSQL sql = new ExecutaSQL();
-            ArrayList<Componente> componentesVeiculo = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
-            for(int i=0; i<componentesVeiculo.size(); i++){
-                cacheComponentes.add(new LeituraRFID(
-                        componentesVeiculo.get(i), 
-                        false, 
-                        true,
-                        null,
-                        "") );
+        try{
+            if(cacheComponentes.size()==0){
+                ExecutaSQL sql = new ExecutaSQL();
+                ArrayList<Componente> componentesVeiculo = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+                for(int i=0; i<componentesVeiculo.size(); i++){
+                    cacheComponentes.add(new LeituraRFID(
+                            componentesVeiculo.get(i), 
+                            false, 
+                            true,
+                            null,
+                            "") );
+                }
             }
+
+            DefaultTableModel dtm = (DefaultTableModel) tRevisaoComponentes.getModel();
+
+            while(dtm.getRowCount()>0){
+                dtm.removeRow(0);
+            }
+
+            for(int i=0;i<cacheComponentes.size();i++){
+                ImageIcon icone = new ImageIcon();
+
+                if(cacheComponentes.get(i).isLido() && cacheComponentes.get(i).isPertenceVeiculo()) //Existe no veículo e foi revisado
+                    icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/accept.png"));
+                else if(!cacheComponentes.get(i).isLido() && cacheComponentes.get(i).isPertenceVeiculo()) //Existe no veículo e não foi revisado
+                    icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png"));
+                else //Não existe no veículo
+                   icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/bullet_error.png")); 
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+                dtm.addRow(
+                        new Object[] {cacheComponentes.get(i).getComponente().getRfid(), 
+                            (cacheComponentes.get(i).isLido()==false) ? "" : sdf.format(cacheComponentes.get(i).getMomentoLeitura()), 
+                            icone}
+                );   
+            }
+
+            TableColumnModel columnModel = tRevisaoComponentes.getColumnModel();
+            TableRenderer renderer = new TableRenderer();
+            columnModel.getColumn(2).setCellRenderer(renderer);
+
+            tfIdVeiculo.setText(veiculo.toString());
+            tRevisaoComponentes.setModel(dtm);
+            tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+        } catch(Exception ex){
+            new JErro(true, ex, true, true, false);
         }
-        
-        DefaultTableModel dtm = (DefaultTableModel) tRevisaoComponentes.getModel();
-        
-        while(dtm.getRowCount()>0){
-            dtm.removeRow(0);
-        }
-                
-        for(int i=0;i<cacheComponentes.size();i++){
-            ImageIcon icone = new ImageIcon();
-            
-            if(cacheComponentes.get(i).isLido() && cacheComponentes.get(i).isPertenceVeiculo()) //Existe no veículo e foi revisado
-                icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/accept.png"));
-            else if(!cacheComponentes.get(i).isLido() && cacheComponentes.get(i).isPertenceVeiculo()) //Existe no veículo e não foi revisado
-                icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png"));
-            else //Não existe no veículo
-               icone = new ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/bullet_error.png")); 
-            
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
-            dtm.addRow(
-                    new Object[] {cacheComponentes.get(i).getComponente().getRfid(), 
-                        (cacheComponentes.get(i).isLido()==false) ? "" : sdf.format(cacheComponentes.get(i).getMomentoLeitura()), 
-                        icone}
-            );   
-        }
-        
-        TableColumnModel columnModel = tRevisaoComponentes.getColumnModel();
-        TableRenderer renderer = new TableRenderer();
-        columnModel.getColumn(2).setCellRenderer(renderer);
-        
-        tfIdVeiculo.setText(veiculo.toString());
-        tRevisaoComponentes.setModel(dtm);
-        tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
     }
     
     private int pesquisaCache(String rfid){
@@ -378,12 +371,12 @@ public class JRevisao extends javax.swing.JDialog {
         
         if(!inserirRevisao()){
             JOptionPane.showMessageDialog(null, "Não foi possível concluir a revisão");
-            closeConexao();
+            killThread = true;
             dispose();
             return;
         }
         
-        closeConexao();
+        killThread = true;
         JOptionPane.showMessageDialog(null, "Revisão concluida com sucesso.");
         dispose();
     }
@@ -411,17 +404,6 @@ public class JRevisao extends javax.swing.JDialog {
                     "") );
         
             initTable();
-        }
-    }
-    
-    private void closeConexao(){
-        try {
-            killThread = true;
-            esc.close();
-            ler.close();
-            socket.close();
-        } catch (IOException ex) {
-            new JErro(true, ex, true, true, false);
         }
     }
 
@@ -496,37 +478,19 @@ public class JRevisao extends javax.swing.JDialog {
         }
     }
     
-    private class ComunicacaoRFID extends Thread{
-        boolean erroConexao = false;
+    private class CapturaRFID extends Thread{
         
-        public ComunicacaoRFID(){
-            try {
-                socket = new Socket(); 
-                socket.connect(new InetSocketAddress("192.168.100.8", 2020), 500); //Timeout de conexão. Retorna uma exception caso não consiga conexao dentro do tempo determinado
-            } catch (SocketTimeoutException ex) {
-                ex = new SocketTimeoutException("Houve um problema na conexão com a leitora RFID: "+ex.getMessage());
-                new JErro(true, ex, true, true, true);
-                erroConexao = true;
-            } catch (Exception ex) {
-                new JErro(true, ex, true, true, true);
-                erroConexao = true;
-            }
+        public CapturaRFID(){
+            conexaoLeitoraRFID = new ConexaoLeitoraRFID();
         }
         
-        public void run(){            
-            while(!killThread && !erroConexao){
+        public void run(){          
+            conexaoLeitoraRFID.start();
+            while(!killThread){
                 try {
-                    if(socket!=null && !socket.isClosed()){
-                        esc = new DataOutputStream(socket.getOutputStream());
-                        ler = new DataInputStream(socket.getInputStream());
-
-                        esc.writeBytes("ping");
-                        byte b[] = new byte[11];
-                        ler.read(b);//Para receber em bytes
-                        String rfid = new String(b);
-                        if(rfid != null && !rfid.equals("")){
-                            addCache(rfid, new Timestamp(new Date().getTime()));
-                        }
+                    String codigo = conexaoLeitoraRFID.getRfid();
+                    if(codigo != null && !codigo.equals("") && !killThread){
+                        addCache(codigo, new Timestamp(new Date().getTime()));
                     }
                 }
                 catch(Exception ex){
@@ -534,7 +498,7 @@ public class JRevisao extends javax.swing.JDialog {
                         new JErro(true, ex, true, true, true);
                 }
             }
-            closeConexao();
+            conexaoLeitoraRFID.finalizar();
             dispose();
         }
     }

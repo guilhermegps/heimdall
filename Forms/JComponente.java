@@ -5,18 +5,11 @@
  */
 package heimdall.Forms;
 
+import heimdall.ConexaoLeitoraRFID;
 import heimdall.ExecutaSQL;
 import heimdall.Util.Componente;
 import heimdall.Util.Modelo;
 import heimdall.Util.Veiculo;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import static java.lang.System.in;
-import static java.lang.System.out;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,9 +28,7 @@ public class JComponente extends javax.swing.JDialog {
     private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private Veiculo veiculo;
     private boolean killThread = false;
-    private DataOutputStream esc = new DataOutputStream(out);
-    private DataInputStream ler = new DataInputStream(in);
-    private Socket socket;
+    private ConexaoLeitoraRFID conexaoLeitoraRFID;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
     /**
@@ -49,7 +40,6 @@ public class JComponente extends javax.swing.JDialog {
         initComponents();
         initTable();
         new Campos().start();
-        new ComunicacaoRFID().start();
         liberarCampos(false); 
     }
 
@@ -94,6 +84,7 @@ public class JComponente extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         tfDataCdt = new javax.swing.JTextField();
         ftfTagRfid = new javax.swing.JFormattedTextField();
+        lbConectadoLeitora = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -172,7 +163,7 @@ public class JComponente extends javax.swing.JDialog {
                         .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                                 .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tfComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -210,7 +201,7 @@ public class JComponente extends javax.swing.JDialog {
                 .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(tfDataValComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -386,6 +377,7 @@ public class JComponente extends javax.swing.JDialog {
         lpCondVeiculo.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpCondVeiculo.setLayer(tfDataCdt, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpCondVeiculo.setLayer(ftfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(lbConectadoLeitora, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpCondVeiculoLayout = new javax.swing.GroupLayout(lpCondVeiculo);
         lpCondVeiculo.setLayout(lpCondVeiculoLayout);
@@ -398,8 +390,12 @@ public class JComponente extends javax.swing.JDialog {
                     .addComponent(jLabel8))
                 .addGap(24, 24, 24)
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfDataCdt, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                    .addComponent(ftfTagRfid))
+                    .addComponent(tfDataCdt)
+                    .addGroup(lpCondVeiculoLayout.createSequentialGroup()
+                        .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)
+                        .addComponent(lbConectadoLeitora, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         lpCondVeiculoLayout.setVerticalGroup(
@@ -408,7 +404,8 @@ public class JComponente extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbConectadoLeitora, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -467,14 +464,14 @@ public class JComponente extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tpComponente, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
+                    .addComponent(tpComponente)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lpIdtComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lpCondVeiculo)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lpCondVeiculo))))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -595,7 +592,6 @@ public class JComponente extends javax.swing.JDialog {
     
     private void sair(){
         killThread = true;
-        closeConexao();
         dispose();
     }
     
@@ -692,18 +688,7 @@ public class JComponente extends javax.swing.JDialog {
         tfDataValComponente.setEnabled(b);
         tpDescComponente.setEnabled(b);
         cbModelo.setEnabled(b);
-    }
-    
-    private void closeConexao(){
-        try {
-            esc.close();
-            ler.close();
-            socket.close();
-        } catch (IOException ex) {
-            new JErro(true, ex, true, true, false);
-        }
-    }
-    
+    }    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancelCdtComponente;
@@ -729,6 +714,7 @@ public class JComponente extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JLabel lbConectadoLeitora;
     private javax.swing.JLayeredPane lpCondVeiculo;
     private javax.swing.JLayeredPane lpIdtComponente;
     private javax.swing.JTable tComponente;
@@ -745,16 +731,33 @@ public class JComponente extends javax.swing.JDialog {
     private javax.swing.JTextPane tpDescComponente;
     // End of variables declaration//GEN-END:variables
 
-    public class Campos extends Thread{        
+    public class Campos extends Thread{   
+        public Campos(){
+            conexaoLeitoraRFID = new ConexaoLeitoraRFID();
+        }
+        
         public void run(){
+            conexaoLeitoraRFID.start();
             while(!killThread){
                 try{
+                    tfDataCdt.setText(sdf.format(new Date()));         
+                    String codigo = conexaoLeitoraRFID.getRfid();
+        
+                    if(!conexaoLeitoraRFID.isErroConexao()){
+                        lbConectadoLeitora.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/accept.png")));
+                        if(codigo!=null && !codigo.equals("") && ftfTagRfid.isEnabled() && !codigo.equals(ftfTagRfid.getText())){
+                            ftfTagRfid.setText(codigo);
+                        }
+                    } else {
+                        lbConectadoLeitora.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png")));
+                    }
+                    
                     verificarCampos();
-                    tfDataCdt.setText(sdf.format(new Date()));                    
                 }catch(Exception ex){
                     new JErro(true, ex, true, true, false);
                 }
             }
+            conexaoLeitoraRFID.finalizar();
         }
         
         private void verificarCampos(){
@@ -775,48 +778,6 @@ public class JComponente extends javax.swing.JDialog {
                 return true;
             }
             return false;
-        }
-    }
-    
-    private class ComunicacaoRFID extends Thread{
-        boolean erroConexao = false;
-        
-        public ComunicacaoRFID(){
-            try {
-                socket = new Socket(); 
-                socket.connect(new InetSocketAddress("192.168.100.8", 2020), 500); //Timeout de conexão. Retorna uma exception caso não consiga conexao dentro do tempo determinado
-            } catch (SocketTimeoutException ex) {
-                ex = new SocketTimeoutException("Houve um problema na conexão com a leitora RFID: "+ex.getMessage());
-                new JErro(true, ex, true, false, false);
-                erroConexao = true;
-            } catch (Exception ex) {
-                new JErro(false, ex, true, true, false);
-                erroConexao = true;
-            }
-        }
-        
-        public void run(){            
-            while(!killThread && !erroConexao){
-                try {
-                    if(socket!=null && !socket.isClosed()){
-                        esc = new DataOutputStream(socket.getOutputStream());
-                        ler = new DataInputStream(socket.getInputStream());
-
-                        esc.writeBytes("ping");
-                        byte b[] = new byte[11]; //Vetor que limita o tamanho do recebimento da informação
-                        ler.read(b); //Recebe em bytes
-                        String rfid = new String(b);
-                        if(rfid != null && !rfid.equals("") && ftfTagRfid.isEnabled() && !rfid.equals(ftfTagRfid.getText())){
-                            ftfTagRfid.setText(rfid);
-                        }
-                    }
-                }
-                catch(Exception ex){
-                    if(!socket.isClosed())
-                        new JErro(true, ex, true, true, false);
-                }
-            }
-            closeConexao();
         }
     }
 }
