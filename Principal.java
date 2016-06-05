@@ -9,7 +9,9 @@ package heimdall;
 import heimdall.Forms.*;
 import heimdall.Util.Usuario;
 import heimdall.Util.Veiculo;
+import java.awt.Toolkit;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -29,7 +31,6 @@ public class Principal extends javax.swing.JFrame {
         try{
             initComponents();
             logando();
-            //new JRevisao().setVisible(true);//Teste da janela
         }catch(Exception ex){
             new JErro(true, ex, false, true, false);
         }
@@ -67,6 +68,7 @@ public class Principal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Heimdall");
         setExtendedState(MAXIMIZED_BOTH);
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/heimdall/img/heimdall_16x16.png")));
         setPreferredSize(new java.awt.Dimension(850, 545));
 
         jPanel1.setBackground(new java.awt.Color(223, 221, 220));
@@ -106,7 +108,7 @@ public class Principal extends javax.swing.JFrame {
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                .addGap(0, 513, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -202,11 +204,13 @@ public class Principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLayeredPane1)
+            .addComponent(jLayeredPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLayeredPane1)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 513, Short.MAX_VALUE)
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         setSize(new java.awt.Dimension(860, 591));
