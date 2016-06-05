@@ -46,11 +46,14 @@ public class ConexaoLeitoraRFID extends Thread{
 
                     esc.writeBytes("ping");
                     byte b[] = new byte[11]; //Vetor que limita o tamanho do recebimento da informação
-                    ler.read(b); //Recebe em vetor de bytes
+                    ler.read(b, 0, 11); //Recebe em vetor de bytes
                     rfid = new String(b);
                 } else{
                     erroConexao = true;
                 }
+            }
+            catch(SocketTimeoutException ex){
+                rfid = "";
             }
             catch(Exception ex){
                 if(!socket.isClosed())
@@ -65,6 +68,7 @@ public class ConexaoLeitoraRFID extends Thread{
         try {
             socket = new Socket();
             socket.connect(new InetSocketAddress("192.168.100.8", 2020), 1000); //Timeout de conexão. Retorna uma exception caso não consiga conexao dentro do tempo determinado
+            socket.setSoTimeout(2000); //Lança um SocketTimeoutException caso não haja comunicação dentro do prazo estipulado após abrir comunicação no socket
             erroConexao = false;
         } catch (SocketTimeoutException ex) {
             ex = new SocketTimeoutException("Houve um problema na conexão com a leitora RFID: "+ex.getMessage());

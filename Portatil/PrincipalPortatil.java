@@ -6,10 +6,12 @@
 package heimdall.Portatil;
 
 import heimdall.ExecutaSQL;
+import heimdall.Forms.JErro;
 import heimdall.Forms.JLogin;
 import heimdall.Forms.JSelecionaItem;
 import heimdall.Util.Usuario;
 import heimdall.Util.Veiculo;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -78,19 +80,23 @@ public class PrincipalPortatil extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bRevisaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRevisaoActionPerformed
-        JSelecionaItem selecionaItem = new JSelecionaItem("Selecione um Veículo", "Código", "Veículo", true);
-        
-        ExecutaSQL sql = new ExecutaSQL();
-        ArrayList<Veiculo> veiculo = sql.SELECT_ALL_VEICULO();
-        for(int i=0; i<veiculo.size(); i++)
-            selecionaItem.add(veiculo.get(i).getCodigo(), veiculo.get(i).toString(), veiculo.get(i));
-        
-        selecionaItem.setVisible(true);
-        
-        if(selecionaItem.getObjetoSelecionado()==null)
-            return;
-            
-        new JRevisao((Veiculo)selecionaItem.getObjetoSelecionado(), usuario).setVisible(true);
+        try{
+            JSelecionaItem selecionaItem = new JSelecionaItem("Selecione um Veículo", "Código", "Veículo", true);
+
+            ExecutaSQL sql = new ExecutaSQL();
+            ArrayList<Veiculo> veiculo = sql.SELECT_ALL_VEICULO();
+            for(int i=0; i<veiculo.size(); i++)
+                selecionaItem.add(veiculo.get(i).getCodigo(), veiculo.get(i).toString(), veiculo.get(i));
+
+            selecionaItem.setVisible(true);
+
+            if(selecionaItem.getObjetoSelecionado()==null)
+                return;
+
+            new JRevisao((Veiculo)selecionaItem.getObjetoSelecionado(), usuario).setVisible(true);
+        } catch (Exception ex) {
+            new JErro(true, ex, true, true, false);
+        }
     }//GEN-LAST:event_bRevisaoActionPerformed
 
     /**
