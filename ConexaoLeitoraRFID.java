@@ -13,6 +13,7 @@ import static java.lang.System.in;
 import static java.lang.System.out;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 /**
@@ -26,15 +27,17 @@ public class ConexaoLeitoraRFID extends Thread{
     private Socket socket;
     private boolean erroConexao;
     private String rfid;
+    private ConfiguracaoSistema configuracaoSistema;
 
     public ConexaoLeitoraRFID() {
+        configuracaoSistema = new ConfiguracaoSistema();
         killThread = false;
         esc = new DataOutputStream(out);
         ler = new DataInputStream(in);
         erroConexao = true;
     }
         
-    public void run(){            
+    public void run(){   
         while(!killThread){
             while(erroConexao && !killThread)
                 conectaTCP();
@@ -66,17 +69,23 @@ public class ConexaoLeitoraRFID extends Thread{
     
     private void conectaTCP(){
         try {
+            String endereco = (configuracaoSistema.getEnderecoTCPLeitora()!=null) ? configuracaoSistema.getEnderecoTCPLeitora() : "0.0.0.0";
+            int porta = (configuracaoSistema.getPortaTCPLeitora()!=null) ? Integer.parseInt(configuracaoSistema.getPortaTCPLeitora()) : 0;
+            int timeout = (configuracaoSistema.getTimeoutLeitora()!=null) ? Integer.parseInt(configuracaoSistema.getTimeoutLeitora()) : 0;
             socket = new Socket();
-            socket.connect(new InetSocketAddress("192.168.100.8", 2020), 1000); //Timeout de conexão. Retorna uma exception caso não consiga conexao dentro do tempo determinado
+            socket.connect(new InetSocketAddress(endereco, porta), timeout); //Timeout de conexão. Retorna uma exception caso não consiga conexao dentro do tempo determinado
             socket.setSoTimeout(2000); //Lança um SocketTimeoutException caso não haja comunicação dentro do prazo estipulado após abrir comunicação no socket
             erroConexao = false;
         } catch (SocketTimeoutException ex) {
             ex = new SocketTimeoutException("Houve um problema na conexão com a leitora RFID: "+ex.getMessage());
             new JErro(false, ex, true, true, false);
             erroConexao = true;
-        } catch (Exception ex) {
+        } catch (SocketException ex) {
+            ex = new SocketException("Houve um problema na conexão com a leitora RFID: "+ex.getMessage());
             new JErro(false, ex, true, true, false);
             erroConexao = true;
+        } catch (Exception ex) {
+            new JErro(true, ex, true, true, false);
         }
     }
     

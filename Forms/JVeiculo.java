@@ -6,6 +6,7 @@
 
 package heimdall.Forms;
 
+import heimdall.ConexaoLeitoraRFID;
 import heimdall.ExecutaSQL;
 import heimdall.Util.Cor;
 import heimdall.Util.Modelo;
@@ -70,6 +71,7 @@ public class JVeiculo extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         tfDataCdt = new javax.swing.JTextField();
         ftfTagRfid = new javax.swing.JFormattedTextField();
+        lbConectadoLeitora = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
         tbVeiculo = new javax.swing.JToolBar();
@@ -163,7 +165,7 @@ public class JVeiculo extends javax.swing.JDialog {
         lpIdtVeiculoLayout.setHorizontalGroup(
             lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lpIdtVeiculoLayout.createSequentialGroup()
-                .addContainerGap(44, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(lpIdtVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(lpIdtVeiculoLayout.createSequentialGroup()
                         .addComponent(jScrollPane1)
@@ -221,7 +223,7 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addGap(11, 11, 11)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -251,6 +253,7 @@ public class JVeiculo extends javax.swing.JDialog {
         lpCondVeiculo.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpCondVeiculo.setLayer(tfDataCdt, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpCondVeiculo.setLayer(ftfTagRfid, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCondVeiculo.setLayer(lbConectadoLeitora, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpCondVeiculoLayout = new javax.swing.GroupLayout(lpCondVeiculo);
         lpCondVeiculo.setLayout(lpCondVeiculoLayout);
@@ -264,16 +267,22 @@ public class JVeiculo extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tfDataCdt, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                    .addComponent(ftfTagRfid))
+                    .addGroup(lpCondVeiculoLayout.createSequentialGroup()
+                        .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)
+                        .addComponent(lbConectadoLeitora, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         lpCondVeiculoLayout.setVerticalGroup(
             lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lpCondVeiculoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
-                    .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lbConectadoLeitora, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -716,6 +725,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JLabel lbConectadoLeitora;
     private javax.swing.JLayeredPane lpCondVeiculo;
     private javax.swing.JLayeredPane lpIdtVeiculo;
     private javax.swing.JTable tVeiculo;
@@ -729,16 +739,35 @@ public class JVeiculo extends javax.swing.JDialog {
     private javax.swing.JTabbedPane tpVeiculo;
     // End of variables declaration//GEN-END:variables
 
-    public class Campos extends Thread{
+    public class Campos extends Thread{  
+        private ConexaoLeitoraRFID conexaoLeitoraRFID;
+    
+        public Campos(){
+            conexaoLeitoraRFID = new ConexaoLeitoraRFID();
+        }
+        
         public void run(){
+            conexaoLeitoraRFID.start();
             while(!killThread){
-                verificarCampos();
                 try{
-                    tfDataCdt.setText(sdf.format(new Date()));                    
+                    tfDataCdt.setText(sdf.format(new Date()));
+                    String codigo = conexaoLeitoraRFID.getRfid();
+        
+                    if(!conexaoLeitoraRFID.isErroConexao()){
+                        lbConectadoLeitora.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/accept.png")));
+                        if(codigo!=null && !codigo.equals("") && ftfTagRfid.isEnabled() && !codigo.equals(ftfTagRfid.getText())){
+                            ftfTagRfid.setText(codigo);
+                        }
+                    } else {
+                        lbConectadoLeitora.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 16x16/cancel.png")));
+                    }
+                    
+                    verificarCampos();
                 }catch(Exception ex){
                     new JErro(true, ex, true, true, false);
                 }
             }
+            conexaoLeitoraRFID.finalizar();
         }
         
         public void verificarCampos(){
@@ -747,11 +776,23 @@ public class JVeiculo extends javax.swing.JDialog {
             int aux = tfVeiculo.getText().compareTo("");
             aux *= ftfPlaca.getText().compareTo("");
             aux *= tfCodigo.getText().compareTo("");
-            if(aux==0 || modelo==null || !ftfPlaca.getText().matches("[a-zA-Z]{3}-[0-9]{4}")){
+            if(aux==0 || modelo==null || !ftfPlaca.getText().matches("[a-zA-Z]{3}-[0-9]{4}") || !rfidValido()){
                 bSaveCdtVeiculo.setEnabled(false);
             }else{
                 bSaveCdtVeiculo.setEnabled(true);
             }
+        }
+        
+        private boolean rfidValido(){
+            if(ftfTagRfid.getText().equals("")){
+                return true;
+            }
+            
+            if(ftfTagRfid.getText().length()==11 && ftfTagRfid.getText().trim().matches("[0-9a-zA-Z]{2}\\s[0-9a-zA-Z]{2}\\s[0-9a-zA-Z]{2}\\s[0-9a-zA-Z]{2}")){
+                return true;
+            }
+            
+            return false;
         }
     }
 

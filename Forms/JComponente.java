@@ -28,7 +28,6 @@ public class JComponente extends javax.swing.JDialog {
     private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private Veiculo veiculo;
     private boolean killThread = false;
-    private ConexaoLeitoraRFID conexaoLeitoraRFID;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
     /**
@@ -402,10 +401,11 @@ public class JComponente extends javax.swing.JDialog {
             lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lpCondVeiculoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbConectadoLeitora, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbConectadoLeitora, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(ftfTagRfid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpCondVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -732,6 +732,8 @@ public class JComponente extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public class Campos extends Thread{   
+        private ConexaoLeitoraRFID conexaoLeitoraRFID;
+    
         public Campos(){
             conexaoLeitoraRFID = new ConexaoLeitoraRFID();
         }

@@ -11,7 +11,6 @@ import heimdall.Forms.JLogin;
 import heimdall.Forms.JSelecionaItem;
 import heimdall.Util.Usuario;
 import heimdall.Util.Veiculo;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
