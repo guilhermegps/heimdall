@@ -78,7 +78,7 @@ public class JLogin extends javax.swing.JDialog {
 
         jLabel2.setText("Senha: ");
 
-        lImgLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/heimdall_login.png"))); // NOI18N
+        lImgLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/heimdall.png"))); // NOI18N
 
         bLogin.setText("Entrar");
         bLogin.setToolTipText("Clique nessa merda");

@@ -74,7 +74,7 @@ public class Principal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Heimdall");
         setExtendedState(MAXIMIZED_BOTH);
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/heimdall/img/heimdall_16x16.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/heimdall/img/heimdall.png")));
         setPreferredSize(new java.awt.Dimension(850, 545));
 
         jPanel1.setBackground(new java.awt.Color(223, 221, 220));
