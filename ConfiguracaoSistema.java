@@ -13,12 +13,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author guilherme
  */
 public class ConfiguracaoSistema {
+    private static final Logger logger = LogManager.getLogger(ConfiguracaoSistema.class.getName());
+    
     private File f;
     private final String setorBD = "[ConexaoBancoDados]", 
             campo1 = "EnderecoHostBD", 
@@ -52,6 +56,8 @@ public class ConfiguracaoSistema {
     }
     
     private void gerarConfiguracao(){
+        logger.info("Gerando arquivo de configuração default...");
+        
         enderecoBD = "localhost";
         portaBD = "5432";
         nomeBD = "heimdall";
@@ -91,6 +97,9 @@ public class ConfiguracaoSistema {
         
             enderecoBD = portaBD = nomeBD = senhaBD = null;
             enderecoTCPLeitora = portaTCPLeitora = timeoutLeitora = null;
+            
+            logger.info("Arquivo de configuração default gerado...");
+            
             carregarConfiguracao();
         } catch (IOException ex) {
             new JErro(true, ex, true, true, true);
@@ -98,6 +107,8 @@ public class ConfiguracaoSistema {
     }
     
     private void carregarConfiguracao(){
+        logger.info("Carregando configurações...");
+        
         int setorLido = 0;//Demarca qual o setor que está sendo lido
         try {
             FileReader fr = new FileReader(f);//construtor que recebe o objeto do tipo arquivo
@@ -134,6 +145,8 @@ public class ConfiguracaoSistema {
             }
             br.close();
             fr.close();
+            
+            logger.info("Configurações carregadas...");
         } catch (Exception ex) {
             new JErro(true, ex, true, true, true);
         }

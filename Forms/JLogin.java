@@ -6,12 +6,15 @@
 
 package heimdall.Forms;
 
+import heimdall.ConfiguracaoSistema;
 import heimdall.ExecutaSQL;
 import heimdall.SenhaAutomatica;
 import heimdall.TratarEntrada;
 import heimdall.Util.Usuario;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -22,6 +25,7 @@ public class JLogin extends javax.swing.JDialog {
     /**
      * Creates new form JLogin
      */
+    private static final Logger logger = LogManager.getLogger(JLogin.class.getName());
     
     private boolean logado=false;
     private Usuario usuario;
@@ -231,6 +235,8 @@ public class JLogin extends javax.swing.JDialog {
     }
     
     private void logando(){
+        logger.info("Iniciando login...");        
+        
         ExecutaSQL sql = new ExecutaSQL();
         ArrayList<Usuario> user = new ArrayList<Usuario>();
         String login = tfUser.getText();
@@ -256,6 +262,7 @@ public class JLogin extends javax.swing.JDialog {
                     logado = true;
                     usuario = user.get(0);
                     dispose();
+                    logger.info("Login feito...");  
                 } else{
                     JOptionPane.showMessageDialog(null,"Login incorreto");
                     return;

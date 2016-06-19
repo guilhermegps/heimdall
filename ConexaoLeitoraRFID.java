@@ -15,12 +15,16 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author guilherme
  */
 public class ConexaoLeitoraRFID extends Thread{
+    private static final Logger logger = LogManager.getLogger(ConexaoLeitoraRFID.class.getName());
+    
     private boolean killThread;
     private DataOutputStream esc;
     private DataInputStream ler;
