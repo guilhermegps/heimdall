@@ -6,15 +6,15 @@
 
 package heimdall;
 
-import heimdall.Forms.JErro;
-import heimdall.Util.Classe;
-import heimdall.Util.Usuario;
-import heimdall.Util.Cor;
-import heimdall.Util.Componente;
-import heimdall.Util.ComponenteRevisao;
-import heimdall.Util.Veiculo;
-import heimdall.Util.Modelo;
-import heimdall.Util.Revisao;
+import heimdall.forms.JErro;
+import heimdall.util.Classe;
+import heimdall.util.Usuario;
+import heimdall.util.Cor;
+import heimdall.util.Componente;
+import heimdall.util.ComponenteRevisao;
+import heimdall.util.Veiculo;
+import heimdall.util.Modelo;
+import heimdall.util.Revisao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;

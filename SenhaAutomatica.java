@@ -6,7 +6,7 @@
 
 package heimdall;
 
-import heimdall.Forms.JErro;
+import heimdall.forms.JErro;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;

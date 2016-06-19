@@ -5,7 +5,7 @@
  */
 package heimdall;
 
-import heimdall.Forms.JErro;
+import heimdall.forms.JErro;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -216,7 +216,7 @@
         <Component class="javax.swing.JComboBox" name="cbCor">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new javax.swing.DefaultComboBoxModel(carregarCores())" type="code"/>
+              <Connection code="new javax.swing.DefaultComboBoxModel(this.carregarCores())" type="code"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Escolha a cor do ve&#xed;culo"/>
           </Properties>
@@ -248,7 +248,7 @@
         <Component class="javax.swing.JComboBox" name="cbModelo">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new javax.swing.DefaultComboBoxModel(carregarModelos())" type="code"/>
+              <Connection code="new javax.swing.DefaultComboBoxModel(this.carregarModelos())" type="code"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Escolha o modelo do ve&#xed;culo"/>
           </Properties>

@@ -3,18 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package heimdall.Forms;
+package heimdall.forms;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author guilherme
  */
 public class JErro extends javax.swing.JDialog {
+    private static final Logger logger = LogManager.getLogger(JErro.class.getName());
     
     private String icone = "", mensagem, detalhesMensagem, tituloJanela, informacaoJanela; 
     private boolean gerarLog, isError /*true = erro, false = Alerta*/, gerarJanela, sairSistema /*Sai do sistema após encerrar a janela*/, detalharErro = false;
@@ -198,9 +199,11 @@ public class JErro extends javax.swing.JDialog {
     private void initialize(){        
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         
-        if(mensagem == null){
+        if(mensagem == null)
             mensagem = "Um erro foi identificado, mas não possui mensagem.";
-        }
+        
+        if(gerarLog)
+            geraLog();
         
         if(isError){
             tituloJanela = "ERRO";
@@ -218,7 +221,11 @@ public class JErro extends javax.swing.JDialog {
     }
     
     private void geraLog(){
-        
+        if(isError){
+            logger.error(mensagem + ": " + detalhesMensagem);
+        } else{
+            logger.warn(mensagem + ": " + detalhesMensagem);
+        }
     }
     
     public static String getStack(Throwable exception) {

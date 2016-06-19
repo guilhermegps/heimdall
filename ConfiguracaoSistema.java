@@ -5,7 +5,7 @@
  */
 package heimdall;
 
-import heimdall.Forms.JErro;
+import heimdall.forms.JErro;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -107,7 +107,7 @@ public class ConfiguracaoSistema {
     }
     
     private void carregarConfiguracao(){
-        logger.info("Carregando configurações...");
+        logger.debug("Carregando configurações...");
         
         int setorLido = 0;//Demarca qual o setor que está sendo lido
         try {
@@ -146,7 +146,7 @@ public class ConfiguracaoSistema {
             br.close();
             fr.close();
             
-            logger.info("Configurações carregadas...");
+            logger.debug("Configurações carregadas...");
         } catch (Exception ex) {
             new JErro(true, ex, true, true, true);
         }

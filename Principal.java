@@ -6,12 +6,18 @@
 
 package heimdall;
 
-import heimdall.Forms.*;
-import heimdall.Util.Usuario;
-import heimdall.Util.Veiculo;
+import heimdall.forms.JErro;
+import heimdall.forms.JConsultaRevisaoVeiculo;
+import heimdall.forms.JNovoUsuario;
+import heimdall.forms.JLogin;
+import heimdall.forms.JSelecionaItem;
+import heimdall.forms.JVeiculo;
+import heimdall.forms.JNovaSenha;
+import heimdall.forms.JComponente;
+import heimdall.util.Usuario;
+import heimdall.util.Veiculo;
 import java.awt.Toolkit;
 import java.util.ArrayList;
-import javax.swing.ImageIcon;
 
 /**
  *

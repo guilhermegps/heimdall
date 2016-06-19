@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package heimdall.Forms;
+package heimdall.forms;
 
 import heimdall.ExecutaSQL;
-import heimdall.Util.Classe;
-import heimdall.Util.Modelo;
+import heimdall.util.Classe;
+import heimdall.util.Modelo;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;

@@ -4,19 +4,21 @@
  * and open the template in the editor.
  */
 
-package heimdall.Forms;
+package heimdall.forms;
 
 import heimdall.ConexaoLeitoraRFID;
 import heimdall.ExecutaSQL;
-import heimdall.Util.Cor;
-import heimdall.Util.Modelo;
-import heimdall.Util.Veiculo;
+import heimdall.util.Cor;
+import heimdall.util.Modelo;
+import heimdall.util.Veiculo;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -27,6 +29,7 @@ public class JVeiculo extends javax.swing.JDialog {
     /**
      * Creates new form JVeiculo
      */
+    private static final Logger logger = LogManager.getLogger(JVeiculo.class.getName());
     
     private ArrayList<Modelo> m;
     private ArrayList<Cor> cor;
@@ -113,7 +116,7 @@ public class JVeiculo extends javax.swing.JDialog {
 
         jLabel6.setText("Cor:");
 
-        cbCor.setModel(new javax.swing.DefaultComboBoxModel(carregarCores()));
+        cbCor.setModel(new javax.swing.DefaultComboBoxModel(this.carregarCores()));
         cbCor.setToolTipText("Escolha a cor do veículo");
         cbCor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -137,7 +140,7 @@ public class JVeiculo extends javax.swing.JDialog {
             }
         });
 
-        cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
+        cbModelo.setModel(new javax.swing.DefaultComboBoxModel(this.carregarModelos()));
         cbModelo.setToolTipText("Escolha o modelo do veículo");
 
         try {
@@ -507,7 +510,7 @@ public class JVeiculo extends javax.swing.JDialog {
     }//GEN-LAST:event_bSaveCdtVeiculoActionPerformed
 
     private void bEditCdtVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCdtVeiculoActionPerformed
-        new JErro(true, new Exception("Mensagem de teste da janela de erro"), false, true, false);
+        new JErro(true, new Exception("Mensagem de teste da janela de erro"), true, false, false);
     }//GEN-LAST:event_bEditCdtVeiculoActionPerformed
 
     private void bCustomModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCustomModeloActionPerformed
@@ -522,7 +525,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private void tfCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfCodigoKeyTyped
         String numeros="0987654321";
 
-        if(!numeros.contains(evt.getKeyChar()+"")){// se o caractere digitado for um contido na String caracteres
+        if(!numeros.contains(evt.getKeyChar()+"")){// se o caractere digitado for diferente dos contidos na String
             evt.consume(); // o caractere é removido através do método consume
         }
     }//GEN-LAST:event_tfCodigoKeyTyped
@@ -640,7 +643,9 @@ public class JVeiculo extends javax.swing.JDialog {
     
     private void initTable(){
         try{
+            logger.debug("Iniciando tabela de veículos...");
             ExecutaSQL sql = new ExecutaSQL();
+            
             ArrayList<Veiculo> aux = new ArrayList<Veiculo>();
             DefaultTableModel dtm = (DefaultTableModel) tVeiculo.getModel();
 

@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package heimdall.Forms;
+package heimdall.forms;
 
 import heimdall.ExecutaSQL;
 import heimdall.SenhaAutomatica;
 import heimdall.TratarEntrada;
-import heimdall.Util.Usuario;
+import heimdall.util.Usuario;
 import static java.awt.image.ImageObserver.WIDTH;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;

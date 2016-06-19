@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package heimdall.Forms;
+package heimdall.forms;
 
 import heimdall.ExecutaSQL;
-import heimdall.Util.Revisao;
-import heimdall.Util.Veiculo;
+import heimdall.util.Revisao;
+import heimdall.util.Veiculo;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

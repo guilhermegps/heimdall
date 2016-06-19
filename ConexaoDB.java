@@ -7,7 +7,7 @@
 package heimdall;
 
 //import java.beans.Statement;  Essa não é a biblioteca q queremos
-import heimdall.Forms.JErro;
+import heimdall.forms.JErro;
 import java.sql.Connection;
 import java.sql.DriverManager;
 

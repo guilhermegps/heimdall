@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package heimdall.Portatil;
+package heimdall.portatil;
 
 import heimdall.ConexaoLeitoraRFID;
 import heimdall.ExecutaSQL;
-import heimdall.Forms.JErro;
-import heimdall.Util.Componente;
-import heimdall.Util.ComponenteRevisao;
-import heimdall.Util.Revisao;
-import heimdall.Util.Usuario;
-import heimdall.Util.Veiculo;
+import heimdall.forms.JErro;
+import heimdall.util.Componente;
+import heimdall.util.ComponenteRevisao;
+import heimdall.util.Revisao;
+import heimdall.util.Usuario;
+import heimdall.util.Veiculo;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

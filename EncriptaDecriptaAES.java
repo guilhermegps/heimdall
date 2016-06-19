@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package heimdall;
-import heimdall.Forms.JErro;
+import heimdall.forms.JErro;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

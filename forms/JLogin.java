@@ -4,13 +4,13 @@
  * and open the template in the editor.
  */
 
-package heimdall.Forms;
+package heimdall.forms;
 
 import heimdall.ConfiguracaoSistema;
 import heimdall.ExecutaSQL;
 import heimdall.SenhaAutomatica;
 import heimdall.TratarEntrada;
-import heimdall.Util.Usuario;
+import heimdall.util.Usuario;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
@@ -235,6 +235,9 @@ public class JLogin extends javax.swing.JDialog {
     }
     
     private void logando(){
+        if(logado)
+            return;
+        
         logger.info("Iniciando login...");        
         
         ExecutaSQL sql = new ExecutaSQL();
@@ -263,21 +266,26 @@ public class JLogin extends javax.swing.JDialog {
                     usuario = user.get(0);
                     dispose();
                     logger.info("Login feito...");  
+                    return;
                 } else{
+                    logger.info("Login não pode ser realizado...");  
+                    
                     JOptionPane.showMessageDialog(null,"Login incorreto");
                     return;
                 }
             } else if(user.size()==0){
+                logger.info("Login não pode ser realizado...");  
+                
                 JOptionPane.showMessageDialog(null,"Login incorreto");
                 return;
             } else{
                 new JErro(true, new Exception("Houve um problema ao tentar encontrar este usuário.\n"
                         + "Favor, verificar o banco de dados."), true, false, false);
                 return;
-            }
+            } 
         }
-        
-        
+            
+        logger.info("Login não pode ser realizado...");  
     }
 
     public boolean getLogado() {

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package heimdall.Util;
+package heimdall.util;
 
 import java.sql.Timestamp;
 

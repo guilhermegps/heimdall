@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package heimdall.Portatil;
+package heimdall.portatil;
 
 import heimdall.ExecutaSQL;
-import heimdall.Forms.JErro;
-import heimdall.Forms.JLogin;
-import heimdall.Forms.JSelecionaItem;
-import heimdall.Util.Usuario;
-import heimdall.Util.Veiculo;
+import heimdall.forms.JErro;
+import heimdall.forms.JLogin;
+import heimdall.forms.JSelecionaItem;
+import heimdall.util.Usuario;
+import heimdall.util.Veiculo;
 import java.util.ArrayList;
 
 /**
