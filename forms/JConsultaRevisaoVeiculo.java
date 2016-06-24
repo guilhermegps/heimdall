@@ -12,14 +12,18 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author guilherme
  */
 public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
+    private static final Logger logger = LogManager.getLogger(JConsultaRevisaoVeiculo.class.getName());
 
     private Veiculo veiculo;
     private ExecutaSQL sql = new ExecutaSQL();
@@ -337,6 +341,7 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
         Revisao revisao = selectedLine();
         
         if(revisao==null){
+            logger.info("É necessário selecionar uma das revisões da tabela.");
             JOptionPane.showMessageDialog(null, "É necessário selecionar uma das revisões da tabela.");
             return;
         } else{
@@ -405,16 +410,19 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
     
     private void pesquisarRevisoes(){
         if(veiculo==null){
+            logger.info("O campo [Veiculo] está vazio.");
             JOptionPane.showMessageDialog(null, "O campo [Veiculo] está vazio.");
             return;
         }
         
         if(!dataValida(ftfDataInicial.getText())){
+            logger.info("O campo [Data Inicial] está vazio ou contem uma data inválida.");
             JOptionPane.showMessageDialog(null, "O campo [Data Inicial] está vazio ou contem uma data inválida.");
             return;
         }
         
         if(!dataValida(ftfDataFinal.getText())){
+            logger.info("O campo [Data Final] está vazio ou contem uma data inválida.");
             JOptionPane.showMessageDialog(null, "O campo [Data Final] está vazio ou contem uma data inválida.");
             return;
         }
@@ -423,6 +431,13 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
         Timestamp dataInicial = sql.ConvertStringTimestamp(dataIni[2]+'-'+dataIni[1]+'-'+dataIni[0]);
         String dataFin[] = ftfDataFinal.getText().split("/");
         Timestamp dataFinal = sql.ConvertStringTimestamp(dataFin[2]+'-'+dataFin[1]+'-'+dataFin[0]);
+        
+        if(new Date(dataFinal.getTime()).before(new Date(dataInicial.getTime()))){
+            logger.info("A [Data Final] não pode ser menor que a [Data Inicial].");
+            
+            JOptionPane.showMessageDialog(null, "A [Data Final] não pode ser menor que a [Data Inicial].");
+            return;
+        }
         
         cacheRevisao = sql.SELECT_REVISAO_CONSULTA(veiculo.getId(), dataInicial, dataFinal);
         initTable();

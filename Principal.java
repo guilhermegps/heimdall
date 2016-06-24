@@ -18,6 +18,8 @@ import heimdall.util.Usuario;
 import heimdall.util.Veiculo;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -28,6 +30,7 @@ public class Principal extends javax.swing.JFrame {
     /**
      * Creates new form Principal
      */
+    private static final Logger logger = LogManager.getLogger(Principal.class.getName());
     
     private Boolean logado = false;
     private JLogin login;
