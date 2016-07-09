@@ -275,6 +275,8 @@ public class JAlterarUsuario extends javax.swing.JDialog {
         }     
         tUsuarios.setModel(dtm);
         tfLinhasTabela.setText(Integer.toString(dtm.getRowCount()));
+        
+        return; //Existe algum tipo de bug no java que faz o método ser executado duas vezes se não for finalizado dessa forma
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

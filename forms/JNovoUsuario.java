@@ -239,7 +239,7 @@ public class JNovoUsuario extends javax.swing.JDialog {
                         JOptionPane.showMessageDialog(null,"Cadastrado com sucesso\nLogin: "+user.getLogin()+"\nSenha: "+senha.getSenhaSimples());
                         dispose();
                     }else{
-                        JOptionPane.showMessageDialog(null,"Falha no cadastrado.");
+                        throw new Exception("Falha no cadastrado.");
                     }
                 }
             }

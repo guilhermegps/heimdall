@@ -6,7 +6,6 @@
 
 package heimdall.forms;
 
-import heimdall.ConfiguracaoSistema;
 import heimdall.ExecutaSQL;
 import heimdall.SenhaAutomatica;
 import heimdall.TratarEntrada;
@@ -286,6 +285,7 @@ public class JLogin extends javax.swing.JDialog {
         }
             
         logger.info("Login não pode ser realizado...");  
+        return; //Existe algum tipo de bug no java que faz o método ser executado duas vezes se não for finalizado dessa forma
     }
 
     public boolean getLogado() {

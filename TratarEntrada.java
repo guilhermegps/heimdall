@@ -14,24 +14,14 @@ public class TratarEntrada {
     public boolean whiteList (String entrada){
         entrada = entrada.toUpperCase();
         String permitido = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ._";
-        int cont = 0;
         
         if(entrada.length() == 0){
             return false;
         }
         
         for(int i=0; i<entrada.length(); i++){
-            for(int f=0; f<permitido.length(); f++){
-                if(entrada.charAt(i)==permitido.charAt(f) && cont==0){
-                    cont++;
-                    break;
-                }
-            }
-            if(cont==0){
+            if(!permitido.contains(entrada.charAt(i)+""))
                 return false;
-            } else {
-                cont = 0;
-            }
         }
         return true;
     }
