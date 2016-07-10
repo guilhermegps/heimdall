@@ -40,13 +40,9 @@ public class PrincipalEncriptadorSenhaBD extends javax.swing.JFrame {
         pfSenha = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Gerar Senha Encriptada");
 
         tfHash.setEditable(false);
-        tfHash.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfHashActionPerformed(evt);
-            }
-        });
 
         bGerar.setText("Gerar");
         bGerar.addActionListener(new java.awt.event.ActionListener() {
@@ -56,6 +52,12 @@ public class PrincipalEncriptadorSenhaBD extends javax.swing.JFrame {
         });
 
         jLabel1.setText("Senha do BD:");
+
+        pfSenha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                pfSenhaKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -92,14 +94,17 @@ public class PrincipalEncriptadorSenhaBD extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tfHashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfHashActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfHashActionPerformed
-
     private void bGerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGerarActionPerformed
         String senhaGerada = encripta(new String(pfSenha.getPassword()));
         tfHash.setText(senhaGerada);
     }//GEN-LAST:event_bGerarActionPerformed
+
+    private void pfSenhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pfSenhaKeyPressed
+        if(evt.getKeyCode() == evt.VK_ENTER){
+            String senhaGerada = encripta(new String(pfSenha.getPassword()));
+            tfHash.setText(senhaGerada);
+        }
+    }//GEN-LAST:event_pfSenhaKeyPressed
 
     /**
      * @param args the command line arguments
@@ -137,6 +142,9 @@ public class PrincipalEncriptadorSenhaBD extends javax.swing.JFrame {
     }
     
     private String encripta(String valor){
+        if(valor==null || valor.equals(""))
+            return "";
+            
         EncriptaDecriptaAES AES = new EncriptaDecriptaAES();
         
         try {
