@@ -15,6 +15,7 @@ import heimdall.util.ComponenteRevisao;
 import heimdall.util.Veiculo;
 import heimdall.util.Modelo;
 import heimdall.util.Revisao;
+import java.io.UnsupportedEncodingException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -846,6 +847,37 @@ public class ExecutaSQL {
         }       
     }   
     
+    // Operações de Log
+    public boolean REGISTRAR_LOG(int idUsuario, String acao, Timestamp dataHoraLog){
+        acao = trata.noSQLInjection(acao);
+        
+        try{
+            comando = conexao.getConexao().prepareStatement("");
+            
+           String idEncriptada = encriptaLog(Integer.toString(idUsuario));
+           acao = encriptaLog(acao);
+            
+            comando.setString(1, idEncriptada);
+            comando.setTimestamp(2,dataHoraLog);
+            comando.setString(3, acao);
+            
+            return !comando.execute();
+        }catch(Exception ex){
+            new JErro(true, ex, true, true, false);
+            return false;
+        }       
+    }   
+    
+    private String encriptaLog(String valor){
+        EncriptaDecriptaAES AES = new EncriptaDecriptaAES();
+        SenhaAutomatica crypt = new SenhaAutomatica(0);
+        try {
+            valor = crypt.base64Encoder(AES.encriptaAES(valor.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException ex) {
+            new JErro(true, ex, true, true, false);
+        }
+        return valor;
+    }
     
     /*public void SELECT_USUARIO(){
         try{

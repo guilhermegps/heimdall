@@ -9,6 +9,7 @@ import heimdall.ConexaoLeitoraRFID;
 import heimdall.ExecutaSQL;
 import heimdall.util.Componente;
 import heimdall.util.Modelo;
+import heimdall.util.Usuario;
 import heimdall.util.Veiculo;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -27,15 +28,17 @@ public class JComponente extends javax.swing.JDialog {
     private DefaultTableModel dtm;
     private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private Veiculo veiculo;
+    private int idUsuarioSessao;
     private boolean killThread = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
     
     /**
      * Creates new form JComponente
      */
-    public JComponente(Veiculo veiculo) {
+    public JComponente(Veiculo veiculo, int idUsuario) {
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
         this.veiculo = veiculo;
+        this.idUsuarioSessao = idUsuario;
         initComponents();
         initTable();
         new Campos().start();
@@ -571,7 +574,7 @@ public class JComponente extends javax.swing.JDialog {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JComponente(new Veiculo()).setVisible(true);
+                new JComponente(new Veiculo(), 0).setVisible(true);
             }
         });
     }
@@ -622,7 +625,7 @@ public class JComponente extends javax.swing.JDialog {
                 );
 
                 sql.BEGIN();
-                if(sql.INSERT_COMPONENTE(componente)){
+                if(sql.INSERT_COMPONENTE(componente) && sql.REGISTRAR_LOG(this.idUsuarioSessao, "", new Timestamp(new Date().getTime()))){
                     sql.COMMIT();
                     JOptionPane.showMessageDialog(null,"Cadastrado com sucesso");
                     liberarCampos(false);

@@ -34,7 +34,7 @@ public class Principal extends javax.swing.JFrame {
     
     private Boolean logado = false;
     private JLogin login;
-    private Usuario usuario;
+    private Usuario usuarioSessao;
     
     public Principal() { 
         try{
@@ -232,7 +232,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void miLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLogoutActionPerformed
         logado = false;
-        usuario = null;
+        usuarioSessao = null;
         dispose();
         new Principal();
     }//GEN-LAST:event_miLogoutActionPerformed
@@ -242,13 +242,13 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_miSairActionPerformed
 
     private void miNovoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNovoUsuarioActionPerformed
-        new JNovoUsuario(usuario).setVisible(true);
+        new JNovoUsuario(usuarioSessao).setVisible(true);
     }//GEN-LAST:event_miNovoUsuarioActionPerformed
 
     private void miAlterarSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAlterarSenhaActionPerformed
-        JNovaSenha novaSenha = new JNovaSenha(usuario);
+        JNovaSenha novaSenha = new JNovaSenha(usuarioSessao);
         novaSenha.setVisible(true);
-        usuario = novaSenha.getUsuario();
+        usuarioSessao = novaSenha.getUsuario();
     }//GEN-LAST:event_miAlterarSenhaActionPerformed
 
     private void miComponenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miComponenteActionPerformed
@@ -262,7 +262,7 @@ public class Principal extends javax.swing.JFrame {
         selecionaItem.setVisible(true);
         
         if(selecionaItem.getObjetoSelecionado()!=null)
-            new JComponente((Veiculo)selecionaItem.getObjetoSelecionado()).setVisible(true);
+            new JComponente((Veiculo)selecionaItem.getObjetoSelecionado(), this.usuarioSessao.getId()).setVisible(true);
     }//GEN-LAST:event_miComponenteActionPerformed
 
     private void miConsutaRevisoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miConsutaRevisoesActionPerformed
@@ -308,14 +308,14 @@ public class Principal extends javax.swing.JFrame {
         login = new JLogin();
         login.setVisible(true);
         
-        usuario = login.getUsuario();
+        usuarioSessao = login.getUsuario();
         logado = login.getLogado();
         barraInferior();
         setVisible(logado);
     }
     
     private void barraInferior(){
-        tfUsuario.setText(usuario.getLogin());
+        tfUsuario.setText(usuarioSessao.getLogin());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
