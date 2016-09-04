@@ -19,6 +19,7 @@ public class Usuario {
     private String cpf;
     private boolean primeiroLogin;
     private boolean ativo;
+    private boolean revisaSemAgendamento;
 
     public Usuario() {
         this.id = 0;
@@ -31,7 +32,7 @@ public class Usuario {
         this.ativo = false;
     }
 
-    public Usuario(int id, String nome, String senha, int nivel, String login, String cpf, boolean primeiroLogin, boolean ativo) {
+    public Usuario(int id, String nome, String senha, int nivel, String login, String cpf, boolean primeiroLogin, boolean ativo, boolean revisaSemAgendamento) {
         this.id = id;
         this.nome = nome;
         this.senha = senha;
@@ -40,6 +41,7 @@ public class Usuario {
         this.cpf = cpf;
         this.primeiroLogin = primeiroLogin;
         this.ativo = ativo;
+        this.revisaSemAgendamento = revisaSemAgendamento;
     }
 
     public int getId() {
@@ -104,6 +106,14 @@ public class Usuario {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public boolean isRevisaSemAgendamento() {
+        return revisaSemAgendamento;
+    }
+
+    public void setRevisaSemAgendamento(boolean revisaSemAgendamento) {
+        this.revisaSemAgendamento = revisaSemAgendamento;
     }
 
     @Override
