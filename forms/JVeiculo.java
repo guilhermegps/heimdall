@@ -514,7 +514,7 @@ public class JVeiculo extends javax.swing.JDialog {
     }//GEN-LAST:event_bEditCdtVeiculoActionPerformed
 
     private void bCustomModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCustomModeloActionPerformed
-        new JModelo(true).setVisible(true);
+        new JModelo(1).setVisible(true);
         cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
     }//GEN-LAST:event_bCustomModeloActionPerformed
 
@@ -568,7 +568,7 @@ public class JVeiculo extends javax.swing.JDialog {
     private Modelo[] carregarModelos(){
         ExecutaSQL sql = new ExecutaSQL();
         m = new ArrayList<Modelo>();
-        m = sql.SELECT_MODELO_TIPO_CLASSE(true);
+        m = sql.SELECT_MODELO_TIPO_CLASSE(1);
         Modelo[] modelos = new Modelo[m.size()+1];
         
         modelos[0] = null;

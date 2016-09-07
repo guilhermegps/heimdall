@@ -212,7 +212,7 @@
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="this.revisao.getUsuario().toString()" type="code"/>
+                  <Connection code="this.revisao.getUsuarioRevisao().toString()" type="code"/>
                 </Property>
               </Properties>
             </Component>
@@ -220,7 +220,7 @@
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="this.revisao.getUsuario().getCpf()" type="code"/>
+                  <Connection code="this.revisao.getUsuarioRevisao().getCpf()" type="code"/>
                 </Property>
               </Properties>
             </Component>

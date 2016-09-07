@@ -469,7 +469,7 @@ public class JConsultaRevisaoVeiculo extends javax.swing.JDialog {
                     new Object[] {
                         cacheRevisao.get(i).getNumero(),
                         sdf.format(cacheRevisao.get(i).getRegistro()), 
-                        cacheRevisao.get(i).getUsuario().toString(), 
+                        cacheRevisao.get(i).getUsuarioRevisao().toString(), 
                         cacheRevisao.get(i).getDescricao(),
                         completa
                     }

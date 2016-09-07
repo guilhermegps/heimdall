@@ -13,20 +13,25 @@ import java.sql.Timestamp;
  */
 public class Revisao {
     private int id;
-    private Usuario usuario;
+    private Usuario usuarioRevisao;
     private Veiculo veiculo;
     private int numero;
     private Timestamp registro;
     private String descricao;
+    private Usuario usuarioAutorizador;
+    private boolean executada;
 
-    public Revisao(int id, Usuario usuario, Veiculo veiculo, int numero, Timestamp registro, String descricao) {
+    public Revisao(int id, Usuario usuarioRevisao, Veiculo veiculo, int numero, Timestamp registro, String descricao, Usuario usuarioAutorizador, boolean executada) {
         this.id = id;
-        this.usuario = usuario;
+        this.usuarioRevisao = usuarioRevisao;
         this.veiculo = veiculo;
         this.numero = numero;
         this.registro = registro;
         this.descricao = descricao;
+        this.usuarioAutorizador = usuarioAutorizador;
+        this.executada = executada;
     }
+    
 
     public int getId() {
         return id;
@@ -34,14 +39,6 @@ public class Revisao {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 
     public Veiculo getVeiculo() {
@@ -74,5 +71,29 @@ public class Revisao {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Usuario getUsuarioRevisao() {
+        return usuarioRevisao;
+    }
+
+    public void setUsuarioRevisao(Usuario usuarioRevisao) {
+        this.usuarioRevisao = usuarioRevisao;
+    }
+
+    public Usuario getUsuarioAutorizador() {
+        return usuarioAutorizador;
+    }
+
+    public void setUsuarioAutorizador(Usuario usuarioAutorizador) {
+        this.usuarioAutorizador = usuarioAutorizador;
+    }
+
+    public boolean isExecutada() {
+        return executada;
+    }
+
+    public void setExecutada(boolean executada) {
+        this.executada = executada;
     }
 }

@@ -521,7 +521,7 @@ public class JComponente extends javax.swing.JDialog {
     }//GEN-LAST:event_tfDataCdtActionPerformed
 
     private void bCustomModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCustomModeloActionPerformed
-        new JModelo(false).setVisible(true);
+        new JModelo(2).setVisible(true);
         cbModelo.setModel(new javax.swing.DefaultComboBoxModel(carregarModelos()));
     }//GEN-LAST:event_bCustomModeloActionPerformed
 
@@ -582,7 +582,7 @@ public class JComponente extends javax.swing.JDialog {
     private Modelo[] carregarModelos(){
         ExecutaSQL sql = new ExecutaSQL();
         m = new ArrayList<Modelo>();
-        m = sql.SELECT_MODELO_TIPO_CLASSE(false);
+        m = sql.SELECT_MODELO_TIPO_CLASSE(2);
         Modelo[] modelos = new Modelo[m.size()+1];
         
         modelos[0] = null;

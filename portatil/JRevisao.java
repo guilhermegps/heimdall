@@ -314,7 +314,10 @@ public class JRevisao extends javax.swing.JDialog {
                     veiculo, 
                     0,
                     new Timestamp(new Date().getTime()), 
-                    taDescricao.getText() )
+                    taDescricao.getText(),
+                    usuario,
+                    true
+                )
             );
 
             Revisao revisao = sql.SELECT_REVISAO("id_revisao", Integer.toString(idRevisao)).get(0);

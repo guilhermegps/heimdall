@@ -273,17 +273,18 @@ public class ExecutaSQL {
     }
     
     // Operações da classe
-    public ArrayList SELECT_CLASSE_TIPO(boolean busca){
+    public ArrayList SELECT_CLASSE_TIPO(int busca){
         ArrayList<Classe> c = new ArrayList<Classe>();
         try{
-            comando = conexao.getConexao().prepareStatement("SELECT * FROM classe WHERE bo_tipo_classe = "+busca+" ORDER BY vc_nome_classe;");
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM classe WHERE nu_tipo_classe = "+busca+" ORDER BY vc_nome_classe;");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Classe aux = new Classe();
-                aux.setId(rs.getInt("id_classe"));
-                aux.setNome(rs.getString("vc_nome_classe"));
-                aux.setTipo(rs.getBoolean("bo_tipo_classe"));
+                Classe aux = new Classe(rs.getInt("id_classe"),
+                rs.getString("vc_nome_classe"),
+                rs.getInt("nu_tipo_classe") 
+                );
+                
                 c.add(aux);
             }
         }catch(Exception ex){
@@ -306,10 +307,10 @@ public class ExecutaSQL {
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Classe aux = new Classe();
-                aux.setId(rs.getInt("id_classe"));
-                aux.setNome(rs.getString("vc_nome_classe"));
-                aux.setTipo(rs.getBoolean("bo_tipo_classe"));
+                Classe aux = new Classe(rs.getInt("id_classe"),
+                rs.getString("vc_nome_classe"),
+                rs.getInt("nu_tipo_classe") );
+                
                 c.add(aux);
             }
              
@@ -324,19 +325,18 @@ public class ExecutaSQL {
     public ArrayList<Modelo> SELECT_ALL_MODELO(){
         ArrayList<Modelo> m = new ArrayList<Modelo>();
         try{
-            comando = conexao.getConexao().prepareStatement("SELECT * FROM modelo ORDER BY vc_descricao_modelo");
+            comando = conexao.getConexao().prepareStatement("SELECT * FROM modelo ORDER BY nu_codigo_modelo;");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Modelo modelo = new Modelo();
-                Classe classe = (Classe) SELECT_CLASSE("id_classe", ""+rs.getInt("id_classe")).get(0);
+                Classe classe = (Classe) SELECT_CLASSE("id_classe", Integer.toString(rs.getInt("id_classe"))).get(0);
                 
-                modelo.setId(rs.getInt("id_modelo"));
-                modelo.setClasse(classe);
-                modelo.setCodigo(rs.getInt("nu_codigo_modelo"));
-                modelo.setModelo(rs.getString("vc_descricao_modelo"));
-                modelo.setMarca(rs.getString("vc_marca_modelo"));
-                modelo.setLayout(rs.getString("vc_layout_modelo"));
+                Modelo modelo = new Modelo(rs.getInt("id_modelo"),
+                rs.getInt("nu_codigo_modelo"),
+                classe,
+                rs.getString("tx_descricao_modelo"),
+                rs.getString("vc_marca_modelo"),
+                rs.getString("vc_layout_modelo") );
                 
                 m.add(modelo);
             } 
@@ -346,30 +346,28 @@ public class ExecutaSQL {
         return m;
     }    
     
-    public ArrayList<Modelo> SELECT_MODELO_TIPO_CLASSE(boolean tipo){
+    public ArrayList<Modelo> SELECT_MODELO_TIPO_CLASSE(int tipo){
         ArrayList<Modelo> m = new ArrayList<Modelo>();
         try{
             comando = conexao.getConexao().prepareStatement("SELECT c.*, m.* FROM modelo AS m\n" +
                                     "INNER JOIN classe c ON (c.id_classe = m.id_classe)\n" +
-                                    "WHERE c.bo_tipo_classe = "+tipo+"\n" +
+                                    "WHERE c.nu_tipo_classe = "+tipo+"\n" +
                                     "ORDER BY c.vc_nome_classe,\n" +
                                     "m.vc_marca_modelo,\n" +
-                                    "m.vc_descricao_modelo");
+                                    "m.tx_descricao_modelo;");
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Modelo modelo = new Modelo();
-                Classe classe = new Classe();
-                classe.setId(rs.getInt("id_classe"));
-                classe.setNome(rs.getString("vc_nome_classe"));
-                classe.setTipo(rs.getBoolean("bo_tipo_classe"));
+                Classe classe = new Classe(rs.getInt("id_classe"),
+                rs.getString("vc_nome_classe"),
+                rs.getInt("nu_tipo_classe") );
                 
-                modelo.setId(rs.getInt("id_modelo"));
-                modelo.setClasse(classe);
-                modelo.setCodigo(rs.getInt("nu_codigo_modelo"));
-                modelo.setModelo(rs.getString("vc_descricao_modelo"));
-                modelo.setMarca(rs.getString("vc_marca_modelo"));
-                modelo.setLayout(rs.getString("vc_layout_modelo"));
+                Modelo modelo = new Modelo(rs.getInt("id_modelo"),
+                rs.getInt("nu_codigo_modelo"),
+                classe,
+                rs.getString("tx_descricao_modelo"),
+                rs.getString("vc_marca_modelo"),
+                rs.getString("vc_layout_modelo") );
                 
                 m.add(modelo);
             } 
@@ -392,17 +390,16 @@ public class ExecutaSQL {
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Modelo model = new Modelo();
                 Classe classe = (Classe) SELECT_CLASSE("id_classe", ""+rs.getInt("id_classe")).get(0);
                 
-                model.setClasse(classe);
-                model.setId(rs.getInt("id_modelo"));
-                model.setCodigo(rs.getInt("nu_codigo_modelo"));
-                model.setModelo(rs.getString("vc_descricao_modelo"));
-                model.setMarca(rs.getString("vc_marca_modelo"));
-                model.setLayout(rs.getString("vc_layout_modelo"));
+                Modelo modelo = new Modelo(rs.getInt("id_modelo"),
+                rs.getInt("nu_codigo_modelo"),
+                classe,
+                rs.getString("tx_descricao_modelo"),
+                rs.getString("vc_marca_modelo"),
+                rs.getString("vc_layout_modelo") );
                 
-                m.add(model);
+                m.add(modelo);
             } 
         }catch(Exception ex){
             new JErro(true, ex, true, true, false);
@@ -412,7 +409,7 @@ public class ExecutaSQL {
     
     public boolean INSERT_MODELO(Modelo model){
         try{
-            comando = conexao.getConexao().prepareStatement("INSERT INTO modelo(id_modelo, id_classe, nu_codigo_modelo, vc_descricao_modelo, vc_marca_modelo, vc_layout_modelo)\n" +
+            comando = conexao.getConexao().prepareStatement("INSERT INTO modelo(id_modelo, id_classe, nu_codigo_modelo, tx_descricao_modelo, vc_marca_modelo, vc_layout_modelo)\n" +
                                     "    VALUES ("+chavePrimaria+", ?, ?, ?, ?, ?);");
             
             comando.setInt(1, model.getClasse().getId());
@@ -706,16 +703,20 @@ public class ExecutaSQL {
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Usuario usuario = (Usuario) SELECT_USUARIO_ATIVO("id_usuario", ""+rs.getInt("usuario_id_usuario")).get(0);
+                Usuario usuarioRevisao = (Usuario) SELECT_USUARIO_ATIVO("id_usuario", ""+rs.getInt("id_usuario")).get(0);
+                Usuario usuarioAutorizador = (Usuario) SELECT_USUARIO_ATIVO("id_usuario", ""+rs.getInt("id_usuario_autorizador")).get(0);
                 Veiculo veiculo = (Veiculo) SELECT_VEICULO("id_veiculo", ""+rs.getInt("id_veiculo")).get(0);
                 
                 Revisao rev = new Revisao(
                         rs.getInt("id_revisao"), 
-                        usuario, 
+                        usuarioRevisao, 
                         veiculo, 
                         rs.getInt("nu_numero_revisao"),
-                        rs.getTimestamp("dh_registro_revisao"), 
-                        rs.getString("tx_descricao_revisao") );
+                        rs.getTimestamp("dh_execucao_revisao"), 
+                        rs.getString("tx_descricao_revisao"),
+                        usuarioAutorizador,
+                        rs.getBoolean("bo_executada")
+                );
                 
                 revisao.add(rev);
             }       
@@ -729,7 +730,7 @@ public class ExecutaSQL {
     public boolean SELECT_VERIFICA_REVISAO_COMPLETA(int idRevisao){ 
         try{
             comando = conexao.getConexao().prepareStatement("SELECT NOT EXISTS(SELECT 1 FROM componente_revisao "
-                                + "WHERE revisao_id_revisao = ? AND bo_identificado = false) AS completa;");
+                                + "WHERE id_revisao = ? AND bo_identificado = false) AS completa;");
             comando.setInt(1, idRevisao);
             
             ResultSet rs = comando.executeQuery();
@@ -749,23 +750,26 @@ public class ExecutaSQL {
         try{
             comando = conexao.getConexao().prepareStatement("SELECT * FROM revisao "
                             + "WHERE id_veiculo = ? "
-                            + "AND dh_registro_revisao BETWEEN ? AND ?;");
+                            + "AND dh_execucao_revisao BETWEEN ? AND ?;");
             comando.setInt(1, idVeiculo);
             comando.setTimestamp(2, dataInicial);
             comando.setTimestamp(3, dataFinal);
             
             ResultSet rs = comando.executeQuery();            
             while(rs.next()){
-                Usuario usuario = (Usuario) SELECT_USUARIO_ATIVO("id_usuario", ""+rs.getInt("usuario_id_usuario")).get(0);
+                Usuario usuarioRevisao = (Usuario) SELECT_USUARIO_ATIVO("id_usuario", ""+rs.getInt("id_usuario")).get(0);
+                Usuario usuarioAutorizador = (Usuario) SELECT_USUARIO_ATIVO("id_usuario", ""+rs.getInt("id_usuario_autorizador")).get(0);
                 Veiculo veiculo = (Veiculo) SELECT_VEICULO("id_veiculo", ""+rs.getInt("id_veiculo")).get(0);
                 
                 Revisao rev = new Revisao(
                         rs.getInt("id_revisao"), 
-                        usuario, 
+                        usuarioRevisao, 
                         veiculo, 
                         rs.getInt("nu_numero_revisao"),
-                        rs.getTimestamp("dh_registro_revisao"), 
-                        rs.getString("tx_descricao_revisao")
+                        rs.getTimestamp("dh_execucao_revisao"), 
+                        rs.getString("tx_descricao_revisao"),
+                        usuarioAutorizador,
+                        rs.getBoolean("bo_executada")
                 );
                 
                 revisao.add(rev);
@@ -780,11 +784,11 @@ public class ExecutaSQL {
     public int INSERT_REVISAO(Revisao revisao){
         try{
             comando = conexao.getConexao().prepareStatement("INSERT INTO revisao(\n" +
-                            "            id_revisao, usuario_id_usuario, id_veiculo, nu_numero_revisao, dh_registro_revisao, \n" +
-                            "            tx_descricao_revisao)\n" +
-                            "    VALUES ("+chavePrimaria+", ?, ?, NEXTVAL('SEQ_NUMERO_REVISAO'), ?, ?) RETURNING id_revisao;");
+                    "            id_revisao, id_veiculo, id_usuario, nu_numero_revisao, dh_execucao_revisao, \n" +
+                    "            tx_descricao_revisao, id_usuario_autorizador, bo_executada)" +
+                    "    VALUES ("+chavePrimaria+", ?, ?, NEXTVAL('SEQ_NUMERO_REVISAO'), ?, ?) RETURNING id_revisao;");
             
-            comando.setInt(1, revisao.getUsuario().getId());
+            comando.setInt(1, revisao.getUsuarioRevisao().getId());
             comando.setInt(2,revisao.getVeiculo().getId());
             comando.setTimestamp(3, revisao.getRegistro());
             comando.setString(4, revisao.getDescricao());
@@ -814,7 +818,7 @@ public class ExecutaSQL {
             
             while(rs.next()){
                 Componente componente = (Componente) SELECT_COMPONENTE("id_componente", Integer.toString(rs.getInt("componente_id_componente"))).get(0);
-                Revisao revisao = (Revisao) SELECT_REVISAO("id_revisao", Integer.toString(rs.getInt("revisao_id_revisao"))).get(0);
+                Revisao revisao = (Revisao) SELECT_REVISAO("id_revisao", Integer.toString(rs.getInt("id_revisao"))).get(0);
                 
                 ComponenteRevisao rev = new ComponenteRevisao(
                         componente,
@@ -836,8 +840,8 @@ public class ExecutaSQL {
     public boolean INSERT_COMPONENTE_REVISAO(ComponenteRevisao componenteRevisao){
         try{
             comando = conexao.getConexao().prepareStatement("INSERT INTO componente_revisao(\n" +
-                            "            componente_id_componente, revisao_id_revisao, bo_identificado, \n" +
-                            "            dh_identificacao_componente_revisao, tx_motivo_nao_identificacao)\n" +
+                        "            id_componente, id_revisao, bo_identificado, dh_identificacao_componente_revisao, \n" +
+                        "            tx_motivo_nao_identificacao)\n" +
                             "    VALUES (?, ?, ?, ?, ?);");
             
             comando.setInt(1, componenteRevisao.getComponente().getId());
@@ -858,7 +862,9 @@ public class ExecutaSQL {
         acao = trata.noSQLInjection(acao);
         
         try{
-            comando = conexao.getConexao().prepareStatement("");
+            comando = conexao.getConexao().prepareStatement("INSERT INTO log_usuario(\n" +
+                        "            id_log, id_usuario, dh_registro_log, tx_acao_log)\n" +
+                        "    VALUES ("+chavePrimaria+", ?, ?, ?);");
             
            String idEncriptada = encriptaLog(Integer.toString(idUsuario));
            acao = encriptaLog(acao);
@@ -885,40 +891,7 @@ public class ExecutaSQL {
         return valor;
     }
     
-    /*public void SELECT_USUARIO(){
-        try{
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");  
-        }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
-        }        
-    }
-    
-    public void DELETE_USUARIO(){
-        try{
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");  
-        }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
-        }        
-    }
-    
-    public void UPDATE_USUARIO(){
-        try{
-            
-            System.out.println("Executou a SQL");
-    conexao.getConexao().close();    
-            System.out.println("Fechou o banco");  
-        }catch(Exception ex){
-            new JErro(true, ex, false, true, false);
-        }        
-    }
-    
-    public void INSERT_USUARIO(){
+    /*public void DELETE_USUARIO(){
         try{
             
             System.out.println("Executou a SQL");

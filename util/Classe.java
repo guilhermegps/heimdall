@@ -9,15 +9,15 @@ public class Classe {
     
     private int id;
     private String nome;
-    private Boolean tipo;
+    private int tipo;
 
     public Classe() {
         this.id = 0;
         this.nome = null;
-        this.tipo = null;
+        this.tipo = 0;
     }
     
-    public Classe(int id, String nome, Boolean tipo) {
+    public Classe(int id, String nome, int tipo) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
@@ -40,11 +40,11 @@ public class Classe {
         this.nome = nome;
     }
 
-    public Boolean isTipo() {
+    public int isTipo() {
         return tipo;
     }
 
-    public void setTipo(Boolean tipo) {
+    public void setTipo(int tipo) {
         this.tipo = tipo;
     }
 

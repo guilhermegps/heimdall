@@ -23,14 +23,14 @@ public class JModelo extends javax.swing.JDialog {
      * Creates new form JModelo
      */
     
-    private boolean classe;
+    private int tipoClasse;
     private ArrayList<Classe> classes;
     private int operacao = 0; // 1 = Novo registro; 2 = Atualizar um registro
     private boolean killThread = false;
     
-    public JModelo(boolean classe/*true - Veiculo; false - componente*/) {
+    public JModelo(int tipoClasse/*1 - Veiculo; 2 - componente*/) {
         setModal(true); //Faz com que o sistema aguarde a conclusão do JDialog para seguir com a execução. 
-        this.classe = classe;
+        this.tipoClasse = tipoClasse;
         initComponents();
         initTable();
         new Campos().start();
@@ -154,7 +154,7 @@ public class JModelo extends javax.swing.JDialog {
 
         jLabel2.setText("Marca*: ");
 
-        cbClasse.setModel(new javax.swing.DefaultComboBoxModel(carregarClasses(classe) ));
+        cbClasse.setModel(new javax.swing.DefaultComboBoxModel(carregarClasses(tipoClasse) ));
         cbClasse.setEnabled(false);
 
         jLabel4.setText("Classe*: ");
@@ -319,7 +319,7 @@ public class JModelo extends javax.swing.JDialog {
         initTable();
     }//GEN-LAST:event_bRefreshCdtModeloActionPerformed
     
-    private Classe[] carregarClasses(boolean tipo){
+    private Classe[] carregarClasses(int tipo){
         ExecutaSQL sql = new ExecutaSQL();
         classes = new ArrayList<Classe>();
         classes = sql.SELECT_CLASSE_TIPO(tipo);
@@ -354,7 +354,7 @@ public class JModelo extends javax.swing.JDialog {
                 dtm.removeRow(0);
             }
 
-            aux = sql.SELECT_MODELO_TIPO_CLASSE(classe);
+            aux = sql.SELECT_MODELO_TIPO_CLASSE(tipoClasse);
             Object valores[] = new Object[aux.size()];
             for(int i=0; i<aux.size(); i++){
                 String classe = (aux.get(i).getClasse() != null) ? aux.get(i).getClasse().getNome() : null;

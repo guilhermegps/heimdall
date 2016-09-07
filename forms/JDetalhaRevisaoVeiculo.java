@@ -113,10 +113,10 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
         jPanel20.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         tfIdentificaoUsuario.setEditable(false);
-        tfIdentificaoUsuario.setText(this.revisao.getUsuario().toString());
+        tfIdentificaoUsuario.setText(this.revisao.getUsuarioRevisao().toString());
 
         tfCpfUsuario.setEditable(false);
-        tfCpfUsuario.setText(this.revisao.getUsuario().getCpf());
+        tfCpfUsuario.setText(this.revisao.getUsuarioRevisao().getCpf());
 
         jLabel21.setText("Usuário:");
 
