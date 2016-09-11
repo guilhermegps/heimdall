@@ -8,7 +8,7 @@ CREATE TABLE public.usuario (
                 vc_cpf_usuario VARCHAR(11) NOT NULL,
                 bo_primeiro_login_usuario BOOLEAN NOT NULL,
                 bo_registro_ativo_usuario BOOLEAN NOT NULL,
-                bo_revisa_sem_agendamento VARCHAR NOT NULL,
+                bo_revisa_sem_agendamento BOOLEAN NOT NULL,
                 CONSTRAINT usuario_pkey PRIMARY KEY (id_usuario)
 );
 COMMENT ON COLUMN public.usuario.nu_nivel_usuario IS 'Níveis de usuários:
@@ -106,7 +106,7 @@ CREATE TABLE public.revisao (
 CREATE TABLE public.agenda_revisao (
                 id_agenda_revisao INTEGER NOT NULL,
                 dh_data_inicio TIMESTAMP NOT NULL,
-                dh_data_termino VARCHAR NOT NULL,
+                dh_data_termino TIMESTAMP NOT NULL,
                 hr_hora_inicio TIME NOT NULL,
                 hr_hora_termino TIME NOT NULL,
                 in_intervalo INTERVAL,
