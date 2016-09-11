@@ -246,7 +246,7 @@ public class JRevisao extends javax.swing.JDialog {
         try{
             if(cacheComponentes.size()==0){
                 ExecutaSQL sql = new ExecutaSQL();
-                ArrayList<Componente> componentesVeiculo = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+                ArrayList<Componente> componentesVeiculo = sql.SELECT_COMPONENTE("id_veiculo", Integer.toString(veiculo.getId()));
                 for(int i=0; i<componentesVeiculo.size(); i++){
                     cacheComponentes.add(new LeituraRFID(
                             componentesVeiculo.get(i), 

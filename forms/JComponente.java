@@ -654,7 +654,7 @@ public class JComponente extends javax.swing.JDialog {
                 dtm.removeRow(0);
             }
 
-            aux = sql.SELECT_COMPONENTE("veiculo_id_veiculo", Integer.toString(veiculo.getId()));
+            aux = sql.SELECT_COMPONENTE("id_veiculo", Integer.toString(veiculo.getId()));
             for(int i=0; i<aux.size(); i++){
                 String registro = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(aux.get(i).getRegistro());
                 String validade = new SimpleDateFormat("dd/MM/yyyy").format(aux.get(i).getValidade());

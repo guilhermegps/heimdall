@@ -817,7 +817,7 @@ public class ExecutaSQL {
             ResultSet rs = comando.executeQuery();
             
             while(rs.next()){
-                Componente componente = (Componente) SELECT_COMPONENTE("id_componente", Integer.toString(rs.getInt("componente_id_componente"))).get(0);
+                Componente componente = (Componente) SELECT_COMPONENTE("id_componente", Integer.toString(rs.getInt("id_componente"))).get(0);
                 Revisao revisao = (Revisao) SELECT_REVISAO("id_revisao", Integer.toString(rs.getInt("id_revisao"))).get(0);
                 
                 ComponenteRevisao rev = new ComponenteRevisao(

@@ -30,7 +30,7 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
         setModal(true);
         this.revisao = revisao;
         sql = new ExecutaSQL();
-        cacheComponenteRevisao = sql.SELECT_COMPONENTE_REVISAO("revisao_id_revisao", Integer.toString(this.revisao.getId()));
+        cacheComponenteRevisao = sql.SELECT_COMPONENTE_REVISAO("id_revisao", Integer.toString(this.revisao.getId()));
         initComponents();
         initTable();
     }

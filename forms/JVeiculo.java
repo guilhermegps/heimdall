@@ -781,7 +781,7 @@ public class JVeiculo extends javax.swing.JDialog {
             int aux = tfVeiculo.getText().compareTo("");
             aux *= ftfPlaca.getText().compareTo("");
             aux *= tfCodigo.getText().compareTo("");
-            if(aux==0 || modelo==null || !ftfPlaca.getText().matches("[a-zA-Z]{3}-[0-9]{4}") || !rfidValido()){
+            if(aux==0 || modelo==null || !ftfPlaca.getText().matches("[a-zA-Z]{3}-[0-9]{4}")){
                 bSaveCdtVeiculo.setEnabled(false);
             }else{
                 bSaveCdtVeiculo.setEnabled(true);
