@@ -35,7 +35,7 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="bTornaAdmin" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="101" max="32767" attributes="0"/>
+                      <EmptySpace pref="87" max="32767" attributes="0"/>
                       <Component id="bExcluir" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="bCancelar" min="-2" max="-2" attributes="0"/>
@@ -195,7 +195,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="bTornaAdmin">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Tornar Administrador"/>
+        <Property name="text" type="java.lang.String" value="Alterar N&#xed;vel de Usu&#xe1;rio"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="bBuscar">

@@ -63,8 +63,6 @@ public class JComponente extends javax.swing.JDialog {
         tpDescComponente = new javax.swing.JTextPane();
         cbModelo = new javax.swing.JComboBox();
         bCustomModelo = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        tfDataValComponente = new javax.swing.JTextField();
         tfCodigo = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         tpComponente = new javax.swing.JTabbedPane();
@@ -123,11 +121,6 @@ public class JComponente extends javax.swing.JDialog {
             }
         });
 
-        jLabel4.setText("Data Validade:");
-
-        tfDataValComponente.setToolTipText("Escreva o nome do veiculo. EX: Onibus 05");
-        tfDataValComponente.setEnabled(false);
-
         tfCodigo.setToolTipText("Escreva o nome do veiculo. EX: Onibus 05");
         tfCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -144,8 +137,6 @@ public class JComponente extends javax.swing.JDialog {
         lpIdtComponente.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtComponente.setLayer(cbModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtComponente.setLayer(bCustomModelo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtComponente.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        lpIdtComponente.setLayer(tfDataValComponente, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtComponente.setLayer(tfCodigo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpIdtComponente.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -165,7 +156,7 @@ public class JComponente extends javax.swing.JDialog {
                         .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                                 .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tfComponente, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -175,11 +166,7 @@ public class JComponente extends javax.swing.JDialog {
                                 .addComponent(bCustomModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(lpIdtComponenteLayout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(lpIdtComponenteLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfDataValComponente)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18))
         );
         lpIdtComponenteLayout.setVerticalGroup(
@@ -199,14 +186,10 @@ public class JComponente extends javax.swing.JDialog {
                         .addComponent(tfComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel5)))
-                .addGap(11, 11, 11)
-                .addGroup(lpIdtComponenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(tfDataValComponente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
 
@@ -262,7 +245,7 @@ public class JComponente extends javax.swing.JDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfLinhasTabela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -456,7 +439,7 @@ public class JComponente extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(tfPlacaVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -484,10 +467,10 @@ public class JComponente extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lpCondVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lpIdtComponente, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                    .addComponent(lpIdtComponente, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tpComponente)
                 .addContainerGap())
         );
@@ -681,14 +664,12 @@ public class JComponente extends javax.swing.JDialog {
         tfCodigo.setText("");
         tfComponente.setText("");
         ftfTagRfid.setText("");
-        tfDataValComponente.setText("");
         tpDescComponente.setText("");
         cbModelo.setSelectedItem(null);
         
         tfCodigo.setEnabled(b);
         tfComponente.setEnabled(b);
         ftfTagRfid.setEnabled(b);
-        tfDataValComponente.setEnabled(b);
         tpDescComponente.setEnabled(b);
         cbModelo.setEnabled(b);
     }    
@@ -707,7 +688,6 @@ public class JComponente extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -726,7 +706,6 @@ public class JComponente extends javax.swing.JDialog {
     private javax.swing.JTextField tfCodigo;
     private javax.swing.JTextField tfComponente;
     private javax.swing.JTextField tfDataCdt;
-    private javax.swing.JTextField tfDataValComponente;
     private javax.swing.JTextField tfLinhasTabela;
     private javax.swing.JTextField tfNomeVeiculo;
     private javax.swing.JTextField tfPlacaVeiculo;

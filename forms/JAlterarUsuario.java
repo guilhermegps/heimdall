@@ -136,7 +136,7 @@ public class JAlterarUsuario extends javax.swing.JDialog {
             }
         });
 
-        bTornaAdmin.setText("Tornar Administrador");
+        bTornaAdmin.setText("Alterar Nível de Usuário");
 
         bBuscar.setText("Buscar");
         bBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -159,7 +159,7 @@ public class JAlterarUsuario extends javax.swing.JDialog {
                         .addComponent(bBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(bTornaAdmin)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                         .addComponent(bExcluir)
                         .addGap(18, 18, 18)
                         .addComponent(bCancelar)))
