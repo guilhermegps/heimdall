@@ -786,12 +786,14 @@ public class ExecutaSQL {
             comando = conexao.getConexao().prepareStatement("INSERT INTO revisao(\n" +
                     "            id_revisao, id_veiculo, id_usuario, nu_numero_revisao, dh_execucao_revisao, \n" +
                     "            tx_descricao_revisao, id_usuario_autorizador, bo_executada)" +
-                    "    VALUES ("+chavePrimaria+", ?, ?, NEXTVAL('SEQ_NUMERO_REVISAO'), ?, ?) RETURNING id_revisao;");
+                    "    VALUES ("+chavePrimaria+", ?, ?, NEXTVAL('SEQ_NUMERO_REVISAO'), ?, ?, ?, ?) RETURNING id_revisao;");
             
-            comando.setInt(1, revisao.getUsuarioRevisao().getId());
-            comando.setInt(2,revisao.getVeiculo().getId());
+            comando.setInt(1, revisao.getVeiculo().getId());
+            comando.setInt(2, revisao.getUsuarioRevisao().getId());
             comando.setTimestamp(3, revisao.getRegistro());
             comando.setString(4, revisao.getDescricao());
+            comando.setInt(5, revisao.getUsuarioAutorizador().getId());
+            comando.setBoolean(6, revisao.isExecutada());
             
             ResultSet rs = comando.executeQuery();
             
