@@ -41,6 +41,7 @@ public class PrincipalPortatil extends javax.swing.JFrame {
 
         jToolBar1 = new javax.swing.JToolBar();
         bRevisao = new javax.swing.JButton();
+        bRevisaoAgendada = new javax.swing.JButton();
         dpPrincipal = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -58,6 +59,17 @@ public class PrincipalPortatil extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(bRevisao);
+
+        bRevisaoAgendada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/heimdall/img/icons 50x50/iSink.png"))); // NOI18N
+        bRevisaoAgendada.setFocusable(false);
+        bRevisaoAgendada.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bRevisaoAgendada.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bRevisaoAgendada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bRevisaoAgendadaActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(bRevisaoAgendada);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,6 +109,10 @@ public class PrincipalPortatil extends javax.swing.JFrame {
             new JErro(true, ex, true, true, false);
         }
     }//GEN-LAST:event_bRevisaoActionPerformed
+
+    private void bRevisaoAgendadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRevisaoAgendadaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bRevisaoAgendadaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -146,6 +162,7 @@ public class PrincipalPortatil extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bRevisao;
+    private javax.swing.JButton bRevisaoAgendada;
     private javax.swing.JDesktopPane dpPrincipal;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
