@@ -25,12 +25,20 @@ CREATE UNIQUE INDEX usuario_vc_login_usuario_key
  ON public.usuario USING BTREE
  ( vc_login_usuario );
 
-CREATE TABLE public.log_usuario (
+/*CREATE TABLE public.log_usuario (
                 id_log INTEGER NOT NULL,
                 id_usuario INTEGER NOT NULL,
                 dh_registro_log TIMESTAMP NOT NULL,
                 tx_acao_log TEXT NOT NULL,
                 CONSTRAINT log_usuario_pkey PRIMARY KEY (id_log)
+);*/
+
+CREATE TABLE public.log_usuario (
+		id_log INTEGER NOT NULL,
+		id_usuario VARCHAR(32) NOT NULL,
+		dh_registro_log TIMESTAMP NOT NULL,
+		tx_acao_log TEXT NOT NULL,
+		CONSTRAINT log_usuario_pkey PRIMARY KEY(id_log)
 );
 
 
@@ -89,6 +97,10 @@ CREATE UNIQUE INDEX veiculo_nu_codigo_veiculo_key
 CREATE UNIQUE INDEX veiculo_vc_rfid_veiculo_key
  ON public.veiculo USING BTREE
  ( vc_rfid_veiculo );
+
+CREATE UNIQUE INDEX veiculo_vc_placa_veiculo_key
+ ON public.veiculo USING BTREE
+ ( vc_placa_veiculo );
 
 CREATE TABLE public.revisao (
                 id_revisao INTEGER NOT NULL,
@@ -153,14 +165,6 @@ CREATE TABLE public.componente_revisao (
                 tx_motivo_nao_identificacao TEXT,
                 CONSTRAINT componente_revisao_pkey PRIMARY KEY (id_componente, id_revisao)
 );
-
-
-ALTER TABLE public.log_usuario ADD CONSTRAINT log_usuario_usuario_id_usuario_fkey
-FOREIGN KEY (id_usuario)
-REFERENCES public.usuario (id_usuario)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION
-NOT DEFERRABLE;
 
 ALTER TABLE public.revisao ADD CONSTRAINT revisao_usuario_id_usuario_fkey
 FOREIGN KEY (id_usuario_autorizador)
