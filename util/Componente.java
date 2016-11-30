@@ -128,5 +128,10 @@ public class Componente {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
+
+    @Override
+    public String toString() {
+        return codigo + " - " + nome  + " (" + rfid + ")";
+    }
     
 }

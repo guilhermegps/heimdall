@@ -401,7 +401,7 @@ public class JDetalhaRevisaoVeiculo extends javax.swing.JDialog {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
                 dtm.addRow(
                         new Object[] {
-                            cacheComponenteRevisao.get(i).getComponente().getCodigo(),
+                            cacheComponenteRevisao.get(i).getComponente().toString(),
                             (cacheComponenteRevisao.get(i).getIdentificacao()==null) ? "" : sdf.format(cacheComponenteRevisao.get(i).getIdentificacao()),
                             cacheComponenteRevisao.get(i).isIdentificado(),
                             cacheComponenteRevisao.get(i).getMotivo()
